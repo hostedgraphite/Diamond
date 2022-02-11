@@ -66,7 +66,7 @@ else:
                            ['.keep']))
 
         if distro == 'Ubuntu':
-            if distro_major_version >= 16:
+            if distro_major_version.isdigit() and int(distro_major_version) >= 16:
                 data_files.append(('/usr/lib/systemd/system',
                                    ['rpm/systemd/diamond.service']))
             else:
@@ -75,10 +75,10 @@ else:
         if distro in ['centos', 'redhat', 'debian', 'fedora', 'oracle']:
             data_files.append(('/etc/init.d',
                                ['bin/init.d/diamond']))
-            if distro_major_version >= 7 and not distro == 'debian':
+            if distro_major_version.isdigit() and int(distro_major_version) >= 7 and not distro == 'debian':
                 data_files.append(('/usr/lib/systemd/system',
                                    ['rpm/systemd/diamond.service']))
-            elif distro_major_version >= 6 and not distro == 'debian':
+            elif distro_major_version.isdigit() and int(distro_major_version) >= 6 and not distro == 'debian':
                 data_files.append(('/etc/init',
                                    ['rpm/upstart/diamond.conf']))
 
