@@ -277,8 +277,8 @@ class MetricWrapper(Metric):
 
             backend = self.delegate.getMetricPath().split('.')[0]
             server = self.delegate.getMetricPath().split('.')[1]
-            self.tags["backend"] = backend
             self.tags["server"] = server
+            self.tags["backend"] = backend
             self.path = self.path.replace("."+server+".", ".")
             self.path = self.path.replace("."+backend+".", ".")
 
