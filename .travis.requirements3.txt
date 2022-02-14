@@ -15,5 +15,5 @@ redis
 simplejson
 setproctitle
 psycopg2
-#PySensors
+PySensors
 pysnmp
