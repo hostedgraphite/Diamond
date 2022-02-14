@@ -39,7 +39,7 @@ class TestTokuMXCollector(CollectorTestCase):
         self.assertTrue(TokuMXCollector)
 
     @run_only_if_pymongo_is_available
-    @patch('pymongo.Connection')
+    @patch('pymongo.MongoClient')
     @patch.object(Collector, 'publish')
     def test_should_publish_nested_keys_for_server_stats(self,
                                                          publish_mock,
@@ -57,7 +57,7 @@ class TestTokuMXCollector(CollectorTestCase):
         })
 
     @run_only_if_pymongo_is_available
-    @patch('pymongo.Connection')
+    @patch('pymongo.MongoClient')
     @patch.object(Collector, 'publish')
     def test_should_publish_nested_keys_for_db_stats(self,
                                                      publish_mock,
@@ -79,12 +79,12 @@ class TestTokuMXCollector(CollectorTestCase):
         self.assertPublishedMany(publish_mock, metrics)
 
     @run_only_if_pymongo_is_available
-    @patch('pymongo.Connection')
+    @patch('pymongo.MongoClient')
     @patch.object(Collector, 'publish')
     def test_should_publish_stats_with_long_type(self,
                                                  publish_mock,
                                                  connector_mock):
-        data = {'more_keys': long(1), 'key': 2, 'string': 'str'}
+        data = {'more_keys': 1, 'key': 2, 'string': 'str'}
         self._annotate_connection(connector_mock, data)
 
         self.collector.collect()
@@ -97,7 +97,7 @@ class TestTokuMXCollector(CollectorTestCase):
         })
 
     @run_only_if_pymongo_is_available
-    @patch('pymongo.Connection')
+    @patch('pymongo.MongoClient')
     @patch.object(Collector, 'publish')
     def test_should_ignore_unneeded_databases(self,
                                               publish_mock,
@@ -109,12 +109,12 @@ class TestTokuMXCollector(CollectorTestCase):
         assert call('baddb') not in self.connection.__getitem__.call_args_list
 
     @run_only_if_pymongo_is_available
-    @patch('pymongo.Connection')
+    @patch('pymongo.MongoClient')
     @patch.object(Collector, 'publish')
     def test_should_ignore_unneeded_collections(self,
                                                 publish_mock,
                                                 connector_mock):
-        data = {'more_keys': long(1), 'key': 2, 'string': 'str'}
+        data = {'more_keys': 1, 'key': 2, 'string': 'str'}
         self._annotate_connection(connector_mock, data)
 
         self.connection['db1'].collection_names.return_value = ['collection1',
@@ -157,7 +157,7 @@ class TestMongoMultiHostDBCollector(CollectorTestCase):
         self.assertTrue(TokuMXCollector)
 
     @run_only_if_pymongo_is_available
-    @patch('pymongo.Connection')
+    @patch('pymongo.MongoClient')
     @patch.object(Collector, 'publish')
     def test_should_publish_nested_keys_for_server_stats(self,
                                                          publish_mock,
@@ -176,7 +176,7 @@ class TestMongoMultiHostDBCollector(CollectorTestCase):
         })
 
     @run_only_if_pymongo_is_available
-    @patch('pymongo.Connection')
+    @patch('pymongo.MongoClient')
     @patch.object(Collector, 'publish')
     def test_should_publish_nested_keys_for_db_stats(self,
                                                      publish_mock,
@@ -200,12 +200,12 @@ class TestMongoMultiHostDBCollector(CollectorTestCase):
         self.assertPublishedMany(publish_mock, metrics)
 
     @run_only_if_pymongo_is_available
-    @patch('pymongo.Connection')
+    @patch('pymongo.MongoClient')
     @patch.object(Collector, 'publish')
     def test_should_publish_stats_with_long_type(self,
                                                  publish_mock,
                                                  connector_mock):
-        data = {'more_keys': long(1), 'key': 2, 'string': 'str'}
+        data = {'more_keys': 1, 'key': 2, 'string': 'str'}
         self._annotate_connection(connector_mock, data)
 
         self.collector.collect()
@@ -219,7 +219,7 @@ class TestMongoMultiHostDBCollector(CollectorTestCase):
         })
 
     @run_only_if_pymongo_is_available
-    @patch('pymongo.Connection')
+    @patch('pymongo.MongoClient')
     @patch.object(Collector, 'publish')
     def test_should_ignore_unneeded_databases(self,
                                               publish_mock,
@@ -231,12 +231,12 @@ class TestMongoMultiHostDBCollector(CollectorTestCase):
         assert call('baddb') not in self.connection.__getitem__.call_args_list
 
     @run_only_if_pymongo_is_available
-    @patch('pymongo.Connection')
+    @patch('pymongo.MongoClient')
     @patch.object(Collector, 'publish')
     def test_should_ignore_unneeded_collections(self,
                                                 publish_mock,
                                                 connector_mock):
-        data = {'more_keys': long(1), 'key': 2, 'string': 'str'}
+        data = {'more_keys': 1, 'key': 2, 'string': 'str'}
         self._annotate_connection(connector_mock, data)
 
         self.connection['db1'].collection_names.return_value = ['collection1',

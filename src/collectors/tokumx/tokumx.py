@@ -19,10 +19,7 @@ try:
 except ImportError:
     pymongo = None
 
-try:
-    from pymongo import ReadPreference
-except ImportError:
-    ReadPreference = None
+from pymongo import ReadPreference
 
 
 class TokuMXCollector(diamond.collector.Collector):
@@ -113,18 +110,11 @@ class TokuMXCollector(diamond.collector.Collector):
                     base_prefix = [alias]
 
             try:
-                if ReadPreference is None:
-                    conn = pymongo.Connection(
-                        host,
-                        network_timeout=self.config['network_timeout'],
-                        slave_okay=True
-                    )
-                else:
-                    conn = pymongo.Connection(
-                        host,
-                        network_timeout=self.config['network_timeout'],
-                        read_preference=ReadPreference.SECONDARY,
-                    )
+                conn = pymongo.MongoClient(
+                    host,
+                    socketTimeoutMS=self.config['network_timeout'],
+                    readPreference=ReadPreference.SECONDARY,
+                )
             except Exception as e:
                 self.log.error('Couldnt connect to mongodb: %s', e)
                 continue
@@ -137,11 +127,11 @@ class TokuMXCollector(diamond.collector.Collector):
                     self.log.error(
                         'User auth given, but could not autheticate' +
                         ' with host: %s, err: %s' % (host, e))
-                    return{}
+                    return {}
 
             serverStatus = conn.db.command('serverStatus')
             engineStatus = conn.db.command('engineStatus')
-            data = dict(serverStatus.items() + engineStatus.items())
+            data = dict(list(serverStatus.items()) + list(engineStatus.items()))
 
             self._publish_transformed(data, base_prefix)
             if str_to_bool(self.config['simple']):
@@ -261,8 +251,6 @@ class TokuMXCollector(diamond.collector.Collector):
                 self._publish_metrics(keys, new_key, value)
         elif isinstance(value, int) or isinstance(value, float):
             publishfn('.'.join(keys), value)
-        elif isinstance(value, long):
-            publishfn('.'.join(keys), float(value))
 
     def _extract_simple_data(self, data):
         return {
