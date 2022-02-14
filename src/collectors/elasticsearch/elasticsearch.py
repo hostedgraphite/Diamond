@@ -108,8 +108,8 @@ class ElasticSearchCollector(diamond.collector.Collector):
         try:
             request = diamond.pycompat.Request(url)
             if self.config['user'] and self.config['password']:
-                base64string = base64.standard_b64encode(
-                    '%s:%s' % (self.config['user'], self.config['password']))
+                auth_header = '%s:%s' % (self.config['user'], self.config['password'])
+                base64string = base64.standard_b64encode(auth_header.encode())
                 request.add_header("Authorization", "Basic %s" % base64string)
             response = diamond.pycompat.urlopen(request)
         except Exception as err:
