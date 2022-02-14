@@ -7,6 +7,7 @@ from test import get_collector_config
 from test import unittest
 from mock import call
 from test import patch
+from test import Mock
 
 from diamond.collector import Collector
 from diamond.pycompat import URLOPEN
@@ -31,8 +32,8 @@ class TestSolrCollector(CollectorTestCase):
                    self.getFixture('ping'),
                    self.getFixture('stats'),
                    self.getFixture('system')]
-        urlopen_mock = patch(URLOPEN, Mock(
-            side_effect=lambda *args: returns.pop(0)))
+
+        urlopen_mock.side_effect = lambda *args: returns.pop(0)
 
         self.collector.collect()
 
@@ -125,8 +126,7 @@ class TestSolrCollector(CollectorTestCase):
             'jvm.mem.used': 19.2,
         }
 
-        self.setDocExample(collector=self.collector.__class__.__name__,
-                           metrics=metrics)
+        self.setDocExample(collector=self.collector.__class__.__name__, metrics=metrics)
         self.assertPublishedMany(publish_mock, metrics)
 
         urlopen_mock.assert_has_calls([
@@ -141,14 +141,11 @@ class TestSolrCollector(CollectorTestCase):
     @patch.object(Collector, 'publish')
     def test_should_fail_gracefully(self, publish_mock, urlopen_mock):
         urlopen_mock.return_value = self.getFixture('stats_blank')
-        urlopen_mock = patch(URLOPEN, Mock(
-                             return_value=self.getFixture('stats_blank')))
 
         self.collector.collect()
 
         self.assertPublishedMany(publish_mock, {})
-        urlopen_mock.assert_called_once_with(
-            'http://localhost:8983/solr/admin/cores?action=STATUS&wt=json')
+        urlopen_mock.assert_called_once_with('http://localhost:8983/solr/admin/cores?action=STATUS&wt=json')
 
 
 ##########################################################################
