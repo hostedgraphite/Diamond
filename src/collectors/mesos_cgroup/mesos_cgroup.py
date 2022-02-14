@@ -63,7 +63,7 @@ class MesosCGroupCollector(diamond.collector.Collector):
         cgroup_root = containers['flags']['cgroups_root']
 
         for aspect in ['cpuacct', 'cpu', 'memory']:
-            aspect_path = os.path.join(sysfs, aspect, cgroup_root)
+            aspect_path: str = os.path.join(sysfs, aspect, cgroup_root)
 
             contents = os.listdir(aspect_path)
             for task_id in [entry for entry in contents if
