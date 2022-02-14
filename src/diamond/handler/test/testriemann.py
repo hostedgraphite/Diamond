@@ -6,7 +6,6 @@ from test import unittest
 from test import run_only
 from test import Mock
 from test import patch
-from mock import call
 import configobj
 
 import diamond.handler.riemann as mod
@@ -62,7 +61,7 @@ class TestRiemannHandler(unittest.TestCase):
             self.assertEqual(event, {
                 'host': u'com.example.www',
                 'service': u'servers.cpu.total.idle',
-                'time': 1234567L,
+                'time': 1234567,
                 'metric_f': 0.0,
             })
 
