@@ -242,7 +242,7 @@ class RabbitMQCollector(diamond.collector.Collector):
             vhost_conf, legacy = self.get_vhost_conf(vhost_names)
 
             # Iterate all vhosts in our vhosts configurations
-            for vhost, queues in vhost_conf.iteritems():
+            for vhost, queues in vhost_conf.items():
                 vhost_name = vhost
                 if self.config['replace_dot']:
                     vhost_name = vhost_name.replace(
@@ -287,7 +287,7 @@ class RabbitMQCollector(diamond.collector.Collector):
         if isinstance(value, dict):
             for new_key in value:
                 self._publish_metrics(name, keys, new_key, value)
-        elif isinstance(value, (float, int, long)):
+        elif isinstance(value, (float, int)):
             joined_keys = '.'.join(keys)
             if name:
                 publish_key = '{0}.{1}'.format(name, joined_keys)
