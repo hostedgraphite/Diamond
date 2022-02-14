@@ -25,6 +25,7 @@ MongoDBCollector.conf
 import diamond.collector
 import datetime
 from diamond.collector import str_to_bool
+from functools import reduce
 import re
 import zlib
 
@@ -348,10 +349,8 @@ class MongoDBCollector(diamond.collector.Collector):
                 self._publish_metrics(keys, new_key, value)
         elif isinstance(value, int) or isinstance(value, float):
             publishfn('.'.join(keys), value)
-        elif isinstance(value, long):
-            publishfn('.'.join(keys), float(value))
         elif isinstance(value, datetime.datetime):
-            publishfn('.'.join(keys), long(value.strftime('%s')))
+            publishfn('.'.join(keys), int(value.strftime('%s')))
 
     def _extract_simple_data(self, data):
         return {
