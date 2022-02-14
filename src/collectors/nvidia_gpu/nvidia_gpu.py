@@ -88,7 +88,7 @@ class NvidiaGPUCollector(diamond.collector.ProcessCollector):
             pynvml.nvmlInit()
             device_count = pynvml.nvmlDeviceGetCount()
 
-            for device_index in xrange(device_count):
+            for device_index in range(device_count):
                 handle = pynvml.nvmlDeviceGetHandleByIndex(device_index)
                 memoryInfo = pynvml.nvmlDeviceGetMemoryInfo(handle)
                 utilizationRates = pynvml.nvmlDeviceGetUtilizationRates(handle)
