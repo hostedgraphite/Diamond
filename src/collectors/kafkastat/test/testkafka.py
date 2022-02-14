@@ -15,6 +15,7 @@ from test import patch
 from diamond.collector import Collector
 from diamond.pycompat import long, URLError, URLOPEN
 from kafkastat import KafkaCollector
+from urllib.parse import urlparse, parse_qs
 
 ##########
 
