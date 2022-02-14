@@ -57,24 +57,22 @@ class TestElasticSearchCollector(CollectorTestCase):
             self.collector.config["password"] = "password"
             self.test_should_work_with_real_data()
 
+    @patch(URLOPEN)
     @patch.object(Collector, 'publish')
-    def test_should_work_with_real_data(self, publish_mock):
+    def test_should_work_with_real_data(self, publish_mock, urlopen_mock):
         returns = [
             self.getFixture('stats'),
             self.getFixture('cluster_stats'),
             self.getFixture('indices_stats'),
         ]
-        urlopen_mock = patch(URLOPEN, Mock(
-            side_effect=lambda *args: returns.pop(0)))
+        urlopen_mock.side_effect = lambda *args: returns.pop(0)
 
         self.collector.config['cluster'] = True
 
-        urlopen_mock.start()
         self.collector.collect()
-        urlopen_mock.stop()
 
         # check how many fixtures were consumed
-        self.assertEqual(urlopen_mock.new.call_count, 3)
+        self.assertEqual(urlopen_mock.call_count, 3)
 
         metrics = {
             'http.current': 1,
