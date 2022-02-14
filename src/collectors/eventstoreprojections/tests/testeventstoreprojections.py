@@ -6,9 +6,9 @@ from test import CollectorTestCase
 from test import get_collector_config
 from test import unittest
 from test import patch
-from mock import call
 
 from diamond.collector import Collector
+from diamond.pycompat import URLOPEN
 
 from eventstoreprojections import EventstoreProjectionsCollector
 
