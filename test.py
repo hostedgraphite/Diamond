@@ -46,10 +46,8 @@ except ImportError:  # py2.x way
     BUILTIN_OPEN = "__builtin__.open"
 
 sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__))))
-sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__),
-                                             'src')))
-sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__),
-                                             'src', 'collectors')))
+sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), 'src')))
+sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), 'src', 'collectors')))
 
 
 def run_only(func, predicate):
@@ -97,7 +95,7 @@ class CollectorTestCase(unittest.TestCase):
             with open(filePath, 'w') as fp:
                 for line in content:
                     if line.strip() == '__EXAMPLESHERE__':
-                        for metric in sorted(metrics.iterkeys()):
+                        for metric in sorted(metrics.keys()):
 
                             metricPath = 'servers.hostname.'
 
