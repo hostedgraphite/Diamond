@@ -25,7 +25,7 @@ class TestMdStatCollector(CollectorTestCase):
     def test_import(self):
         self.assertTrue(MdStatCollector)
 
-    @patch('__builtin__.open')
+    @patch('builtins.open')
     @patch('os.access', Mock(return_value=True))
     @patch.object(Collector, 'publish')
     def test_should_open_proc_loadavg(self, publish_mock, open_mock):
@@ -34,7 +34,7 @@ class TestMdStatCollector(CollectorTestCase):
             # on platforms that don't provide /proc/mdstat: don't bother
             # testing this.
             return
-        open_mock.return_value = io.BytesIO('')
+        open_mock.return_value = io.BytesIO(b'')
         self.collector.collect()
         open_mock.assert_called_once_with('/proc/mdstat', 'r')
 
