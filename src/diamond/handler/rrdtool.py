@@ -210,8 +210,7 @@ class RRDHandler(Handler):
             # The timestamps must be sorted, and we each of the
             # <time> values must be unique (like a snowflake).
             data_points = map(
-                lambda (timestamp, values): "%d:%s" %
-                (timestamp, ":".join(map(str, values))),
+                lambda point: "%d:%s" % (point[0], ":".join(map(str, point[1]))),
                 sorted(updates.items()))
 
             # Optimisticly update.
