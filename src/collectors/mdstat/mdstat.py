@@ -162,10 +162,10 @@ class MdStatCollector(diamond.collector.Collector):
         """
         Parse for a md device name.
 
-        >>> block = 'md0 : active raid1 sdd2[0] sdb2[2](S) sdc2[1]\n'
-        >>>         '      100171776 blocks super 1.2 [2/2] [UU]\n'
-        >>>         '      bitmap: 1/1 pages [4KB], 65536KB chunk\n\n'
-        >>> print _parse_device_name(block)
+        >>> block = ('md0 : active raid1 sdd2[0] sdb2[2](S) sdc2[1]\n'
+        ...          '      100171776 blocks super 1.2 [2/2] [UU]\n'
+        ...          '      bitmap: 1/1 pages [4KB], 65536KB chunk\n\n')
+        >>> print(_parse_device_name(block))
         md0
 
         :return: parsed device name
@@ -177,10 +177,10 @@ class MdStatCollector(diamond.collector.Collector):
         """
         Parse the state of the the md array members.
 
-        >>> block = 'md0 : active raid1 sdd2[0] sdb2[2](S) sdc2[1]\n'
-        >>>         '      100171776 blocks super 1.2 [2/2] [UU]\n'
-        >>>         '      bitmap: 1/1 pages [4KB], 65536KB chunk\n\n'
-        >>> print _parse_array_member_state(block)
+        >>> block = ('md0 : active raid1 sdd2[0] sdb2[2](S) sdc2[1]\n'
+        ...          '      100171776 blocks super 1.2 [2/2] [UU]\n'
+        ...          '      bitmap: 1/1 pages [4KB], 65536KB chunk\n\n')
+        >>> print(_parse_array_member_state(block))
         {
             'active': 2,
             'faulty': 0,
@@ -219,10 +219,10 @@ class MdStatCollector(diamond.collector.Collector):
         """
         Parse the status of the md array.
 
-        >>> block = 'md0 : active raid1 sdd2[0] sdb2[2](S) sdc2[1]\n'
-        >>>         '      100171776 blocks super 1.2 [2/2] [UU]\n'
-        >>>         '      bitmap: 1/1 pages [4KB], 65536KB chunk\n\n'
-        >>> print _parse_array_status(block)
+        >>> block = ('md0 : active raid1 sdd2[0] sdb2[2](S) sdc2[1]\n'
+        ...          '      100171776 blocks super 1.2 [2/2] [UU]\n'
+        ...          '      bitmap: 1/1 pages [4KB], 65536KB chunk\n\n')
+        >>> print(_parse_array_status(block))
         {
             'total_members': '2',
             'actual_members': '2',
@@ -271,10 +271,10 @@ class MdStatCollector(diamond.collector.Collector):
         """
         Parse the bitmap status of the md array.
 
-        >>> block = 'md0 : active raid1 sdd2[0] sdb2[2](S) sdc2[1]\n'
-        >>>         '      100171776 blocks super 1.2 [2/2] [UU]\n'
-        >>>         '      bitmap: 1/1 pages [4KB], 65536KB chunk\n\n'
-        >>> print _parse_array_bitmap(block)
+        >>> block = ('md0 : active raid1 sdd2[0] sdb2[2](S) sdc2[1]\n'
+        ...          '      100171776 blocks super 1.2 [2/2] [UU]\n'
+        ...          '      bitmap: 1/1 pages [4KB], 65536KB chunk\n\n')
+        >>> print(_parse_array_bitmap(block))
         {
             'total_pages': '1',
             'allocated_pages': '1',
@@ -320,12 +320,12 @@ class MdStatCollector(diamond.collector.Collector):
         """
         Parse the recovery progress of the md array.
 
-        >>> block = 'md0 : active raid1 sdd2[0] sdb2[2](S) sdc2[1]\n'
-        >>>         '      100171776 blocks super 1.2 [2/2] [UU]\n'
-        >>>         '      [===================>.]  recovery = 99.5% '
-        >>>         '(102272/102272) finish=13.37min speed=102272K/sec\n'
-        >>>         '\n'
-        >>> print _parse_array_recovery(block)
+        >>> block = ('md0 : active raid1 sdd2[0] sdb2[2](S) sdc2[1]\n'
+        ...          '      100171776 blocks super 1.2 [2/2] [UU]\n'
+        ...          '      [===================>.]  recovery = 99.5% '
+        ...          '(102272/102272) finish=13.37min speed=102272K/sec\n'
+        ...          '\n')
+        >>> print(_parse_array_recovery(block))
         {
             'percent': '99.5',
             'speed': 104726528,
