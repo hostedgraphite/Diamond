@@ -4,6 +4,7 @@
 import sys
 import os
 from glob import glob
+import distro
 import platform
 
 
@@ -30,7 +31,7 @@ if os.name == 'nt':
         (os.path.join(base_files, 'collectors'), glob('conf/collectors/*')),
         (os.path.join(base_files, 'handlers'), glob('conf/handlers/*')),
     ]
-    install_requires = ['configobj', 'psutil', ],
+    install_requires = ['configobj', 'psutil', 'distro'],
 
 else:
     data_files = [
@@ -38,11 +39,11 @@ else:
         ('share/diamond/user_scripts', []),
     ]
 
-    distro = platform.dist()[0]
-    distro_major_version = platform.dist()[1].split('.')[0]
-    if not distro:
+    distro_id = distro.os_release_attr('id')
+    distro_major_version = distro.os_release_attr('version_id').split('.')[0]
+    if not distro_id:
         if 'amzn' in platform.uname()[2]:
-            distro = 'centos'
+            distro_id = 'centos'
 
     if running_under_virtualenv():
         data_files.append(('etc/diamond',
@@ -59,18 +60,18 @@ else:
         data_files.append(('/etc/diamond/handlers',
                            glob('conf/handlers/*')))
 
-        if distro == 'Ubuntu':
+        if distro_id == 'ubuntu':
             data_files.append(('/etc/init',
                                ['debian/diamond.upstart']))
-        if distro in ['centos', 'redhat', 'debian', 'fedora', 'oracle']:
+        if distro_id in ['centos', 'redhat', 'debian', 'fedora', 'oracle']:
             data_files.append(('/etc/init.d',
                                ['bin/init.d/diamond']))
             data_files.append(('/var/log/diamond',
                                ['.keep']))
-            if distro_major_version >= 7 and not distro == 'debian':
+            if distro_major_version >= 7 and not distro_id == 'debian':
                 data_files.append(('/usr/lib/systemd/system',
                                    ['rpm/systemd/diamond.service']))
-            elif distro_major_version >= 6 and not distro == 'debian':
+            elif distro_major_version >= 6 and not distro_id == 'debian':
                 data_files.append(('/etc/init',
                                    ['rpm/upstart/diamond.conf']))
 
@@ -78,13 +79,13 @@ else:
 
     # Are we in a virtenv?
     if running_under_virtualenv():
-        install_requires = ['configobj', 'psutil', ]
+        install_requires = ['configobj', 'psutil', 'distro']
     else:
-        if distro in ['debian', 'Ubuntu']:
-            install_requires = ['python-configobj', 'python-psutil', ]
+        if distro_id in ['debian', 'ubuntu']:
+            install_requires = ['python-configobj', 'python-psutil', 'distro']
         # Default back to pip style requires
         else:
-            install_requires = ['configobj', 'psutil', ]
+            install_requires = ['configobj', 'psutil', 'distro']
 
 
 def get_version():
@@ -145,7 +146,7 @@ setup(
     install_requires=install_requires,
     classifiers=[
         'Programming Language :: Python',
-        'Programming Language :: Python :: 2',
+        'Programming Language :: Python :: 3',
     ],
     ** setup_kwargs
 )
