@@ -79,6 +79,10 @@ def getHandlers(path, name=None):
 
             try:
                 # Import the module
+                if path.endswith('handler'):
+                    # A workaround to fix relative import path issue in handlers that use relative imports
+                    modname = 'diamond.handler.%s' % modname
+
                 module = __import__(modname, globals(), locals(), ['*'])
 
                 # Find the name
@@ -138,12 +142,12 @@ def writeDocOptions(docFile, options, default_options):
         docFile.write("%s | %s | %s | %s\n"
                       % (option,
                          defaultOption,
-                         options[option].replace("\n", '<br>\n'),
+                         str(options[option]).replace("\n", '<br>\n'),
                          defaultOptionType))
 
 
 def writeDoc(items, type_name, doc_path):
-    for item in sorted(items.iterkeys()):
+    for item in sorted(items.keys()):
 
         # Skip configuring the basic item object
         if item == type_name:
@@ -163,15 +167,15 @@ def writeDoc(items, type_name, doc_path):
 
         try:
             tmpfile = None
-            if type_name is "Collector":
+            if type_name == "Collector":
                 obj = cls(config=config, handlers={})
-            elif type_name is "Handler":
+            elif type_name == "Handler":
                 tmpfile = tempfile.mkstemp()
                 obj = cls({'log_file': tmpfile[1]})
 
             item_options = obj.get_default_config_help()
             default_options = obj.get_default_config()
-            if type_name is "Handler":
+            if type_name == "Handler":
                 os.remove(tmpfile[1])
         except Exception as e:
             print("Caught Exception %s" % e)
@@ -187,7 +191,7 @@ def writeDoc(items, type_name, doc_path):
         if item_options:
             writeDocOptions(docFile, item_options, default_options)
 
-        if type_name is "Collector":
+        if type_name == "Collector":
             docFile.write("\n")
             docFile.write("#### Example Output\n")
             docFile.write("\n")
