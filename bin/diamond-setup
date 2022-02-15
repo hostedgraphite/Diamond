@@ -137,7 +137,7 @@ def configureKey(key):
     print("\n")
     if key in default_conf_help:
         print(default_conf_help[key])
-    val = raw_input(key + ' [' + user_val + ']: ')
+    val = input(key + ' [' + user_val + ']: ')
 
     # Empty user input? Default to current value
     if len(val) == 0:
@@ -191,7 +191,7 @@ if __name__ == "__main__":
         print(config['server']['collectors_config_path'])
         print('Please type yes to continue')
 
-        val = raw_input('Are you sure? ')
+        val = input('Are you sure? ')
         if val != 'yes':
             sys.exit()
 
@@ -246,7 +246,7 @@ if __name__ == "__main__":
             print("\n\t\tNow configuring " + collector)
             print(collectors[collector].__doc__)
 
-            print "(%s)" % collector
+            print("(%s)" % collector)
             configureKey('enabled')
 
             if boolCheck(config_file['enabled']):
