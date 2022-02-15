@@ -14,7 +14,7 @@ Enable this handler
 """
 
 from . Handler import Handler
-from . pycompat import Request, urlopen
+from .. pycompat import Request, urlopen
 
 
 class HttpPostHandler(Handler):
