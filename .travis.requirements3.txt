@@ -10,7 +10,7 @@ mock
 psutil
 pymongo<3.0
 statsd
-#pyutmp
+utmp
 redis
 simplejson
 setproctitle

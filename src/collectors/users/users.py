@@ -7,7 +7,7 @@ Collects the number of users logged in and shells per user
 
  * [pyutmp](http://software.clapper.org/pyutmp/)
 or
- * [utmp] (python-utmp on Debian and derivatives)
+ * [utmp] (https://pypi.org/project/utmp/)
 
 """
 
@@ -18,10 +18,9 @@ try:
 except ImportError:
     UtmpFile = None
 try:
-    from utmp import UtmpRecord
-    import UTMPCONST
+    from utmp import reader
 except ImportError:
-    UtmpRecord = None
+    reader = None
 
 
 class UsersCollector(diamond.collector.Collector):
@@ -41,14 +40,14 @@ class UsersCollector(diamond.collector.Collector):
         """
         config = super(UsersCollector, self).get_default_config()
         config.update({
-            'path':     'users',
-            'utmp':     None,
+            'path': 'users',
+            'utmp': None,
         })
         return config
 
     def collect(self):
-        if UtmpFile is None and UtmpRecord is None:
-            self.log.error('Unable to import either pyutmp or python-utmp')
+        if UtmpFile is None and reader is None:
+            self.log.error('Unable to import either pyutmp or utmp')
             return False
 
         metrics = {}
@@ -60,11 +59,13 @@ class UsersCollector(diamond.collector.Collector):
                     metrics[utmp.ut_user] = metrics.get(utmp.ut_user, 0) + 1
                     metrics['total'] = metrics['total'] + 1
 
-        if UtmpRecord:
-            for utmp in UtmpRecord(fname=self.config['utmp']):
-                if utmp.ut_type == UTMPCONST.USER_PROCESS:
-                    metrics[utmp.ut_user] = metrics.get(utmp.ut_user, 0) + 1
-                    metrics['total'] = metrics['total'] + 1
+        if reader:
+            with open(self.config['utmp'], 'rb') as fd:
+                buf = fd.read()
+                for entry in reader.read(buf):
+                    if entry.type == reader.UTmpRecordType.user_process:
+                        metrics[entry.user] = metrics.get(entry.user, 0) + 1
+                        metrics['total'] = metrics['total'] + 1
 
         for metric_name in metrics.keys():
             self.publish(metric_name, metrics[metric_name])
