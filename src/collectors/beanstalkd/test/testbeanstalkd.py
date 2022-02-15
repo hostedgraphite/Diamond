@@ -17,10 +17,11 @@ from beanstalkd import BeanstalkdCollector
 
 def run_only_if_beanstalkc_is_available(func):
     try:
-        import beanstalkc
+        from pystalkd import Beanstalkd
+        beanstalkd = True
     except ImportError:
-        beanstalkc = None
-    pred = lambda: beanstalkc is not None
+        beanstalkd = False
+    pred = lambda: beanstalkd is True
     return run_only(func, pred)
 
 

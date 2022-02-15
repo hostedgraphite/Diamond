@@ -1,6 +1,6 @@
 #MySQL-python
 PyYAML
-#beanstalkc
+pystalkd
 riemann-client
 boto
 configobj
