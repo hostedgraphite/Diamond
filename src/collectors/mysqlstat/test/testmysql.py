@@ -17,10 +17,11 @@ from mysqlstat import MySQLCollector
 
 def run_only_if_MySQLdb_is_available(func):
     try:
-        import MySQLdb
+        from mysql import connector
+        MySQLdb = True
     except ImportError:
-        MySQLdb = None
-    pred = lambda: MySQLdb is not None
+        MySQLdb = False
+    pred = lambda: MySQLdb is True
     return run_only(func, pred)
 
 

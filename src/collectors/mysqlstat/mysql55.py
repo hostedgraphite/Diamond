@@ -11,7 +11,7 @@ For now only monitors replication load
 
 #### Dependencies
 
- * MySQLdb
+ * mysql-connector-python
  * MySQL 5.5.3+
 
 """
@@ -19,10 +19,10 @@ For now only monitors replication load
 from __future__ import division
 
 try:
-    import MySQLdb
-    from MySQLdb import MySQLError
+    from mysql import connector
+    MySQLdb = True
 except ImportError:
-    MySQLdb = None
+    MySQLdb = False
 import diamond
 import time
 import re
@@ -127,15 +127,14 @@ class MySQLPerfCollector(diamond.collector.Collector):
         return config
 
     def connect(self, params):
-        if MySQLdb is None:
+        if MySQLdb is False:
             self.log.error('Unable to import MySQLdb')
             return
 
         try:
-            self.db = MySQLdb.connect(**params)
-        except MySQLError as e:
-            self.log.error('MySQLPerfCollector couldnt connect to database %s',
-                           e)
+            self.db = connector.Connect(**params)
+        except connector.Error as e:
+            self.log.error('MySQLPerfCollector couldnt connect to database %s', e)
             return {}
         self.log.debug('MySQLPerfCollector: Connected to database.')
 

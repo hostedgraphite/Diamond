@@ -24,7 +24,7 @@ GRANT PROCESS ON *.* TO 'user'@'hostname' IDENTIFIED BY
 
 #### Dependencies
 
- * MySQLdb
+ * mysql-connector-python
 
 """
 
@@ -34,10 +34,10 @@ import re
 import time
 
 try:
-    import MySQLdb
-    from MySQLdb import MySQLError
+    from mysql import connector
+    MySQLdb = True
 except ImportError:
-    MySQLdb = None
+    MySQLdb = False
     MySQLError = ValueError
 
 
@@ -291,7 +291,7 @@ class MySQLCollector(diamond.collector.Collector):
         return config
 
     def get_db_stats(self, query):
-        cursor = self.db.cursor(cursorclass=MySQLdb.cursors.DictCursor)
+        cursor = self.db.cursor(dictionary=True)
 
         try:
             cursor.execute(query)
@@ -302,7 +302,7 @@ class MySQLCollector(diamond.collector.Collector):
 
     def connect(self, params):
         try:
-            self.db = MySQLdb.connect(**params)
+            self.db = connector.Connect(**params)
             self.log.debug('MySQLCollector: Connected to database.')
         except MySQLError as e:
             self.log.error('MySQLCollector couldnt connect to database %s', e)
@@ -438,7 +438,7 @@ class MySQLCollector(diamond.collector.Collector):
 
     def collect(self):
 
-        if MySQLdb is None:
+        if MySQLdb is False:
             self.log.error('Unable to import MySQLdb')
             return False
 
@@ -475,7 +475,7 @@ class MySQLCollector(diamond.collector.Collector):
             except Exception as e:
                 try:
                     self.disconnect()
-                except MySQLdb.ProgrammingError:
+                except connector.ProgrammingError:
                     pass
                 self.log.error('Collection failed for %s %s', nickname, e)
                 continue

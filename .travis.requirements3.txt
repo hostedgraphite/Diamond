@@ -1,4 +1,4 @@
-#MySQL-python
+mysql-connector-python
 PyYAML
 pystalkd
 riemann-client
