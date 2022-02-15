@@ -18,6 +18,12 @@ def running_under_virtualenv():
     return False
 
 
+def running_under_conda_env():
+    if os.getenv('CONDA_PREFIX', False):
+        return True
+    return False
+
+
 from setuptools import setup
 setup_kwargs = dict(zip_safe=0)
 
@@ -45,7 +51,7 @@ else:
         if 'amzn' in platform.uname()[2]:
             distro_id = 'centos'
 
-    if running_under_virtualenv():
+    if running_under_virtualenv() or running_under_conda_env():
         data_files.append(('etc/diamond',
                            glob('conf/*.conf.*')))
         data_files.append(('etc/diamond/collectors',
@@ -78,7 +84,7 @@ else:
     # Support packages being called differently on different distros
 
     # Are we in a virtenv?
-    if running_under_virtualenv():
+    if running_under_virtualenv() or running_under_conda_env():
         install_requires = ['configobj', 'psutil', ]
     else:
         if distro_id in ['debian', 'ubuntu']:
