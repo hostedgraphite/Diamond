@@ -20,6 +20,7 @@ This collector is based upon the HTTPJSONCollector.
 import json
 import diamond.collector
 import diamond.pycompat
+from diamond.pycompat import URLError
 
 
 class EventstoreProjectionsCollector(diamond.collector.Collector):

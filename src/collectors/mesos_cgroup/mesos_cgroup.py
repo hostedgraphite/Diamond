@@ -24,6 +24,7 @@ you're going to have a bad time.
 
 import diamond.collector
 import diamond.pycompat
+from diamond.pycompat import HTTPError
 import json
 import os
 

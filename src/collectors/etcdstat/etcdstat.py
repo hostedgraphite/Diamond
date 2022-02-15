@@ -15,6 +15,7 @@ Collects metrics from an Etcd instance.
 import diamond.collector
 import diamond.pycompat
 import json
+from diamond.pycompat import HTTPError
 
 METRICS_KEYS = ['sendPkgRate',
                 'recvPkgRate',

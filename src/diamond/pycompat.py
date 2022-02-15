@@ -6,8 +6,9 @@ try:
     from urlparse import urljoin, urlparse
     from Queue import Empty, Full, Queue
 except ImportError:
-    from urllib.request import HTTPError, Request, URLError, urlopen
+    from urllib.request import Request, urlopen
     from urllib.parse import urlencode, quote, urljoin, urlparse
+    from urllib.error import HTTPError, URLError
     from queue import Full, Empty, Queue
 
 try:
