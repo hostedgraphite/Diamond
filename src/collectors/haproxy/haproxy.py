@@ -94,11 +94,12 @@ class HAProxyCollector(diamond.collector.Collector):
             self.log.error('Invalid authentication scheme.')
             return metrics
 
-        base64string = base64.encodestring(
-            '%s:%s' % (self._get_config_value(section, 'user'),
-                       self._get_config_value(section, 'pass')))[:-1]
-        authheader = 'Basic %s' % base64string
-        req.add_header("Authorization", authheader)
+        auth_header = '%s:%s' % (
+            self._get_config_value(section, 'user'),
+            self._get_config_value(section, 'pass')
+        )
+        base64string = base64.encodebytes(auth_header.encode())[:-1]
+        req.add_header("Authorization", 'Basic %s' % base64string)
         try:
             handle = diamond.pycompat.urlopen(req)
             metrics = handle.readlines()
