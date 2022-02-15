@@ -10,6 +10,7 @@ Uses /sys/fs/vmsfs to collect host-global data on VMS memory usage
 """
 
 import diamond.collector
+from diamond.pycompat import long
 import os
 
 
