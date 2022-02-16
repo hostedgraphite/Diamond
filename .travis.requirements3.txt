@@ -6,9 +6,8 @@ boto
 configobj
 docker-py
 kitchen
-mock
 psutil
-pymongo<3.0
+pymongo
 statsd
 utmp
 redis
