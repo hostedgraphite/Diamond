@@ -4,6 +4,7 @@
 import sys
 import os
 from glob import glob
+import distro
 import platform
 
 
@@ -13,6 +14,12 @@ def running_under_virtualenv():
     elif sys.prefix != getattr(sys, "base_prefix", sys.prefix):
         return True
     if os.getenv('VIRTUAL_ENV', False):
+        return True
+    return False
+
+
+def running_under_conda_env():
+    if os.getenv('CONDA_PREFIX', False):
         return True
     return False
 
@@ -38,13 +45,13 @@ else:
         ('share/diamond/user_scripts', []),
     ]
 
-    distro = platform.dist()[0]
-    distro_major_version = platform.dist()[1].split('.')[0]
-    if not distro:
+    distro_id = distro.os_release_attr('id')
+    distro_major_version = distro.os_release_attr('version_id').split('.')[0]
+    if not distro_id:
         if 'amzn' in platform.uname()[2]:
-            distro = 'centos'
+            distro_id = 'centos'
 
-    if running_under_virtualenv():
+    if running_under_virtualenv() or running_under_conda_env():
         data_files.append(('etc/diamond',
                            glob('conf/*.conf.*')))
         data_files.append(('etc/diamond/collectors',
@@ -59,28 +66,28 @@ else:
         data_files.append(('/etc/diamond/handlers',
                            glob('conf/handlers/*')))
 
-        if distro == 'Ubuntu':
+        if distro_id == 'ubuntu':
             data_files.append(('/etc/init',
                                ['debian/diamond.upstart']))
-        if distro in ['centos', 'redhat', 'debian', 'fedora', 'oracle']:
+        if distro_id in ['centos', 'redhat', 'debian', 'fedora', 'oracle']:
             data_files.append(('/etc/init.d',
                                ['bin/init.d/diamond']))
             data_files.append(('/var/log/diamond',
                                ['.keep']))
-            if distro_major_version >= 7 and not distro == 'debian':
+            if distro_major_version >= 7 and not distro_id == 'debian':
                 data_files.append(('/usr/lib/systemd/system',
                                    ['rpm/systemd/diamond.service']))
-            elif distro_major_version >= 6 and not distro == 'debian':
+            elif distro_major_version >= 6 and not distro_id == 'debian':
                 data_files.append(('/etc/init',
                                    ['rpm/upstart/diamond.conf']))
 
     # Support packages being called differently on different distros
 
     # Are we in a virtenv?
-    if running_under_virtualenv():
+    if running_under_virtualenv() or running_under_conda_env():
         install_requires = ['configobj', 'psutil', ]
     else:
-        if distro in ['debian', 'Ubuntu']:
+        if distro_id in ['debian', 'ubuntu']:
             install_requires = ['python-configobj', 'python-psutil', ]
         # Default back to pip style requires
         else:
@@ -145,7 +152,7 @@ setup(
     install_requires=install_requires,
     classifiers=[
         'Programming Language :: Python',
-        'Programming Language :: Python :: 2',
+        'Programming Language :: Python :: 3',
     ],
     ** setup_kwargs
 )
