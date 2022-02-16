@@ -16,8 +16,6 @@ For now only monitors replication load
 
 """
 
-from __future__ import division
-
 try:
     from mysql import connector
     MySQLdb = True
