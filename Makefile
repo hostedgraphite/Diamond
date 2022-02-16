@@ -76,7 +76,7 @@ sdeb: buildsourcedeb
 builddeb: version
 	dch --newversion $(VERSION) --distribution unstable --force-distribution -b "Last Commit: $(shell git log -1 --pretty=format:'(%ai) %H %cn <%ce>')"
 	dch --release  "new upstream"
-	./setup.py sdist
+	$(PYTHON) setup.py sdist
 	mkdir -p build
 	tar -C build -zxf dist/$(PROJECT)-$(VERSION).tar.gz
 	(cd build/$(PROJECT)-$(VERSION) && debuild -us -uc -v$(VERSION))
@@ -85,7 +85,7 @@ builddeb: version
 buildsourcedeb: version
 	dch --newversion $(VERSION)~$(DISTRO) --distribution $(DISTRO) --force-distribution -b "Last Commit: $(shell git log -1 --pretty=format:'(%ai) %H %cn <%ce>')"
 	dch --release  "new upstream"
-	./setup.py sdist
+	$(PYTHON) setup.py sdist
 	mkdir -p build
 	tar -C build -zxf dist/$(PROJECT)-$(VERSION).tar.gz
 	(cd build/$(PROJECT)-$(VERSION) && debuild -S -sa -v$(VERSION))
@@ -100,7 +100,7 @@ buildebuild: version
 tar: sdist
 
 clean:
-	./setup.py clean
+	$(PYTHON) setup.py clean
 	rm -rf dist build MANIFEST .tox *.log
 	find . -name '*.pyc' -delete
 	find -name __pycache__ -delete
