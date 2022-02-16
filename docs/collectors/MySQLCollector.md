@@ -27,23 +27,23 @@ GRANT PROCESS ON *.* TO 'user'@'hostname' IDENTIFIED BY
 
 #### Dependencies
 
- * MySQLdb
+ * mysql-connector-python
 
 
 #### Options
 
-Setting | Default | Description | Type
---------|---------|-------------|-----
-byte_unit | byte | Default numeric output(s) | str
-enabled | False | Enable collecting these metrics | bool
-hosts | , | List of hosts to collect from. Format is yourusername:yourpassword@host:port/db[/nickname]use db "None" to avoid connecting to a particular db | list
-innodb | False | Collect SHOW ENGINE INNODB STATUS | bool
-master | False | Collect SHOW MASTER STATUS | bool
-measure_collector_time | False | Collect the collector run time in ms | bool
-metrics_blacklist | None | Regex to match metrics to block. Mutually exclusive with metrics_whitelist | NoneType
-metrics_whitelist | None | Regex to match metrics to transmit. Mutually exclusive with metrics_blacklist | NoneType
-publish |  | Which rows of '[SHOW GLOBAL STATUS](http://dev.mysql.com/doc/refman/5.1/en/show-status.html)' you would like to publish. Leave unset to publish all | 
-slave | False | Collect SHOW SLAVE STATUS | bool
+| Setting                | Default | Description                                                                                                                                         | Type     |
+|------------------------|---------|-----------------------------------------------------------------------------------------------------------------------------------------------------|----------|
+| byte_unit              | byte    | Default numeric output(s)                                                                                                                           | str      |
+| enabled                | False   | Enable collecting these metrics                                                                                                                     | bool     |
+| hosts                  | ,       | List of hosts to collect from. Format is yourusername:yourpassword@host:port/db[/nickname]use db "None" to avoid connecting to a particular db      | list     |
+| innodb                 | False   | Collect SHOW ENGINE INNODB STATUS                                                                                                                   | bool     |
+| master                 | False   | Collect SHOW MASTER STATUS                                                                                                                          | bool     |
+| measure_collector_time | False   | Collect the collector run time in ms                                                                                                                | bool     |
+| metrics_blacklist      | None    | Regex to match metrics to block. Mutually exclusive with metrics_whitelist                                                                          | NoneType |
+| metrics_whitelist      | None    | Regex to match metrics to transmit. Mutually exclusive with metrics_blacklist                                                                       | NoneType |
+| publish                |         | Which rows of '[SHOW GLOBAL STATUS](http://dev.mysql.com/doc/refman/5.1/en/show-status.html)' you would like to publish. Leave unset to publish all |          |
+| slave                  | False   | Collect SHOW SLAVE STATUS                                                                                                                           | bool     |
 
 #### Example Output
 
