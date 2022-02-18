@@ -307,9 +307,9 @@ class MdStatCollector(diamond.collector.Collector):
 
         # convert all values to int
         for key, value in array_bitmap_dict.items():
-                if not value:
-                    continue
-                array_bitmap_dict_sanitizied[key] = int(value)
+            if not value:
+                continue
+            array_bitmap_dict_sanitizied[key] = int(value)
 
         # convert page_size to bytes
         array_bitmap_dict_sanitizied['page_size'] *= 1024

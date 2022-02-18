@@ -53,9 +53,9 @@ class TestElasticSearchCollector(CollectorTestCase):
 
     @patch.object(Collector, 'publish')
     def test_should_work_with_real_data_and_basic_auth(self, publish_mock):
-            self.collector.config["user"] = "user"
-            self.collector.config["password"] = "password"
-            self.test_should_work_with_real_data()
+        self.collector.config["user"] = "user"
+        self.collector.config["password"] = "password"
+        self.test_should_work_with_real_data()
 
     @patch(URLOPEN)
     @patch.object(Collector, 'publish')
