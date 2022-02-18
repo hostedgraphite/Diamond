@@ -77,15 +77,16 @@ high.
 
 """
 
-from . Handler import Handler
-from diamond.metric import Metric
-from diamond.pycompat import Request, HTTPError, URLError, urlopen
-from io import BytesIO
-import gzip
 import base64
+import contextlib
+import gzip
 import json
 import re
-import contextlib
+from io import BytesIO
+
+from diamond.metric import Metric
+from diamond.pycompat import Request, HTTPError, URLError, urlopen
+from .Handler import Handler
 
 
 class TSDBHandler(Handler):
@@ -113,7 +114,7 @@ class TSDBHandler(Handler):
         self.compression = int(self.config['compression'])
         # prefix
         if self.config['prefix'] != "":
-            self.prefix = str(self.config['prefix'])+'.'
+            self.prefix = str(self.config['prefix']) + '.'
         else:
             self.prefix = ""
         # tags
@@ -216,8 +217,8 @@ class TSDBHandler(Handler):
             if self.compression >= 1:
                 data = BytesIO()
                 with contextlib.closing(gzip.GzipFile(fileobj=data,
-                                        compresslevel=self.compression,
-                                        mode="w")) as f:
+                                                      compresslevel=self.compression,
+                                                      mode="w")) as f:
                     f.write(json.dumps(self.entrys).encode())
                 self._send(data.getvalue())
             else:
@@ -242,10 +243,10 @@ class TSDBHandler(Handler):
                     self.log.debug(response.getcode())
                     success = True
             except HTTPError as e:
-                self.log.error("HTTP Error Code: "+str(e.code))
-                self.log.error("Message : "+str(e.reason))
+                self.log.error("HTTP Error Code: " + str(e.code))
+                self.log.error("Message : " + str(e.reason))
             except URLError as e:
-                self.log.error("Connection Error: "+str(e.reason))
+                self.log.error("Connection Error: " + str(e.reason))
             finally:
                 retry += 1
         self.entrys = []
@@ -267,6 +268,7 @@ class MetricWrapper(Metric):
     """
     This method does nothing and therefore keeps the existing metric unchanged.
     """
+
     def processDefaultMetric(self):
         self.tags = {}
         self.aggregate = False
@@ -276,18 +278,21 @@ class MetricWrapper(Metric):
     marks all metrics with 'total' as aggregates, so they can be skipped if
     the skipAggregates feature is active.
     """
+
     def processCpuMetric(self):
         if len(self.getMetricPath().split('.')) > 1:
             self.aggregate = self.getMetricPath().split('.')[0] == 'total'
 
             cpuId = self.delegate.getMetricPath().split('.')[0]
             self.tags["cpuId"] = cpuId
-            self.path = self.path.replace("."+cpuId+".", ".")
+            self.path = self.path.replace("." + cpuId + ".", ".")
+
     """
     Processes metrics of the HaProxyCollector. It stores the backend and the
     server to which the backends send as tags. Counters with 'backend' as
     backend name are considered aggregates.
     """
+
     def processHaProxyMetric(self):
         if len(self.getMetricPath().split('.')) == 3:
             self.aggregate = self.getMetricPath().split('.')[1] == 'backend'
@@ -296,44 +301,44 @@ class MetricWrapper(Metric):
             server = self.delegate.getMetricPath().split('.')[1]
             self.tags["server"] = server
             self.tags["backend"] = backend
-            self.path = self.path.replace("."+server+".", ".")
-            self.path = self.path.replace("."+backend+".", ".")
+            self.path = self.path.replace("." + server + ".", ".")
+            self.path = self.path.replace("." + backend + ".", ".")
 
     """
     Processes metrics of the DiskspaceCollector. It stores the mountpoint as a
     tag. There are no aggregates in this collector.
     """
+
     def processDiskspaceMetric(self):
         if len(self.getMetricPath().split('.')) == 2:
-
             mountpoint = self.delegate.getMetricPath().split('.')[0]
 
             self.tags["mountpoint"] = mountpoint
-            self.path = self.path.replace("."+mountpoint+".", ".")
+            self.path = self.path.replace("." + mountpoint + ".", ".")
 
     """
     Processes metrics of the DiskusageCollector. It stores the device as a
     tag. There are no aggregates in this collector.
     """
+
     def processDiskusageMetric(self):
         if len(self.getMetricPath().split('.')) == 2:
-
             device = self.delegate.getMetricPath().split('.')[0]
 
             self.tags["device"] = device
-            self.path = self.path.replace("."+device+".", ".")
+            self.path = self.path.replace("." + device + ".", ".")
 
     """
     Processes metrics of the NetworkCollector. It stores the interface as a
     tag. There are no aggregates in this collector.
     """
+
     def processNetworkMetric(self):
         if len(self.getMetricPath().split('.')) == 2:
-
             interface = self.delegate.getMetricPath().split('.')[0]
 
             self.tags["interface"] = interface
-            self.path = self.path.replace("."+interface+".", ".")
+            self.path = self.path.replace("." + interface + ".", ".")
 
     def processMattermostMetric(self):
         split = self.getMetricPath().split('.')
@@ -341,12 +346,12 @@ class MetricWrapper(Metric):
             if split[0] == 'teamdetails' or split[0] == 'channeldetails':
                 team = split[1]
                 self.tags["team"] = team
-                self.path = self.path.replace("."+team+".", ".")
+                self.path = self.path.replace("." + team + ".", ".")
                 # fall through for channeldetails
             if split[0] == 'channeldetails':
                 channel = split[2]
                 self.tags["channel"] = channel
-                self.path = self.path.replace("."+channel+".", ".")
+                self.path = self.path.replace("." + channel + ".", ".")
             if split[0] == 'userdetails':
                 user = split[1]
                 team = split[2]
@@ -354,9 +359,9 @@ class MetricWrapper(Metric):
                 self.tags["user"] = user
                 self.tags["team"] = team
                 self.tags["channel"] = channel
-                self.path = self.path.replace("."+user+".", ".")
-                self.path = self.path.replace("."+team+".", ".")
-                self.path = self.path.replace("."+channel+".", ".")
+                self.path = self.path.replace("." + user + ".", ".")
+                self.path = self.path.replace("." + team + ".", ".")
+                self.path = self.path.replace("." + channel + ".", ".")
 
     handlers = {'cpu': processCpuMetric, 'haproxy': processHaProxyMetric,
                 'mattermost': processMattermostMetric,

@@ -46,8 +46,9 @@ bitmap: 1/1 pages [4KB], 65536KB chunk
 - recovery.remaining_time
 """
 
-import diamond.collector
 import re
+
+import diamond.collector
 
 
 class MdStatCollector(diamond.collector.Collector):
@@ -69,6 +70,7 @@ class MdStatCollector(diamond.collector.Collector):
 
     def collect(self):
         """Publish all mdstat metrics."""
+
         def traverse(d, metric_name=''):
             """
             Traverse the given nested dict using depth-first search.
@@ -362,6 +364,6 @@ class MdStatCollector(diamond.collector.Collector):
 
         # convert minutes to milliseconds
         array_recovery_dict['remaining_time'] = \
-            int(float(array_recovery_dict['remaining_time'])*60*1000)
+            int(float(array_recovery_dict['remaining_time']) * 60 * 1000)
 
         return array_recovery_dict
