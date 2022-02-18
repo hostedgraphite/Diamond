@@ -18,7 +18,6 @@
 
 """
 
-from __future__ import print_function
 import diamond.collector
 import time
 from diamond.metric import Metric

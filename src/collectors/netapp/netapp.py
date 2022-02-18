@@ -33,7 +33,6 @@ https://communities.netapp.com/docs/DOC-1044
 
 """
 
-from __future__ import print_function
 import sys
 import time
 import re
