@@ -46,7 +46,7 @@ else:
     ]
 
     distro_id = distro.os_release_attr('id')
-    distro_major_version = distro.os_release_attr('version_id').split('.')[0]
+    distro_major_version = int(distro.os_release_attr('version_id').split('.')[0])
     if not distro_id:
         if 'amzn' in platform.uname()[2]:
             distro_id = 'centos'
@@ -70,20 +70,15 @@ else:
 
         if distro_id == 'ubuntu':
             if distro_major_version >= 16:
-                data_files.append(('/usr/lib/systemd/system',
-                                   ['rpm/systemd/diamond.service']))
+                data_files.append(('/usr/lib/systemd/system', ['rpm/systemd/diamond.service']))
             else:
-                data_files.append(('/etc/init',
-                                   ['debian/diamond.upstart']))
+                data_files.append(('/etc/init', ['debian/diamond.upstart']))
         if distro_id in ['centos', 'redhat', 'debian', 'fedora', 'oracle']:
-            data_files.append(('/etc/init.d',
-                               ['bin/init.d/diamond']))
+            data_files.append(('/etc/init.d', ['bin/init.d/diamond']))
             if distro_major_version >= 7 and not distro_id == 'debian':
-                data_files.append(('/usr/lib/systemd/system',
-                                   ['rpm/systemd/diamond.service']))
+                data_files.append(('/usr/lib/systemd/system', ['rpm/systemd/diamond.service']))
             elif distro_major_version >= 6 and not distro_id == 'debian':
-                data_files.append(('/etc/init',
-                                   ['rpm/upstart/diamond.conf']))
+                data_files.append(('/etc/init', ['rpm/upstart/diamond.conf']))
 
     # Support packages being called differently on different distros
 
@@ -92,7 +87,7 @@ else:
         install_requires = ['configobj', 'psutil', ]
     else:
         if distro_id in ['debian', 'ubuntu']:
-            install_requires = ['python-configobj', 'python-psutil', ]
+            install_requires = ['python3-configobj', 'python3-psutil', ]
         # Default back to pip style requires
         else:
             install_requires = ['configobj', 'psutil', ]
