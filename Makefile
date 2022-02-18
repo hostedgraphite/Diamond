@@ -79,7 +79,7 @@ builddeb: version
 	$(PYTHON) setup.py sdist
 	mkdir -p build
 	tar -C build -zxf dist/$(PROJECT)-$(VERSION).tar.gz
-	(cd build/$(PROJECT)-$(VERSION) && debuild -us -uc -v$(VERSION))
+	(cd build/$(PROJECT)-$(VERSION) && debuild --no-tgz-check -us -uc -v$(VERSION))
 	@echo "Package is at build/$(PROJECT)_$(VERSION)_all.deb"
 
 buildsourcedeb: version

@@ -121,7 +121,7 @@ class ListenerThread(threading.Thread):
         self.queue = Queue()
 
     def run(self):
-        self.log.info('ListenerThread started on {0}:{1}(udp)'.format(
+        self.log.info('ListenerThread started on {}:{}(udp)'.format(
             self.host, self.port))
 
         rdr = collectd_network.Reader(self.host, self.port)

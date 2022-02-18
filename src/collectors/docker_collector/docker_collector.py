@@ -17,6 +17,8 @@ try:
     import docker
 except ImportError:
     docker = None
+else:
+    DockerClient = docker.Client if docker.version < "2" else docker.APIClient
 
 
 class DockerCollector(diamond.collector.Collector):
@@ -51,7 +53,7 @@ class DockerCollector(diamond.collector.Collector):
         cur = dictionary
         for key in keys:
             if not isinstance(cur, dict):
-                raise Exception("metric '{0}' does not exist".format(path))
+                raise Exception("metric '{}' does not exist".format(path))
             cur = cur.get(key)
             if cur is None:
                 break
@@ -63,7 +65,7 @@ class DockerCollector(diamond.collector.Collector):
 
         # Collect info
         results = {}
-        client = docker.Client(version='auto')
+        client = DockerClient(version='auto')
 
         # Top level stats
         running_containers = client.containers()

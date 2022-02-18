@@ -18,11 +18,7 @@ try:
 except ImportError:
     from io import StringIO
 import re
-import sys
-if sys.version_info >= (2, 5):
-    import xml.etree.cElementTree as ElementTree
-else:
-    import cElementTree as ElementTree
+import xml.etree.cElementTree as ElementTree
 
 
 class EndecaDgraphCollector(diamond.collector.Collector):
@@ -118,10 +114,7 @@ class EndecaDgraphCollector(diamond.collector.Collector):
         url = 'http://%s:%d/admin?op=stats' % (self.config['host'],
                                                self.config['port'])
         try:
-            xml = diamond.pycompat.urlopen(
-                url,
-                timeout=self.config['timeout']).read(
-                )
+            xml = diamond.pycompat.urlopen(url, timeout=self.config['timeout']).read()
         except Exception as e:
             self.log.error('Could not connect to endeca on %s: %s' % (url, e))
             return {}

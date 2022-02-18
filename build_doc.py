@@ -177,11 +177,9 @@ def writeDoc(items, type_name, doc_path):
             if type_name == "Handler":
                 os.remove(tmpfile[1])
         except Exception as e:
-            print("Caught Exception %s" % e)
+            print("Caught Exception {}".format(e))
 
         docFile = open(os.path.join(doc_path, item + ".md"), 'w')
-
-        enabled = ''
 
         writeDocHeader(docFile)
         writeDocString(docFile, item, items[item].__doc__)

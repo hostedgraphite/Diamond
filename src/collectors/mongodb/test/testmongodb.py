@@ -177,7 +177,7 @@ class TestMongoDBCollector(CollectorTestCase):
         # should not happen, but it did (once), so lets check it
         datapoints_per_metric = defaultdict(int)
         for c in publish_mock.call_args_list:
-            m, v = c[0][0], c[0][1]
+            m = c[0][0]
             datapoints_per_metric[m] += 1
         dupes = [m for m, n in datapoints_per_metric.items() if n > 1]
         self.assertEqual(len(dupes), 0,

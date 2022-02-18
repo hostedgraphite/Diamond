@@ -5,6 +5,7 @@ The Collector class is a base class for all metric collectors.
 """
 
 import os
+import platform
 import socket
 import platform
 import logging
@@ -12,7 +13,6 @@ import configobj
 import time
 import re
 import subprocess
-import signal
 
 from diamond.metric import Metric
 from diamond.utils.config import load_config
@@ -95,14 +95,14 @@ def get_hostname(config, method=None):
         return hostname
 
     if method == 'uname_short':
-        hostname = os.uname()[1].split('.')[0]
+        hostname = platform.uname()[1].split('.')[0]
         get_hostname.cached_results[method] = hostname
         if hostname == '':
             raise DiamondException('Hostname is empty?!')
         return hostname
 
     if method == 'uname_rev':
-        hostname = os.uname()[1].split('.')
+        hostname = platform.uname()[1].split('.')
         hostname.reverse()
         hostname = '.'.join(hostname)
         get_hostname.cached_results[method] = hostname
@@ -175,10 +175,6 @@ class Collector(object):
             self.name = self.__class__.__name__
         else:
             self.name = name
-
-        # Reset signal handlers of forks/threads
-        signal.signal(signal.SIGINT, signal.SIG_DFL)
-        signal.signal(signal.SIGTERM, signal.SIG_DFL)
 
         self.handlers = handlers
         self.last_values = {}
@@ -298,6 +294,9 @@ class Collector(object):
 
             # Default Poll Interval (seconds)
             'interval': 300,
+
+            # Staggering collector runs is enabled by default
+            'stagger_collection': True,
 
             # Default Event TTL (interval multiplier)
             'ttl_multiplier': 2,

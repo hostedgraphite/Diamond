@@ -65,15 +65,19 @@ else:
                            glob('conf/collectors/*')))
         data_files.append(('/etc/diamond/handlers',
                            glob('conf/handlers/*')))
+        data_files.append(('/var/log/diamond',
+                           ['.keep']))
 
         if distro_id == 'ubuntu':
-            data_files.append(('/etc/init',
-                               ['debian/diamond.upstart']))
+            if distro_major_version >= 16:
+                data_files.append(('/usr/lib/systemd/system',
+                                   ['rpm/systemd/diamond.service']))
+            else:
+                data_files.append(('/etc/init',
+                                   ['debian/diamond.upstart']))
         if distro_id in ['centos', 'redhat', 'debian', 'fedora', 'oracle']:
             data_files.append(('/etc/init.d',
                                ['bin/init.d/diamond']))
-            data_files.append(('/var/log/diamond',
-                               ['.keep']))
             if distro_major_version >= 7 and not distro_id == 'debian':
                 data_files.append(('/usr/lib/systemd/system',
                                    ['rpm/systemd/diamond.service']))
@@ -149,6 +153,7 @@ setup(
     packages=['diamond', 'diamond.handler', 'diamond.utils'],
     scripts=['bin/diamond', 'bin/diamond-setup'],
     data_files=data_files,
+    python_requires='~=3.8',
     install_requires=install_requires,
     classifiers=[
         'Programming Language :: Python',

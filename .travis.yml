@@ -3,8 +3,6 @@ sudo: false
 
 language: python
 python:
-#  - "2.5"
-  - "2.6"
   - "2.7"
   - "3.4"
   - "3.5"
@@ -21,7 +19,6 @@ install:
     - if [[ $TRAVIS_PYTHON_VERSION == 3* ]]; then pip install -r .travis.requirements3.txt; fi
     - pip install pep8==1.5.7
     - pip install coveralls
-    - if [[ $TRAVIS_PYTHON_VERSION == '2.6' ]]; then pip install unittest2; fi
 
 # command to run tests, e.g. python setup.py test
 script:
@@ -49,7 +46,3 @@ notifications:
 addons:
     apt_packages:
     - libsensors4
-
-branches:
-  only:
-    - master
