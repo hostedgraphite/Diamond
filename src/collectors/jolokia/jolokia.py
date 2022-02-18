@@ -1,6 +1,6 @@
 # coding=utf-8
 
-"""
+r"""
  Collects JMX metrics from the Jolokia Agent. Jolokia is an HTTP bridge that
 provides access to JMX MBeans without the need to write Java code. See the
 [Reference Guide](http://www.jolokia.org/reference/html/index.html) for more
@@ -129,7 +129,7 @@ class JolokiaCollector(diamond.collector.Collector):
             self.mbeans = [re.compile(mbean) for mbean in self.mbeans]
 
         self.rewrite = [
-            (re.compile('["\'(){}<>\[\]]'), ''),
+            (re.compile(r'["\'(){}<>\[\]]'), ''),
             (re.compile('[:,.]+'), '.'),
             (re.compile('[^a-zA-Z0-9_.+-]+'), '_'),
         ]

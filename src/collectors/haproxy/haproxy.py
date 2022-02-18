@@ -78,7 +78,7 @@ class HAProxyCollector(diamond.collector.Collector):
 
         # this regular expression is used to extract scheme and realm
         authre = (r'''(?:\s*www-authenticate\s*:)?\s*''' +
-                  '''(\w*)\s+realm=['"]([^'"]+)['"]''')
+                  r'''(\w*)\s+realm=['"]([^'"]+)['"]''')
         authobj = re.compile(authre, re.IGNORECASE)
         matchobj = authobj.match(authline)
         if not matchobj:
@@ -182,4 +182,4 @@ class HAProxyCollector(diamond.collector.Collector):
     def _sanitize(self, s):
         """Sanitize the name of a metric to remove unwanted chars
         """
-        return re.sub('[^\w-]', '_', s)
+        return re.sub(r'[^\w-]', '_', s)

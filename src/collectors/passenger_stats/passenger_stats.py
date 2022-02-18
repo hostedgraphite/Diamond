@@ -95,8 +95,8 @@ class PassengerCollector(diamond.collector.Collector):
             "passenger_mem_total": 0.0,
         }
         #
-        re_colour = re.compile("\x1B\[([0-9]{1,3}((;[0-9]{1,3})*)?)?[m|K]")
-        re_digit = re.compile("^\d")
+        re_colour = re.compile(r"\x1B\[([0-9]{1,3}((;[0-9]{1,3})*)?)?[m|K]")
+        re_digit = re.compile(r"^\d")
         #
         apache_flag = 0
         nginx_flag = 0
@@ -143,8 +143,8 @@ class PassengerCollector(diamond.collector.Collector):
         except OSError:
             return (-1)
 
-        re_lspaces = re.compile("^\s*")
-        re_digit = re.compile("^\d")
+        re_lspaces = re.compile(r"^\s*")
+        re_digit = re.compile(r"^\d")
         overall_cpu = 0
         for raw_line in std_out.splitlines():
             line = re_lspaces.sub("", raw_line)
@@ -184,7 +184,7 @@ class PassengerCollector(diamond.collector.Collector):
         if std_out is None:
             return {}
 
-        re_colour = re.compile("\x1B\[([0-9]{1,3}((;[0-9]{1,3})*)?)?[m|K]")
+        re_colour = re.compile(r"\x1B\[([0-9]{1,3}((;[0-9]{1,3})*)?)?[m|K]")
         re_requests = re.compile(r"Requests")
         re_topqueue = re.compile(r"^top-level")
 

@@ -74,7 +74,7 @@ class ApcupsdCollector(diamond.collector.Collector):
 
         data = data.split('\n\x00')
         for d in data:
-            matches = re.search("([A-Z]+)\s+:\s+(.*)$", d)
+            matches = re.search(r"([A-Z]+)\s+:\s+(.*)$", d)
             if matches:
                 value = matches.group(2).strip()
                 raw[matches.group(1)] = matches.group(2).strip()

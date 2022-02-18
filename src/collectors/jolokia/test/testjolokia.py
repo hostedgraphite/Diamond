@@ -58,7 +58,7 @@ class TestJolokiaCollector(CollectorTestCase):
         patch_urlopen.start()
         rewrite = [
             (re.compile('memoryUsage'), 'memUsed'),
-            (re.compile('.*\.init'), ''),
+            (re.compile(r'.*\.init'), ''),
         ]
         self.collector.rewrite.extend(rewrite)
         self.collector.collect()

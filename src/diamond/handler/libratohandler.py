@@ -72,8 +72,8 @@ class LibratoHandler(Handler):
                 'A list of regex patterns. Only measurements whose path '
                 'matches a filter will be submitted. Useful for limiting '
                 'usage to *only* desired measurements, e.g. '
-                '`"^diskspace\..*\.byte_avail$", "^loadavg\.01"` or '
-                '`"^sockets\.",` (note trailing comma to indicate a list)',
+                r'`"^diskspace\..*\.byte_avail$", "^loadavg\.01"` or '
+                r'`"^sockets\.",` (note trailing comma to indicate a list)',
         })
 
         return config

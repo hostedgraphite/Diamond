@@ -49,7 +49,7 @@ class PuppetDashboardCollector(diamond.collector.Collector):
 
             try:
                 regex = re.compile(
-                    "<a href=\"/nodes/(?P<key>[\w.]+)\">(?P<count>[\d.]+)</a>")
+                    r"<a href=\"/nodes/(?P<key>[\w.]+)\">(?P<count>[\d.]+)</a>")
                 r = regex.search(line)
                 results = r.groupdict()
 

@@ -61,7 +61,7 @@ class TokuMXCollector(diamond.collector.Collector):
             'user':      None,
             'passwd':      None,
             'databases': '.*',
-            'ignore_collections': '^tmp\.mr\.',
+            'ignore_collections': r'^tmp\.mr\.',
             'network_timeout': None,
             'simple': 'False',
             'translate_collections': 'False'
@@ -100,12 +100,12 @@ class TokuMXCollector(diamond.collector.Collector):
                 # one host only, no need to have a prefix
                 base_prefix = []
             else:
-                matches = re.search('((.+)\@)?(.+)?', host)
+                matches = re.search(r'((.+)\@)?(.+)?', host)
                 alias = matches.group(2)
                 host = matches.group(3)
 
                 if alias is None:
-                    base_prefix = [re.sub('[:\.]', '_', host)]
+                    base_prefix = [re.sub(r'[:\.]', '_', host)]
                 else:
                     base_prefix = [alias]
 

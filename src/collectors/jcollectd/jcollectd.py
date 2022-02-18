@@ -198,7 +198,7 @@ def sanitize_word(s):
     """Remove non-alphanumerical characters from metric word.
     And trim excessive underscores.
     """
-    s = re.sub('[^\w-]+', '_', s)
+    s = re.sub(r'[^\w-]+', '_', s)
     s = re.sub('__+', '_', s)
     return s.strip('_')
 

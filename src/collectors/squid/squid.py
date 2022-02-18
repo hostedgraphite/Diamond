@@ -15,8 +15,8 @@ import diamond.collector
 class SquidCollector(diamond.collector.Collector):
 
     def __init__(self, *args, **kwargs):
-        self.host_pattern = re.compile("(([^@]+)@)?([^:]+)(:([0-9]+))?")
-        self.stat_pattern = re.compile("^([^ ]+) = ([0-9\.]+)$")
+        self.host_pattern = re.compile(r"(([^@]+)@)?([^:]+)(:([0-9]+))?")
+        self.stat_pattern = re.compile(r"^([^ ]+) = ([0-9\.]+)$")
 
         super(SquidCollector, self).__init__(*args, **kwargs)
 

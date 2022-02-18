@@ -195,9 +195,9 @@ class MdStatCollector(diamond.collector.Collector):
         members = block.split('\n')[0].split(' : ')[1].split(' ')[2:]
 
         device_regexp = re.compile(
-            '^(?P<member_name>.*)'
-            '\[(?P<member_role_number>\d*)\]'
-            '\(?(?P<member_state>[FS])?\)?$'
+            r'^(?P<member_name>.*)'
+            r'\[(?P<member_role_number>\d*)\]'
+            r'\(?(?P<member_state>[FS])?\)?$'
         )
 
         ret = {
@@ -239,13 +239,13 @@ class MdStatCollector(diamond.collector.Collector):
         :rtype: dict
         """
         array_status_regexp = re.compile(
-            '^ *(?P<blocks>\d*) blocks '
-            '(?:super (?P<superblock_version>\d\.\d) )?'
-            '(?:level (?P<raid_level>\d), '
-            '(?P<chunk_size>\d*)k chunk, '
-            'algorithm (?P<algorithm>\d) )?'
-            '(?:\[(?P<total_members>\d*)/(?P<actual_members>\d*)\])?'
-            '(?:(?P<rounding_factor>\d*)k rounding)?.*$'
+            r'^ *(?P<blocks>\d*) blocks '
+            r'(?:super (?P<superblock_version>\d\.\d) )?'
+            r'(?:level (?P<raid_level>\d), '
+            r'(?P<chunk_size>\d*)k chunk, '
+            r'algorithm (?P<algorithm>\d) )?'
+            r'(?:\[(?P<total_members>\d*)/(?P<actual_members>\d*)\])?'
+            r'(?:(?P<rounding_factor>\d*)k rounding)?.*$'
         )
 
         array_status_dict = \
@@ -291,9 +291,9 @@ class MdStatCollector(diamond.collector.Collector):
         :rtype: dict
         """
         array_bitmap_regexp = re.compile(
-            '^ *bitmap: (?P<allocated_pages>[0-9]*)/'
-            '(?P<total_pages>[0-9]*) pages '
-            '\[(?P<page_size>[0-9]*)KB\], '
+            r'^ *bitmap: (?P<allocated_pages>[0-9]*)/'
+            r'(?P<total_pages>[0-9]*) pages '
+            r'\[(?P<page_size>[0-9]*)KB\], '
             '(?P<chunk_size>[0-9]*)KB chunk.*$',
             re.MULTILINE
         )
@@ -341,9 +341,9 @@ class MdStatCollector(diamond.collector.Collector):
         :rtype: dict
         """
         array_recovery_regexp = re.compile(
-            '^ *\[.*\] *recovery = (?P<percent>\d*\.?\d*)%'
-            ' \(\d*/\d*\) finish=(?P<remaining_time>\d*\.?\d*)min '
-            'speed=(?P<speed>\d*)K/sec$',
+            r'^ *\[.*\] *recovery = (?P<percent>\d*\.?\d*)%'
+            r' \(\d*/\d*\) finish=(?P<remaining_time>\d*\.?\d*)min '
+            r'speed=(?P<speed>\d*)K/sec$',
             re.MULTILINE
         )
 

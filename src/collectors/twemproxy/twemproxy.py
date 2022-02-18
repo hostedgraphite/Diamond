@@ -144,7 +144,7 @@ class TwemproxyCollector(diamond.collector.Collector):
             hosts = [hosts]
 
         for host in hosts:
-            matches = re.search('((.+)\@)?([^:]+)(:(\d+))?', host)
+            matches = re.search(r'((.+)\@)?([^:]+)(:(\d+))?', host)
             alias = matches.group(2)
             hostname = matches.group(3)
             port = matches.group(5)

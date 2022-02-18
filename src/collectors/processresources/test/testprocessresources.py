@@ -31,11 +31,11 @@ class TestProcessResourcesCollector(CollectorTestCase):
         'interval': 10,
         'process': {
             'postgres': {
-                'exe': '^\/usr\/lib\/postgresql\/+d.+d\/bin\/postgres',
+                'exe': r'^\/usr\/lib\/postgresql\/+d.+d\/bin\/postgres',
                 'name': ['postgres', 'pg'],
             },
             'foo': {
-                'exe': '^\/usr\/bin\/foo',
+                'exe': r'^\/usr\/bin\/foo',
             },
             'bar': {
                 'name': '^bar',

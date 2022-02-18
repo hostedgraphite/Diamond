@@ -1,6 +1,6 @@
 # coding=utf-8
 
-"""
+r"""
 The MemoryCgroupCollector collects memory metric for cgroups
 
 Example config:

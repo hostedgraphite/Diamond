@@ -1,6 +1,6 @@
 # coding=utf-8
 
-"""
+r"""
 V. 1.0
 
 JbossApiCollector is a collector that uses JBOSS 7 native API to collect data
@@ -170,7 +170,7 @@ class JbossApiCollector(diamond.collector.Collector):
             'connect_timeout': '4',
             'ssl_options': '--sslv3 -k',
             'curl_options': '-s --digest -L ',
-            'interface_regex': '^(.+?)\.',  # matches up to first "."
+            'interface_regex': r'^(.+?)\.',  # matches up to first "."
             'hosts': [],
             'app_stats': 'True',
             'connector_options': ['http', 'ajp'],

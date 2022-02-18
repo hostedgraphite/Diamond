@@ -17,8 +17,8 @@ from diamond.collector import str_to_bool
 
 class VarnishCollector(diamond.collector.Collector):
 
-    _RE = re.compile("^(?P<stat>[\w_.,]*)\s+(?P<psa>\d*)\s+"
-                     "(?P<psan>[\d.]*)\s+(?P<desc>.*)$", re.M)
+    _RE = re.compile(r"^(?P<stat>[\w_.,]*)\s+(?P<psa>\d*)\s+"
+                     r"(?P<psan>[\d.]*)\s+(?P<desc>.*)$", re.M)
     _KEYS_v3 = frozenset([
         'client_conn', 'client_drop', 'client_req', 'cache_hit',
         'cache_hitpass', 'cache_miss', 'backend_conn', 'backend_unhealthy',

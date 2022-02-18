@@ -80,7 +80,7 @@ class TestMemoryCgroupCollector(CollectorTestCase):
             'interval': 10,
             'byte_unit': 'megabyte',
             'memory_path': fixtures_path,
-            'skip': 'test\w+ner',
+            'skip': r'test\w+ner',
         })
 
         self.collector = MemoryCgroupCollector(config, None)

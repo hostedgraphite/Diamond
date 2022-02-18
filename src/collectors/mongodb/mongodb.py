@@ -97,7 +97,7 @@ class MongoDBCollector(diamond.collector.Collector):
             'user': None,
             'passwd': None,
             'databases': '.*',
-            'ignore_collections': '^tmp\.mr\.',
+            'ignore_collections': r'^tmp\.mr\.',
             'network_timeout': None,
             'simple': 'False',
             'translate_collections': 'False',
@@ -148,7 +148,7 @@ class MongoDBCollector(diamond.collector.Collector):
             passwd = None
 
         for host in hosts:
-            matches = re.search('((.+)\@)?(.+)?', host)
+            matches = re.search(r'((.+)\@)?(.+)?', host)
             alias = matches.group(2)
             host = matches.group(3)
 
@@ -157,7 +157,7 @@ class MongoDBCollector(diamond.collector.Collector):
                     # one host only, no need to have a prefix
                     base_prefix = []
                 else:
-                    base_prefix = [re.sub('[:\.]', '_', host)]
+                    base_prefix = [re.sub(r'[:\.]', '_', host)]
             else:
                 base_prefix = [alias]
 

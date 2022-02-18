@@ -140,7 +140,7 @@ class GridEngineCollector(diamond.collector.Collector):
     def _sanitize(self, s):
         """Sanitize the name of a metric to remove unwanted chars
         """
-        return re.sub("[^\w-]", "_", s)
+        return re.sub(r"[^\w-]", "_", s)
 
     def _sge_root(self):
         sge_root = os.environ.get('SGE_ROOT')
