@@ -95,15 +95,15 @@ class NginxCollector(diamond.collector.Collector):
                                         'Waiting: (?P<waiting>\d+)')
         precision = int(self.config['precision'])
 
-        for l in status.readlines():
-            l = l.rstrip('\r\n')
-            if activeConnectionsRE.match(l):
+        for line in status.readlines():
+            line = line.rstrip('\r\n')
+            if activeConnectionsRE.match(line):
                 self.publish_gauge(
                     'active_connections',
-                    int(activeConnectionsRE.match(l).group('conn')),
+                    int(activeConnectionsRE.match(line).group('conn')),
                     precision)
-            elif totalConnectionsRE.match(l):
-                m = totalConnectionsRE.match(l)
+            elif totalConnectionsRE.match(line):
+                m = totalConnectionsRE.match(line)
                 req_per_conn = float(m.group('req')) / \
                     float(m.group('acc'))
                 self.publish_counter('conn_accepted',
@@ -118,8 +118,8 @@ class NginxCollector(diamond.collector.Collector):
                 self.publish_gauge('req_per_conn',
                                    float(req_per_conn),
                                    precision)
-            elif connectionStatusRE.match(l):
-                m = connectionStatusRE.match(l)
+            elif connectionStatusRE.match(line):
+                m = connectionStatusRE.match(line)
                 self.publish_gauge('act_reads',
                                    int(m.group('reading')),
                                    precision)
