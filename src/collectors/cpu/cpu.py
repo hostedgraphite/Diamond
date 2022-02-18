@@ -204,28 +204,28 @@ class CPUCollector(diamond.collector.Collector):
                     if use_derivative:
                         metrics[cpu + '.user'] = self.derivative(
                             cpu + '.user',
-                            long(cpu_time[i].user),
+                            int(cpu_time[i].user),
                             self.MAX_VALUES['user'])
                         metrics[cpu + '.system'] = self.derivative(
                             cpu + '.system',
-                            long(cpu_time[i].system),
+                            int(cpu_time[i].system),
                             self.MAX_VALUES['system'])
                         metrics[cpu + '.idle'] = self.derivative(
                             cpu + '.idle',
-                            long(cpu_time[i].idle),
+                            int(cpu_time[i].idle),
                             self.MAX_VALUES['idle'])
                         if hasattr(cpu_time[i], 'nice'):
                             metrics[cpu + '.nice'] = self.derivative(
                                 cpu + '.nice',
-                                long(cpu_time[i].nice),
+                                int(cpu_time[i].nice),
                                 self.MAX_VALUES['nice'])
 
                     else:
-                        metrics[cpu + '.user'] = long(cpu_time[i].user)
-                        metrics[cpu + '.system'] = long(cpu_time[i].system)
-                        metrics[cpu + '.idle'] = long(cpu_time[i].idle)
+                        metrics[cpu + '.user'] = int(cpu_time[i].user)
+                        metrics[cpu + '.system'] = int(cpu_time[i].system)
+                        metrics[cpu + '.idle'] = int(cpu_time[i].idle)
                         if hasattr(cpu_time[i], 'nice'):
-                            metrics[cpu + '.nice'] = long(cpu_time[i].nice)
+                            metrics[cpu + '.nice'] = int(cpu_time[i].nice)
 
             div = 1
             if use_normalization and cpu_count > 0:
@@ -234,27 +234,27 @@ class CPUCollector(diamond.collector.Collector):
             if use_derivative:
                 metrics['total.user'] = self.derivative(
                     'total.user',
-                    long(total_time.user),
+                    int(total_time.user),
                     self.MAX_VALUES['user']) / div
                 metrics['total.system'] = self.derivative(
                     'total.system',
-                    long(total_time.system),
+                    int(total_time.system),
                     self.MAX_VALUES['system']) / div
                 metrics['total.idle'] = self.derivative(
                     'total.idle',
-                    long(total_time.idle),
+                    int(total_time.idle),
                     self.MAX_VALUES['idle']) / div
                 if hasattr(total_time, 'nice'):
                     metrics['total.nice'] = self.derivative(
                         'total.nice',
-                        long(total_time.nice),
+                        int(total_time.nice),
                         self.MAX_VALUES['nice']) / div
             else:
-                metrics['total.user'] = long(total_time.user) / div
-                metrics['total.system'] = long(total_time.system) / div
-                metrics['total.idle'] = long(total_time.idle) / div
+                metrics['total.user'] = int(total_time.user) / div
+                metrics['total.system'] = int(total_time.system) / div
+                metrics['total.idle'] = int(total_time.idle) / div
                 if hasattr(total_time, 'nice'):
-                    metrics['total.nice'] = long(total_time.nice) / div
+                    metrics['total.nice'] = int(total_time.nice) / div
 
         # Publish Metric
         for metric_name in metrics.keys():

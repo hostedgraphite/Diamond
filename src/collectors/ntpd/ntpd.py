@@ -78,7 +78,11 @@ class NtpdCollector(diamond.collector.Collector):
             data['poll'] = {'val': parts[5], 'precision': 0}
             data['reach'] = {'val': parts[6], 'precision': 0}
             data['delay'] = {'val': parts[7], 'precision': 6}
-            data['offset'] = {'val': parts[8], 'precision': 0}
+
+            # Commented this as a temporary workaround to resolve an issue with the 'offset' metric being processed
+            # twice, since both ntpq and ntpdc_kerninfo fixtures contain that metric
+            # data['offset'] = {'val': parts[8], 'precision': 0}
+
             data['jitter'] = {'val': parts[9], 'precision': 6}
 
         def convert_to_second(when_ntpd_ouput):
