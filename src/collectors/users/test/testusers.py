@@ -26,8 +26,8 @@ def run_only_if_pyutmp_is_available(func):
         import utmp
     except ImportError:
         utmp = None
-    pred = lambda: pyutmp is not None or utmp is not None
-    return run_only(func, pred)
+
+    return run_only(func, lambda: pyutmp is not None or utmp is not None)
 
 
 class TestUsersCollector(CollectorTestCase):

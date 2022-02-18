@@ -19,9 +19,7 @@ except ImportError:
 
 
 def run_only_if_riemann_client_is_available(func):
-    def pred():
-        return riemann_client is not None
-    return run_only(func, pred)
+    return run_only(func, lambda: riemann_client is not None)
 
 
 def fake_connect(self):

@@ -18,8 +18,7 @@ from userscripts import UserScriptsCollector
 
 def run_only_if_kitchen_is_available(func):
     import subprocess
-    pred = lambda: subprocess is not None
-    return run_only(func, pred)
+    return run_only(func, lambda: subprocess is not None)
 
 
 class TestUserScriptsCollector(CollectorTestCase):

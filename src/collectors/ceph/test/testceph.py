@@ -20,13 +20,11 @@ import ceph
 
 
 def run_only_if_assertSequenceEqual_is_available(func):
-    pred = lambda: 'assertSequenceEqual' in dir(unittest.TestCase)
-    return run_only(func, pred)
+    return run_only(func, lambda: 'assertSequenceEqual' in dir(unittest.TestCase))
 
 
 def run_only_if_subprocess_check_output_is_available(func):
-    pred = lambda: 'check_output' in dir(subprocess)
-    return run_only(func, pred)
+    return run_only(func, lambda: 'check_output' in dir(subprocess))
 
 
 class TestCounterIterator(unittest.TestCase):

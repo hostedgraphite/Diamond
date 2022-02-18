@@ -21,8 +21,8 @@ def run_only_if_beanstalkc_is_available(func):
         beanstalkd = True
     except ImportError:
         beanstalkd = False
-    pred = lambda: beanstalkd is True
-    return run_only(func, pred)
+
+    return run_only(func, lambda: beanstalkd is True)
 
 
 class TestBeanstalkdCollector(CollectorTestCase):

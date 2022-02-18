@@ -24,8 +24,8 @@ def run_only_if_redis_is_available(func):
         import redis
     except ImportError:
         redis = None
-    pred = lambda: redis is not None
-    return run_only(func, pred)
+
+    return run_only(func, lambda: redis is not None)
 
 
 class TestRedisCollector(CollectorTestCase):

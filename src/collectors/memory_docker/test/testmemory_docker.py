@@ -37,8 +37,8 @@ def run_only_if_docker_client_is_available(func):
         from docker import Client
     except ImportError:
         Client = None
-    pred = lambda: Client is not None
-    return run_only(func, pred)
+
+    return run_only(func, lambda: Client is not None)
 
 
 class TestMemoryDockerCollector(CollectorTestCase):

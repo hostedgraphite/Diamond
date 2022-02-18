@@ -19,8 +19,8 @@ def run_only_if_boto_is_available(func):
         import boto
     except ImportError:
         boto = None
-    pred = lambda: boto is not None
-    return run_only(func, pred)
+
+    return run_only(func, lambda: boto is not None)
 
 
 class TestElbCollector(CollectorTestCase):

@@ -26,9 +26,7 @@ def run_only_if_ElementTree_is_available(func):
     except ImportError:
         ElementTree = None
 
-    def pred():
-        return ElementTree is not None
-    return run_only(func, pred)
+    return run_only(func, lambda: ElementTree is not None)
 
 
 class TestKafkaCollector(CollectorTestCase):

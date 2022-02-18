@@ -21,8 +21,8 @@ def run_only_if_MySQLdb_is_available(func):
         MySQLdb = True
     except ImportError:
         MySQLdb = False
-    pred = lambda: MySQLdb is True
-    return run_only(func, pred)
+
+    return run_only(func, lambda: MySQLdb is True)
 
 
 class TestMySQLCollector(CollectorTestCase):

@@ -19,8 +19,8 @@ def run_only_if_yaml_is_available(func):
         import yaml
     except ImportError:
         yaml = None
-    pred = lambda: yaml is not None
-    return run_only(func, pred)
+
+    return run_only(func, lambda: yaml is not None)
 
 
 class TestPuppetAgentCollector(CollectorTestCase):
