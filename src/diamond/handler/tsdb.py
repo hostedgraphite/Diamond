@@ -234,9 +234,7 @@ class TSDBHandler(Handler):
         while retry < 3 and success is False:
             self.log.debug(content)
             try:
-                request = Request("http://"+self.host+":" +
-                                          str(self.port)+"/api/put",
-                                          content, self.httpheader)
+                request = Request(f'http://{self.host}:{self.port}/api/put', content, self.httpheader)
                 response = urlopen(url=request, timeout=self.timeout)
                 if response.getcode() < 301:
                     self.log.debug(response.read())
