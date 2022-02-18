@@ -4,14 +4,15 @@
 
 import os
 
-from test import CollectorTestCase
-from test import get_collector_config
-from test import unittest
-from test import run_only
-from test import patch
+from userscripts import UserScriptsCollector
 
 from diamond.collector import Collector
-from userscripts import UserScriptsCollector
+from test import CollectorTestCase
+from test import get_collector_config
+from test import patch
+from test import run_only
+from test import unittest
+
 
 ##########################################################################
 
@@ -56,6 +57,7 @@ class TestUserScriptsCollector(CollectorTestCase):
         # Just make sure publish got called >0 times, if this test fails it'll
         # be due to raising an exception. Meh.
         assert publish_mock.call_args_list
+
 
 ##########################################################################
 if __name__ == "__main__":

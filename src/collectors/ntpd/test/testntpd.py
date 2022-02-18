@@ -2,15 +2,15 @@
 # coding=utf-8
 ##########################################################################
 
-from test import CollectorTestCase
-from test import get_collector_config
-from test import unittest
-from test import Mock
-from test import patch
+from ntpd import NtpdCollector
 
 from diamond.collector import Collector
+from test import CollectorTestCase
+from test import Mock
+from test import get_collector_config
+from test import patch
+from test import unittest
 
-from ntpd import NtpdCollector
 
 ##########################################################################
 
@@ -79,6 +79,7 @@ class TestNtpdCollector(CollectorTestCase):
         collector_mock.stop()
 
         self.assertPublishedMany(publish_mock, {})
+
 
 ##########################################################################
 if __name__ == "__main__":

@@ -113,5 +113,6 @@ class TestMemoryCgroupCollector(CollectorTestCase):
         [self.assertUnpublished(publish_mock, k, v)
          for k, v in should_not_be_published.items()]
 
+
 if __name__ == "__main__":
     unittest.main()

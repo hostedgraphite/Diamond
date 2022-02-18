@@ -103,5 +103,6 @@ class TestMemoryDockerCollector(CollectorTestCase):
             'docker.swap': 1,
         })
 
+
 if __name__ == "__main__":
     unittest.main()

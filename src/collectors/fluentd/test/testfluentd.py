@@ -43,5 +43,6 @@ class TestFluentdCollector(CollectorTestCase):
         stat = json.loads(f)
         self.assertEqual(len(self.collector.parse_api_output(stat)), 0)
 
+
 if __name__ == "__main__":
     unittest.main()

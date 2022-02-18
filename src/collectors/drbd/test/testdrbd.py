@@ -21,6 +21,7 @@ class TestDRBDCollector(CollectorTestCase):
     def test_import(self):
         self.assertTrue(DRBDCollector)
 
+
 ##########################################################################
 if __name__ == "__main__":
     unittest.main()

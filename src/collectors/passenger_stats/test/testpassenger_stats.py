@@ -20,6 +20,7 @@ class TestPassengerCollector(CollectorTestCase):
     def test_import(self):
         self.assertTrue(PassengerCollector)
 
+
 ##########################################################################
 if __name__ == "__main__":
     unittest.main()

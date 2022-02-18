@@ -57,5 +57,6 @@ class TestDockerCollector(CollectorTestCase):
             val = self.collector.get_value(path, stat)
             self.assertTrue(val is None)
 
+
 if __name__ == "__main__":
     unittest.main()

@@ -23,6 +23,7 @@ class TestS3BucketCollector(CollectorTestCase):
     def test_import(self):
         self.assertTrue(S3BucketCollector)
 
+
 ##########################################################################
 if __name__ == "__main__":
     unittest.main()

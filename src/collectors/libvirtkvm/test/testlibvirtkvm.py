@@ -21,6 +21,7 @@ class TestLibvirtKVMCollector(CollectorTestCase):
     def test_import(self):
         self.assertTrue(LibvirtKVMCollector)
 
+
 ###############################################################################
 if __name__ == "__main__":
     unittest.main()

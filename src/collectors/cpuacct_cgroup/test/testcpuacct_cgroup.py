@@ -58,5 +58,6 @@ class TestCpuAcctCgroupCollector(CollectorTestCase):
             'system.system': 4784004,
         })
 
+
 if __name__ == "__main__":
     unittest.main()

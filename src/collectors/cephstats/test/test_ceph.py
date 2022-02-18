@@ -34,5 +34,6 @@ class TestCephStats(unittest.TestCase):
         self.assertEqual(process_ceph_status(f.read()), {})
         f.close()
 
+
 if __name__ == '__main__':
     unittest.main()

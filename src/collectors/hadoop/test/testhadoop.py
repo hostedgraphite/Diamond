@@ -38,6 +38,7 @@ class TestHadoopCollector(CollectorTestCase):
                            defaultpath=self.collector.config['path'])
         self.assertPublishedMetricMany(publish_mock, metrics)
 
+
 ##########################################################################
 if __name__ == "__main__":
     unittest.main()

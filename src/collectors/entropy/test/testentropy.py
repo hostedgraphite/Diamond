@@ -22,6 +22,7 @@ class TestEntropyStatCollector(CollectorTestCase):
     def test_import(self):
         self.assertTrue(EntropyStatCollector)
 
+
 ##########################################################################
 if __name__ == "__main__":
     unittest.main()

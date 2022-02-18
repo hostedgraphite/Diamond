@@ -63,6 +63,7 @@ class TestSidekiqWebCollector(CollectorTestCase):
 
         self.assertPublishedMany(publish_mock, {})
 
+
 ##########################################################################
 if __name__ == "__main__":
     unittest.main()

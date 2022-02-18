@@ -2,15 +2,16 @@
 # coding=utf-8
 ##########################################################################
 
-from test import CollectorTestCase
-from test import get_collector_config
-from test import unittest
-from test import Mock
-from test import patch
+from puppetdashboard import PuppetDashboardCollector
 
 from diamond.collector import Collector
 from diamond.pycompat import URLOPEN
-from puppetdashboard import PuppetDashboardCollector
+from test import CollectorTestCase
+from test import Mock
+from test import get_collector_config
+from test import patch
+from test import unittest
+
 
 ##########################################################################
 
@@ -59,6 +60,7 @@ class TestPuppetDashboardCollector(CollectorTestCase):
         patch_urlopen.stop()
 
         self.assertPublishedMany(publish_mock, {})
+
 
 ##########################################################################
 if __name__ == "__main__":

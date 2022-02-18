@@ -2,13 +2,14 @@
 # coding=utf-8
 ##########################################################################
 
-import configobj
 import optparse
 import os
 import shutil
 import sys
 import tempfile
 import traceback
+
+import configobj
 
 sys.path.append(os.path.abspath(
     os.path.join(os.path.dirname(__file__), 'src')))
@@ -23,6 +24,7 @@ def getIncludePaths(path):
 
         elif os.path.isdir(cPath):
             getIncludePaths(cPath)
+
 
 collectors = {}
 
@@ -62,6 +64,7 @@ def getCollectors(path):
 
         elif os.path.isdir(cPath):
             getCollectors(cPath)
+
 
 handlers = {}
 
@@ -198,6 +201,7 @@ def writeDoc(items, type_name, doc_path):
             docFile.write("\n")
 
         docFile.close()
+
 
 ##########################################################################
 

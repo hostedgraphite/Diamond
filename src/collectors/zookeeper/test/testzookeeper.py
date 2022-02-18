@@ -21,6 +21,7 @@ class TestZookeeperCollector(CollectorTestCase):
     def test_import(self):
         self.assertTrue(ZookeeperCollector)
 
+
 ###############################################################################
 if __name__ == "__main__":
     unittest.main()

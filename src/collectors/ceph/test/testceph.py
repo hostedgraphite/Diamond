@@ -211,5 +211,6 @@ class TestCephCollectorPublish(CollectorTestCase):
                                             precision=0),
                                        ])
 
+
 if __name__ == "__main__":
     unittest.main()

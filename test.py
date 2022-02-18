@@ -2,14 +2,15 @@
 # coding=utf-8
 ###############################################################################
 
+import inspect
+import logging
+import optparse
 import os
 import sys
-import inspect
 import traceback
-import optparse
-import logging
-import configobj
 import unittest
+
+import configobj
 
 try:
     import cPickle as pickle
@@ -36,6 +37,7 @@ except ImportError:
 
 try:  # py3k way
     import builtins
+
     BUILTIN_OPEN = "builtins.open"
 except ImportError:  # py2.x way
     BUILTIN_OPEN = "__builtin__.open"
@@ -51,6 +53,7 @@ def run_only(func, predicate):
     else:
         def f(arg):
             pass
+
         return f
 
 
@@ -72,7 +75,7 @@ class CollectorTestCase(unittest.TestCase):
             return False
 
         filePath = os.path.join(os.path.dirname(os.path.realpath(__file__)),
-                                'docs', 'collectors',  collector + '.md')
+                                'docs', 'collectors', collector + '.md')
 
         if not os.path.exists(filePath):
             return False
@@ -231,6 +234,7 @@ class CollectorTestCase(unittest.TestCase):
 
         mock.reset_mock()
 
+
 collectorTests = {}
 
 
@@ -260,6 +264,7 @@ def getCollectorTests(path):
         cPath = os.path.abspath(os.path.join(path, f))
         if os.path.isdir(cPath):
             getCollectorTests(cPath)
+
 
 ###############################################################################
 

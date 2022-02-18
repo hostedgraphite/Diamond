@@ -185,6 +185,7 @@ class TestSmartCollector(CollectorTestCase):
         assert_attrs_start_at(7, 'centos5.5_hdd')
         assert_attrs_start_at(8, 'debian_invalid_checksum_warning')
 
+
 ##########################################################################
 if __name__ == "__main__":
     unittest.main()

@@ -217,5 +217,6 @@ def assertRaisesAndContains(excClass, contains_str, callableObj, *args,
             excName = str(excClass)
         raise AssertionError("%s not raised" % excName)
 
+
 if __name__ == "__main__":
     unittest.main()

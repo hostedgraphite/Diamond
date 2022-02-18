@@ -2,17 +2,18 @@
 # coding=utf-8
 ##########################################################################
 
-from test import unittest
-from test import run_only
-from test import Mock
-from test import patch
 import configobj
 
 import diamond.handler.riemann as mod
 from diamond.metric import Metric
+from test import Mock
+from test import patch
+from test import run_only
+from test import unittest
 
 try:
     from riemann_client.client import Client
+
     riemann_client = True
 except ImportError:
     riemann_client = None
@@ -62,6 +63,7 @@ class TestRiemannHandler(unittest.TestCase):
                 'time': 1234567,
                 'metric_f': 0.0,
             })
+
 
 ##########################################################################
 if __name__ == "__main__":

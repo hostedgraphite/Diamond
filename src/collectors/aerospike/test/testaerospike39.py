@@ -265,6 +265,7 @@ class TestAerospike39Collector(CollectorTestCase):
             ],
         )
 
+
 ##########################################################################
 if __name__ == "__main__":
     unittest.main()

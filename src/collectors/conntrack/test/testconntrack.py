@@ -2,14 +2,15 @@
 # coding=utf-8
 ##########################################################################
 
-from test import CollectorTestCase
-from test import get_collector_config
-from test import unittest
-from test import Mock
-from test import patch
+from conntrack import ConnTrackCollector
 
 from diamond.collector import Collector
-from conntrack import ConnTrackCollector
+from test import CollectorTestCase
+from test import Mock
+from test import get_collector_config
+from test import patch
+from test import unittest
+
 
 ##########################################################################
 
@@ -64,6 +65,7 @@ class TestConnTrackCollector(CollectorTestCase):
     def test_should_fail_gracefully_2(self, publish_mock):
         self.collector.collect()
         self.assertPublishedMany(publish_mock, {})
+
 
 ##########################################################################
 if __name__ == "__main__":

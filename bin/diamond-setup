@@ -1,8 +1,8 @@
 #!/usr/bin/env python
 ##########################################################################
+import optparse
 import os
 import sys
-import optparse
 import traceback
 
 from configobj import ConfigObj
@@ -35,6 +35,7 @@ def getIncludePaths(path):
         cPath = os.path.abspath(os.path.join(path, f))
         if os.path.isdir(cPath):
             getIncludePaths(cPath)
+
 
 collectors = {}
 
@@ -145,6 +146,7 @@ def configureKey(key):
         stringToType(key, val)
     except NotImplementedError:
         return
+
 
 ##########################################################################
 

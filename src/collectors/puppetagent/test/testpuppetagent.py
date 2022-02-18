@@ -2,14 +2,15 @@
 # coding=utf-8
 ##########################################################################
 
-from test import CollectorTestCase
-from test import get_collector_config
-from test import unittest
-from test import run_only
-from test import patch
+from puppetagent import PuppetAgentCollector
 
 from diamond.collector import Collector
-from puppetagent import PuppetAgentCollector
+from test import CollectorTestCase
+from test import get_collector_config
+from test import patch
+from test import run_only
+from test import unittest
+
 
 ##########################################################################
 
@@ -39,7 +40,6 @@ class TestPuppetAgentCollector(CollectorTestCase):
     @run_only_if_yaml_is_available
     @patch.object(Collector, 'publish')
     def test(self, publish_mock):
-
         self.collector.collect()
 
         metrics = {
@@ -86,6 +86,7 @@ class TestPuppetAgentCollector(CollectorTestCase):
 
         self.assertPublishedMany(publish_mock, metrics)
         self.assertUnpublishedMany(publish_mock, unpublished_metrics)
+
 
 ##########################################################################
 if __name__ == "__main__":
