@@ -112,7 +112,7 @@ class Metric(object):
             return Metric(groups['name'],
                           groups['value'],
                           float(groups['timestamp']))
-        except:
+        except Exception:
             raise DiamondException(
                 "Metric could not be parsed from string: %s." % string)
 

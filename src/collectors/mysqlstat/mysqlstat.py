@@ -334,7 +334,7 @@ class MySQLCollector(diamond.collector.Collector):
         for row in rows:
             try:
                 metrics['status'][row['Variable_name']] = float(row['Value'])
-            except:
+            except Exception:
                 pass
 
         if self.config['master']:
@@ -347,9 +347,9 @@ class MySQLCollector(diamond.collector.Collector):
                             continue
                         try:
                             metrics['master'][key] = float(row_master[key])
-                        except:
+                        except Exception:
                             pass
-            except:
+            except Exception:
                 self.log.error('MySQLCollector: Couldnt get master status')
                 pass
 
@@ -363,9 +363,9 @@ class MySQLCollector(diamond.collector.Collector):
                             continue
                         try:
                             metrics['slave'][key] = float(row_slave[key])
-                        except:
+                        except Exception:
                             pass
-            except:
+            except Exception:
                 self.log.error('MySQLCollector: Couldnt get slave status')
                 pass
 

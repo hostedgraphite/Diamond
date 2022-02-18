@@ -69,7 +69,7 @@ class PowerDNSCollector(diamond.collector.Collector):
             metric, value = metric.split('=')
             try:
                 value = float(value)
-            except:
+            except Exception:
                 pass
             if metric not in self._GAUGE_KEYS:
                 value = self.derivative(metric, value)

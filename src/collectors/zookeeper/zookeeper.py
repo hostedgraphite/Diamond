@@ -109,7 +109,7 @@ class ZookeeperCollector(diamond.collector.Collector):
                 self.log.debug('limit connections %s', m.group(1))
                 stats['limit_maxconn'] = m.group(1)
             f.close()
-        except:
+        except Exception:
             self.log.debug("Cannot parse command line options for zookeeper")
 
         return stats

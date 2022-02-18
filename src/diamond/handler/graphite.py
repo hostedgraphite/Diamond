@@ -130,14 +130,14 @@ class GraphiteHandler(Handler):
         try:
             self.socket.sendall(data)
             self._reset_errors()
-        except:
+        except Exception:
             self._close()
             self._throttle_error("GraphiteHandler: Socket error, "
                                  "trying reconnect.")
             self._connect()
             try:
                 self.socket.sendall(data)
-            except:
+            except Exception:
                 return
             self._reset_errors()
 

@@ -169,7 +169,7 @@ class RabbitMQCollector(diamond.collector.Collector):
                              len(node_data['partitions']))
                 content = client.get_nodes()
                 self.publish('cluster.nodes', len(content))
-        except:
+        except Exception:
             self.log.exception('Could not connect to rabbitmq')
             return {}
 
@@ -276,7 +276,7 @@ class RabbitMQCollector(diamond.collector.Collector):
             overview = client.get_overview()
             for key in overview:
                 self._publish_metrics('', [], key, overview)
-        except:
+        except Exception:
             self.log.exception('An error occurred collecting from RabbitMQ')
             return {}
 

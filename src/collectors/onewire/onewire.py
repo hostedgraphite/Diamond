@@ -81,13 +81,13 @@ class OneWireCollector(diamond.collector.Collector):
                     f = open(fv)
                     v = f.read()
                     f.close()
-                except:
+                except Exception:
                     self.log.error("Unable to read %s", fv)
                     raise
 
                 try:
                     v = float(v)
-                except:
+                except Exception:
                     self.log.error("Unexpected value %s in %s", v, fv)
                     raise
 

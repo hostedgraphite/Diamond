@@ -58,7 +58,7 @@ class PostqueueCollector(diamond.collector.Collector):
 
         try:
             postqueue_count = int(output.strip().split("\n")[-1].split()[-2])
-        except:
+        except Exception:
             postqueue_count = 0
 
         self.publish('count', postqueue_count)
