@@ -24,8 +24,8 @@ class TestFluentdCollector(CollectorTestCase):
                     'buffer_queue_length',
                     'buffer_total_queued_size',
                     'retry_count'
-                    ]
-                }
+                ]
+            }
         })
 
         self.collector = FluentdCollector(config, None)

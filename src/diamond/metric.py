@@ -15,7 +15,7 @@ class Metric(object):
     __slots__ = [
         'path', 'value', 'raw_value', 'timestamp', 'precision',
         'host', 'metric_type', 'ttl'
-        ]
+    ]
 
     def __init__(self, path, value, raw_value=None, timestamp=None, precision=0,
                  host=None, metric_type='COUNTER', ttl=None):
