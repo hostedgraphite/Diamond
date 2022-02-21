@@ -52,8 +52,11 @@ class MonitCollector(diamond.collector.Collector):
 
             # shouldn't need to check this
             original_string = '%s:%s' % (self.config['user'], self.config['passwd'])
-            base64string = base64.encodebytes(original_string.encode())
-            base64string = base64string.replace(b'\n', b'')
+            base64string = (base64
+                            .encodebytes(original_string.encode())
+                            .decode()
+                            .replace('\n', ''))
+
             request.add_header("Authorization", "Basic %s" % base64string)
             response = diamond.pycompat.urlopen(request)
         except HTTPError as err:
