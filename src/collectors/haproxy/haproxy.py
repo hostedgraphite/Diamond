@@ -98,7 +98,10 @@ class HAProxyCollector(diamond.collector.Collector):
             self._get_config_value(section, 'user'),
             self._get_config_value(section, 'pass')
         )
-        base64string = base64.encodebytes(auth_header.encode())[:-1]
+        base64string = (base64
+                        .encodebytes(auth_header.encode())
+                        .decode())[:-1]
+
         req.add_header("Authorization", 'Basic %s' % base64string)
         try:
             handle = diamond.pycompat.urlopen(req)
