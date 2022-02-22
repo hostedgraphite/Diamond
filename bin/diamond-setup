@@ -258,7 +258,6 @@ if __name__ == "__main__":
         except IOError as err:
             print("I/O error({0}): {1}".format(err.errno, err.strerror))
         except KeyboardInterrupt:
-            print("")
             sys.exit()
         except:
             continue
