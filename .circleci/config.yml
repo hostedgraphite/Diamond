@@ -11,8 +11,6 @@ jobs:
       - run: pip install coverage
       - run: make install
       - run: coverage run --source=diamond test.py
-      - store_artifacts:
-          path: /tmp/artifacts
       - save_cache:
           key: dep-pip-{{ .Branch }}-{{ checksum ".travis.requirements.txt" }}
           paths:
