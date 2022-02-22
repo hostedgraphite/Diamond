@@ -49,7 +49,7 @@ class NtpdCollector(diamond.collector.Collector):
             stdout = subprocess.Popen(command,
                                       stdout=subprocess.PIPE).communicate()[0]
             if isinstance(stdout, bytes):
-                stdout = stdout.decode("utf8")
+                stdout = stdout.decode()
         except OSError:
             self.log.exception("Unable to run %s", command)
             return ""

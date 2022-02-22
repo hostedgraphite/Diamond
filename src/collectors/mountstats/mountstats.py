@@ -122,7 +122,7 @@ class MountStatsCollector(diamond.collector.Collector):
             p = subprocess.Popen(command,
                                  stdout=subprocess.PIPE).communicate()[0]
             if isinstance(p, bytes):
-                p = p.decode("utf8")
+                p = p.decode()
             p = p[:-1]
             lines = p.split("\n")
 
