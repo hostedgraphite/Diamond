@@ -77,7 +77,7 @@ class IPVSCollector(diamond.collector.Collector):
         p = subprocess.Popen(self.statcommand,
                              stdout=subprocess.PIPE).communicate()[0]
         if isinstance(p, bytes):
-            p = p.decode("utf8")
+            p = p.decode()
         p = p[:-1]
 
         columns = {
@@ -122,7 +122,7 @@ class IPVSCollector(diamond.collector.Collector):
         p = subprocess.Popen(self.concommand,
                              stdout=subprocess.PIPE).communicate()[0]
         if isinstance(p, bytes):
-            p = p.decode("utf8")
+            p = p.decode()
         p = p[:-1]
 
         columns = {

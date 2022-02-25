@@ -1,4 +1,4 @@
-#!/usr/bin/python
+#!/usr/bin/python3
 from test import CollectorTestCase, get_collector_config
 from test import patch
 from test import MagicMock

@@ -80,7 +80,7 @@ class ZookeeperCollector(diamond.collector.Collector):
         except socket.error:
             self.log.exception('Failed to get stats from %s:%s',
                                host, port)
-        return data.decode("utf8")
+        return data.decode()
 
     def get_stats(self, host, port):
         # stuff that's always ignored, aren't 'stats'

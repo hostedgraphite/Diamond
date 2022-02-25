@@ -1,4 +1,4 @@
-#!/usr/bin/env python
+#!/usr/bin/env python3
 # coding=utf-8
 """
 This class collects data on NUMA utilization
@@ -33,7 +33,7 @@ class NumaCollector(diamond.collector.Collector):
         p = Popen([self.config['bin'], '--hardware'], stdout=PIPE, stderr=PIPE)
         output, errors = p.communicate()
         if isinstance(output, bytes):
-            output = output.decode("utf8")
+            output = output.decode()
         lines = output.split('\n')
         for line in lines:
             try:

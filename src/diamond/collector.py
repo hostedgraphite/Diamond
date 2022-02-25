@@ -54,7 +54,7 @@ def get_hostname(config, method=None):
                                     stdout=subprocess.PIPE)
             hostname = proc.communicate()[0]
             if isinstance(hostname, bytes):
-                hostname = hostname.decode("utf8")
+                hostname = hostname.decode()
             hostname = hostname.strip()
             if proc.returncode != 0:
                 raise subprocess.CalledProcessError(proc.returncode,
@@ -575,9 +575,9 @@ class ProcessCollector(Collector):
             p = subprocess.Popen(command, stdout=subprocess.PIPE)
             stdout, stderr = p.communicate()
             if isinstance(stdout, bytes):
-                stdout = stdout.decode("utf8")
+                stdout = stdout.decode()
             if isinstance(stderr, bytes):
-                stderr = stderr.decode("utf8")
+                stderr = stderr.decode()
             return stdout, stderr
         except OSError:
             self.log.exception("Unable to run %s", command)

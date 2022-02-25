@@ -79,7 +79,7 @@ class PassengerCollector(diamond.collector.Collector):
             proc1 = subprocess.Popen(command, stdout=subprocess.PIPE)
             std_out = proc1.communicate()[0]
             if isinstance(std_out, bytes):
-                std_out = std_out.decode("utf8")
+                std_out = std_out.decode()
         except OSError:
             return {}
 
@@ -139,7 +139,7 @@ class PassengerCollector(diamond.collector.Collector):
                 stdout=subprocess.PIPE)
             std_out = proc1.communicate()[0]
             if isinstance(std_out, bytes):
-                std_out = std_out.decode("utf8")
+                std_out = std_out.decode()
         except OSError:
             return (-1)
 
