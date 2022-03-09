@@ -104,19 +104,26 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
       v.cpus = 2
     end
 
-    c.vm.provision "shell", inline: "sudo rpm -ivh http://dl.fedoraproject.org/pub/epel/7/x86_64/e/epel-release-7-9.noarch.rpm"
+    c.vm.provision "shell", inline: "sudo rpm -ivh https://dl.fedoraproject.org/pub/epel/7/x86_64/Packages/e/epel-release-7-14.noarch.rpm"
     c.vm.provision "shell", inline: "sudo yum install -y git rpm-build python-configobj python-test python-mock tree vim-enhanced MySQL-python htop gcc"
 
     # Install python 3
-    c.vm.provision "shell", inline: "sudo yum install -y python34 python34-devel"
-    c.vm.provision "shell", inline: "curl -O https://bootstrap.pypa.io/get-pip.py && sudo /usr/bin/python3.4 get-pip.py"
+    c.vm.provision "shell", inline: 'sudo yum -y groupinstall "Development Tools"'
+    c.vm.provision "shell", inline: "sudo yum -y install openssl-devel bzip2-devel libffi-devel"
+    c.vm.provision "shell", inline: "sudo yum install -y centos-release-scl-rh"
+    c.vm.provision "shell", inline: "sudo yum install -y rh-python38"
+    c.vm.provision "shell", inline: "scl enable rh-python38 bash"
+    c.vm.provision "shell", inline: "sudo yum -y install wget"
+    c.vm.provision "shell", inline: "wget https://www.python.org/ftp/python/3.8.12/Python-3.8.12.tgz"
+    c.vm.provision "shell", inline: "tar xvf Python-3.8.12.tgz"
+    c.vm.provision "shell", inline: "cd Python-3.8.12/ && ./configure --enable-optimizations && sudo make altinstall"
+    c.vm.provision "shell", inline: "sudo yum install -y python3-devel"
 
     # Install python libraries needed by specific collectors
     c.vm.provision "shell", inline: "sudo yum install -y postgresql-devel" # req for psycopg2
     c.vm.provision "shell", inline: "sudo yum install -y Cython" # req for pyutmp
     c.vm.provision "shell", inline: "sudo yum install -y lm_sensors-devel lm_sensors python-devel" # req for pyutmp
-    c.vm.provision "shell", inline: "sudo yum install -y python-pip"
-    c.vm.provision "shell", inline: "sudo pip install -r /vagrant/.travis.requirements.txt"
+    c.vm.provision "shell", inline: "sudo yum install -y python3-pip"
     c.vm.provision "shell", inline: "sudo pip3 install -r /vagrant/.travis.requirements3.txt"
 
     # Setup Diamond to run as a service
@@ -124,20 +131,20 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
     c.vm.provision "shell", inline: "sudo mkdir /var/log/diamond"
     c.vm.provision "shell", inline: "sudo ln -s /vagrant/conf/vagrant /etc/diamond"
     c.vm.provision "shell", inline: "sudo ln -s /vagrant/bin/diamond /usr/bin/diamond"
-    c.vm.provision "shell", inline: "sudo ln -s /vagrant/src/diamond /usr/lib/python2.7/site-packages/diamond"
+    c.vm.provision "shell", inline: "sudo ln -s /vagrant/src/diamond /usr/local/lib/python3.8/site-packages/diamond"
     c.vm.provision "shell", inline: "sudo ln -s /vagrant/rpm/systemd/diamond.service /usr/lib/systemd/system/diamond.service"
 
     # Install other components to test with
 
-    ## Redis
+    # Redis
     c.vm.provision "shell", inline: "sudo yum install -y redis"
     c.vm.provision "shell", inline: "sudo systemctl start redis.service"
 
     # Build Diamond docs and run tests
-    c.vm.provision "shell", inline: "sudo pip install pep8==1.5.7"
-    c.vm.provision "shell", inline: "sudo pip3 install pep8==1.5.7"
-    c.vm.provision "shell", inline: "echo 'Build docs...' && python /vagrant/build_doc.py"
-    c.vm.provision "shell", inline: "echo 'Running tests...' && python /vagrant/test.py"
+    c.vm.provision "shell", inline: "sudo yum makecache && sudo yum -y install python-pep8"
+    c.vm.provision "shell", inline: "sudo pip3 install mock"
+    c.vm.provision "shell", inline: "echo 'Build docs...' && python3 /vagrant/build_doc.py"
+    c.vm.provision "shell", inline: "echo 'Running tests...' && python3 /vagrant/test.py"
     c.vm.provision "shell", inline: "echo 'Running pep8...' && pep8 --config=/vagrant/.pep8 /vagrant/src /vagrant/bin/diamond /vagrant/bin/diamond-setup /vagrant/build_doc.py /vagrant/setup.py /vagrant/test.py"
 
     # Start diamond
