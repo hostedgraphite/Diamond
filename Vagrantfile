@@ -109,15 +109,13 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
 
     # Install python 3
     c.vm.provision "shell", inline: 'sudo yum -y groupinstall "Development Tools"'
-    c.vm.provision "shell", inline: "sudo yum -y install openssl-devel bzip2-devel libffi-devel"
+    c.vm.provision "shell", inline: 'sudo yum install openssl-devel zlib-devel libffi-devel -y'
     c.vm.provision "shell", inline: "sudo yum install -y centos-release-scl-rh"
     c.vm.provision "shell", inline: "sudo yum install -y rh-python38"
-    c.vm.provision "shell", inline: "scl enable rh-python38 bash"
-    c.vm.provision "shell", inline: "sudo yum -y install wget"
-    c.vm.provision "shell", inline: "wget https://www.python.org/ftp/python/3.8.12/Python-3.8.12.tgz"
-    c.vm.provision "shell", inline: "tar xvf Python-3.8.12.tgz"
-    c.vm.provision "shell", inline: "cd Python-3.8.12/ && ./configure --enable-optimizations && sudo make altinstall"
+    c.vm.provision "shell", inline: 'sudo wget https://www.python.org/ftp/python/3.8.8/Python-3.8.8.tgz'
+    c.vm.provision "shell", inline: 'sudo tar xzf Python-3.8.8.tgz && cd Python-3.8.8 && sudo ./configure --enable-optimizations --enable-shared LDFLAGS="-Wl,-rpath /usr/local/lib" && sudo make altinstall'
     c.vm.provision "shell", inline: "sudo yum install -y python3-devel"
+    c.vm.provision "shell", inline: "sudo ln -sfn /usr/local/bin/python3.8 /usr/bin/python3"
 
     # Install python libraries needed by specific collectors
     c.vm.provision "shell", inline: "sudo yum install -y postgresql-devel" # req for psycopg2
@@ -148,7 +146,8 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
     c.vm.provision "shell", inline: "echo 'Running pep8...' && pep8 --config=/vagrant/.pep8 /vagrant/src /vagrant/bin/diamond /vagrant/bin/diamond-setup /vagrant/build_doc.py /vagrant/setup.py /vagrant/test.py"
 
     # Start diamond
-    c.vm.provision "shell", inline: "sudo systemctl start diamond.service"
+    c.vm.provision "shell", inline: "echo 'Starting Diamond service...' && sudo systemctl start diamond.service"
+    c.vm.provision "shell", inline: "systemctl status diamond.service"
   end
 
   config.vm.define "ubuntu1604-test" do |c|
