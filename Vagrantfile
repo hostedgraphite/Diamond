@@ -41,6 +41,19 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
     c.vm.provision "shell", inline: "mkdir -p /vagrant/dist/el6 && (cp -f /tmp/Diamond/dist/* /vagrant/dist/el6/ || grep -v 'cannot stat')"
   end
 
+  config.vm.define "centos8-build" do |c|
+#     c.vm.hostname = "centos-build"
+    c.vm.box = "generic/centos8"
+    c.vm.synced_folder "./", "/tmp/Diamond", type: "rsync"
+
+	c.vm.provision "shell", inline: "sudo pip3 install distro"
+    c.vm.provision "shell", inline: "sudo yum install -y git rpm-build python3-distro"
+    c.vm.provision "shell", inline: "cd /tmp/Diamond && make buildrpmpy3"
+    c.vm.provision "shell", inline: "cd /tmp/Diamond/dist && sudo bash -c 'for f in *.src.rpm; do mv $f `basename $f .src.rpm`.el8.src.rpm; done;'"
+    c.vm.provision "shell", inline: "cd /tmp/Diamond/dist && sudo bash -c 'for f in *.noarch.rpm; do mv $f `basename $f .noarch.rpm`.el8.noarch.rpm; done;'"
+    c.vm.provision "shell", inline: "sudo mkdir -p /vagrant/dist/el8 && (sudo cp -f /tmp/Diamond/dist/* /vagrant/dist/el8/ || grep -v 'cannot stat')"
+  end
+
   config.vm.define "ubuntu-build" do |c|
     c.vm.hostname = "ubuntu-build"
     c.vm.box = "bento/ubuntu-12.04"
@@ -94,6 +107,14 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
 
     c.vm.provision "shell", inline: "sudo rpm -ivh http://dl.fedoraproject.org/pub/epel/7/x86_64/e/epel-release-7-9.noarch.rpm"
     c.vm.provision "shell", inline: "sudo yum install -y git rpm-build python-configobj python-test python-mock tree vim-enhanced MySQL-python gcc"
+  end
+
+  config.vm.define "centos8-devel" do |c|
+#     c.vm.hostname = "centos-devel"
+    c.vm.box = "generic/centos8"
+
+    c.vm.provision "shell", inline: "sudo rpm -ivh --force https://dl.fedoraproject.org/pub/epel/8/Everything/x86_64/Packages/e/epel-release-8-14.el8.noarch.rpm"
+    c.vm.provision "shell", inline: "sudo yum install -y git rpm-build tree vim-enhanced mysql-devel gcc"
   end
 
   config.vm.define "centos6-test" do |c|

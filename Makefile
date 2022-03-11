@@ -66,8 +66,8 @@ buildrpm: sdist
 buildrpmpy3: sdist
 	$(PYTHON) setup.py bdist_rpm \
 		--release=`ls dist/*.noarch.rpm | wc -l` \
-		--build-requires='python3, python3-configobj' \
-		--requires='python3, python3-configobj'
+		--build-requires='python3, python3-configobj, python3-distro' \
+		--requires='python3, python3-configobj, python3-distro'
 
 deb: builddeb
 
