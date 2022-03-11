@@ -246,4 +246,54 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
     c.vm.provision "shell", inline: "echo 'Starting Diamond service...' && sudo systemctl start diamond.service"
     c.vm.provision "shell", inline: "systemctl status diamond.service"
   end
+
+  config.vm.define "ubuntu2004-test" do |c|
+    c.vm.hostname = "ubuntu2004-test"
+    c.vm.box = "ubuntu/focal64"
+
+	# Comment out DPkg line which prevents pre-configuring all packages with debconf before they are installed, thus
+	# fixing "unable to re-open stdin: No file or directory" issue
+    c.vm.provision "shell", inline: 'sudo ex +"%s@DPkg@//DPkg" -cwq /etc/apt/apt.conf.d/70debconf'
+    c.vm.provision "shell", inline: 'sudo dpkg-reconfigure debconf -f noninteractive -p critical'
+
+    # Install necessary libs
+    c.vm.provision "shell", inline: "sudo apt-get update"
+    c.vm.provision "shell", inline: "sudo apt-get install -y make git pbuilder python-mock python3-configobj dh-python cdbs"
+
+    # Install python 3
+    c.vm.provision "shell", inline: 'sudo apt-get install software-properties-common'
+    c.vm.provision "shell", inline: "sudo apt-get install python3.8 -y"
+    c.vm.provision "shell", inline: "sudo update-alternatives --install /usr/bin/python python /usr/bin/python3.8 1"
+    c.vm.provision "shell", inline: "sudo update-alternatives --install /usr/bin/python3 python3 /usr/bin/python3.8 1"
+
+    # Install python libraries needed by specific collectors
+    c.vm.provision "shell", inline: "sudo apt-get install -y libmysqlclient-dev" # req for MySQL-python
+    c.vm.provision "shell", inline: "sudo apt-get install -y lm-sensors" # req for pyutmp
+    c.vm.provision "shell", inline: "sudo apt-get install -y python3-pip"
+    c.vm.provision "shell", inline: "sudo apt-get install libpq-dev -y"
+    c.vm.provision "shell", inline: "sudo apt-get install python3-dev -y"
+    c.vm.provision "shell", inline: "sudo apt-get install libpython3.8-dev -y"
+    c.vm.provision "shell", inline: "sudo pip3 install -r /vagrant/.travis.requirements3.txt"
+
+    # Setup Diamond to run as a service
+    c.vm.provision "shell", inline: "sudo apt-get install -y python-setuptools"
+    c.vm.provision "shell", inline: "sudo mkdir -p /var/log/diamond"
+    c.vm.provision "shell", inline: "sudo ln -sf /vagrant/conf/vagrant /etc/diamond"
+    c.vm.provision "shell", inline: "sudo ln -sf /vagrant/bin/diamond /usr/bin/diamond"
+    c.vm.provision "shell", inline: "sudo ln -sf /vagrant/src/diamond /usr/local/lib/python3.8/dist-packages/diamond"
+    c.vm.provision "shell", inline: "sudo ln -sf /vagrant/rpm/systemd/diamond.service /lib/systemd/system/diamond.service"
+
+    # Redis
+    c.vm.provision "shell", inline: "sudo apt-get install -y redis"
+    c.vm.provision "shell", inline: "sudo systemctl start redis.service"
+
+    # Run tests and linter
+    c.vm.provision "shell", inline: "sudo apt-get install -y pep8"
+    c.vm.provision "shell", inline: "echo 'Running tests...' && python3 /vagrant/test.py"
+    c.vm.provision "shell", inline: "echo 'Running pep8...' && pep8 --config=/vagrant/.pep8 /vagrant/src /vagrant/bin/diamond /vagrant/bin/diamond-setup /vagrant/build_doc.py /vagrant/setup.py /vagrant/test.py"
+
+    # Start diamond
+    c.vm.provision "shell", inline: "echo 'Starting Diamond service...' && sudo systemctl start diamond.service"
+    c.vm.provision "shell", inline: "systemctl status diamond.service"
+  end
 end
