@@ -18,3 +18,4 @@ simplejson==3.17.6
 statsd==3.3.0
 utmp==21.10.0
 mock
+Cython==0.29.28
