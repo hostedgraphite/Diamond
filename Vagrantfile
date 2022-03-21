@@ -200,6 +200,7 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
   end
 
   config.vm.define "centos8-test" do |c|
+#     It doesn't works with hostname on CentOS8
 #     c.vm.hostname = "centos8-test"
     c.vm.box = "generic/centos8"
     c.vm.synced_folder ".", "/vagrant"
@@ -410,6 +411,7 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
     # Build Diamond docs and run tests
     c.vm.provision "shell", inline: "sudo apt-get -y install python3-pep8-naming"
     c.vm.provision "shell", inline: "echo 'Running tests...' && python3 /vagrant/test.py"
+#     Linter is not working. Some pep8 issues
 #     c.vm.provision "shell", inline: "echo 'Running pep8...' && pep8 --config=/vagrant/.pep8 /vagrant/src /vagrant/bin/diamond /vagrant/bin/diamond-setup /vagrant/build_doc.py /vagrant/setup.py /vagrant/test.py"
 
     # Start diamond
