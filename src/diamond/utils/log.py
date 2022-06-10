@@ -35,7 +35,7 @@ def setup_logging(configfile, stdout=False):
     log = logging.getLogger('diamond')
 
     try:
-        config_parser = configparser.RawConfigParser(configfile, strict=False)
+        config_parser = configparser.RawConfigParser(strict=False)
         config_parser.read(configfile)
         logging.config.fileConfig(config_parser, disable_existing_loggers=False)
 
