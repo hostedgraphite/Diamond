@@ -87,7 +87,7 @@ else:
         install_requires = ['configobj', 'psutil', ]
     else:
         if distro_id in ['debian', 'ubuntu']:
-            install_requires = ['python3-configobj', 'python3-psutil', ]
+            install_requires = ['configobj', 'psutil', ]
         # Default back to pip style requires
         else:
             install_requires = ['configobj', 'psutil', ]
