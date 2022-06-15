@@ -66,7 +66,11 @@ class HAProxyCollector(diamond.collector.Collector):
         req = Request(self._get_config_value(section, 'url'))
         try:
             handle = diamond.pycompat.urlopen(req)
-            return handle.readlines()
+            data = []
+            for line in handle.readlines():
+                data = data.append(line.decode())
+
+            return data
         except Exception as e:
             if not hasattr(e, 'code') or e.code != 401:
                 self.log.error("Error retrieving HAProxy stats. %s", e)
