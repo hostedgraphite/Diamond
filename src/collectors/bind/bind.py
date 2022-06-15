@@ -75,16 +75,16 @@ class BindCollector(diamond.collector.Collector):
             self.log.error('Couldnt connect to bind: %s', e)
             return {}
 
-        tree = ElementTree.parse(req)
+        tree = ElementTree.fromstring(req.read())
 
         if not tree:
             raise ValueError("Corrupt XML file, no statistics found")
 
-        root = tree.find('bind/statistics')
+        root = tree
 
         if 'resolver' in self.config['publish']:
             for view in root.findall('views/view'):
-                name = view.find('name').text
+                name = view.get('name')
                 if name == '_bind' and not self.config['publish_view_bind']:
                     continue
                 if name == '_meta' and not self.config['publish_view_meta']:
