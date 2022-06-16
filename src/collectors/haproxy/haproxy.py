@@ -68,7 +68,7 @@ class HAProxyCollector(diamond.collector.Collector):
             handle = diamond.pycompat.urlopen(req)
             data = []
             for line in handle.readlines():
-                data = data.append(line.decode())
+                data.append(line.decode())
 
             return data
         except Exception as e:
