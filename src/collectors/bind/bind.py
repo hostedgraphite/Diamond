@@ -84,7 +84,7 @@ class BindCollector(diamond.collector.Collector):
 
         if 'resolver' in self.config['publish']:
             for view in root.findall('views/view'):
-                name = view.get('name')
+                name = view.find('name').text
                 if name == '_bind' and not self.config['publish_view_bind']:
                     continue
                 if name == '_meta' and not self.config['publish_view_meta']:
@@ -143,7 +143,7 @@ class BindCollector(diamond.collector.Collector):
                 )
 
         if 'memory' in self.config['publish']:
-            for counter in root.find('memory/summary').getchildren():
+            for counter in list(root.find('memory/summary')):
                 self.publish(
                     'memory.%s' % counter.tag,
                     int(counter.text)
