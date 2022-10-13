@@ -2,6 +2,7 @@
 # coding=utf-8
 ###############################################################################
 
+from io import BytesIO
 import os
 import sys
 import inspect
@@ -123,6 +124,10 @@ class CollectorTestCase(unittest.TestCase):
     def getFixture(self, fixture_name):
         with open(self.getFixturePath(fixture_name), 'r') as f:
             return StringIO(f.read())
+
+    def getFixtureInBytes(self, fixture_name):
+        with open(self.getFixturePath(fixture_name), 'rb') as f:
+            return BytesIO(f.read())
 
     def getFixtures(self):
         fixtures = []
