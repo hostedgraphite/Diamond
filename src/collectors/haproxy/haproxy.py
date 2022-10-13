@@ -123,9 +123,9 @@ class HAProxyCollector(diamond.collector.Collector):
 
         try:
             sock.connect(self.config['sock'])
-            sock.send('show stat\n')
+            sock.send(b'show stat\n')
             while 1:
-                buf = sock.recv(4096)
+                buf = sock.recv(4096).decode()
                 if not buf:
                     break
                 data += buf
