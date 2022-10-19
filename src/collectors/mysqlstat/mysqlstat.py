@@ -377,7 +377,7 @@ class MySQLCollector(diamond.collector.Collector):
 
                 innodb_status_output = rows[0]
 
-                todo = self.innodb_status_keys.keys()
+                todo = list(self.innodb_status_keys)
                 for line in innodb_status_output['Status'].split('\n'):
                     for key in todo:
                         match = self.innodb_status_keys[key].match(line)
