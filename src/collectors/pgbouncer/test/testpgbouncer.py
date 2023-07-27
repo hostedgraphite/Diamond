@@ -18,8 +18,8 @@ def run_only_if_psycopg2_is_available(func):
         import psycopg2
     except ImportError:
         psycopg2 = None
-    pred = lambda: psycopg2 is not None
-    return run_only(func, pred)
+
+    return run_only(func, lambda: psycopg2 is not None)
 
 
 class TestPgbouncerCollector(CollectorTestCase):

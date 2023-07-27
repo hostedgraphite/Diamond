@@ -129,6 +129,7 @@ def pkgPath(root, path, rpath="/"):
             pkgPath(root, subpath, spath)
     data_files.append((root + rpath, files))
 
+
 if os.name == 'nt':
     pkgPath(os.path.join(base_files, 'collectors'), 'src/collectors', '\\')
 else:

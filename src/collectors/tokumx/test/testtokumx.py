@@ -21,8 +21,8 @@ def run_only_if_pymongo_is_available(func):
         import pymongo
     except ImportError:
         pymongo = None
-    pred = lambda: pymongo is not None
-    return run_only(func, pred)
+
+    return run_only(func, lambda: pymongo is not None)
 
 
 class TestTokuMXCollector(CollectorTestCase):

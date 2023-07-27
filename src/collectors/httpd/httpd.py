@@ -100,7 +100,7 @@ class HttpdCollector(diamond.collector.Collector):
                     service_host, str(service_port), url, e)
                 continue
 
-            exp = re.compile('^([A-Za-z ]+):\s+(.+)$')
+            exp = re.compile(r'^([A-Za-z ]+):\s+(.+)$')
             for line in data.split('\n'):
                 if line:
                     m = exp.match(line)
@@ -144,7 +144,7 @@ class HttpdCollector(diamond.collector.Collector):
         if key in metrics:
             # Get Metric Name
             presicion_metric = False
-            metric_name = "%s" % re.sub('\s+', '', key)
+            metric_name = "%s" % re.sub(r'\s+', '', key)
             if metric_name in metrics_precision:
                 presicion_metric = 1
 

@@ -36,8 +36,7 @@ class TestNginxCollector(CollectorTestCase):
         mockResponse = Mock(**{
             'readlines.return_value': self.getFixture('status').readlines(),
             'info.return_value': mockMimeMessage,
-            }
-        )
+        })
 
         patch_urlopen = patch(URLOPEN, Mock(
             return_value=mockResponse))
@@ -76,8 +75,7 @@ class TestNginxCollector(CollectorTestCase):
                 self.getFixture('plus_status').readlines(),
             'info.return_value': mockMimeMessage,
             'read.return_value': self.getFixture('plus_status').read(),
-            }
-        )
+        })
 
         patch_urlopen = patch(URLOPEN, Mock(
             return_value=mockResponse))
@@ -177,8 +175,7 @@ class TestNginxCollector(CollectorTestCase):
             'readlines.return_value':
                 self.getFixture('status_blank').readlines(),
             'info.return_value': mockMimeMessage,
-            }
-        )
+        })
 
         patch_urlopen = patch(URLOPEN, Mock(
             return_value=mockResponse))
@@ -188,6 +185,7 @@ class TestNginxCollector(CollectorTestCase):
         patch_urlopen.stop()
 
         self.assertPublishedMany(publish_mock, {})
+
 
 ##########################################################################
 if __name__ == "__main__":

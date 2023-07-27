@@ -2,15 +2,16 @@
 # coding=utf-8
 ##########################################################################
 
-from test import CollectorTestCase
-from test import get_collector_config
-from test import unittest
-from test import Mock
-from test import patch
 from mock import call
+from rabbitmq import RabbitMQCollector
 
 from diamond.collector import Collector
-from rabbitmq import RabbitMQCollector
+from test import CollectorTestCase
+from test import Mock
+from test import get_collector_config
+from test import patch
+from test import unittest
+
 
 ##########################################################################
 
@@ -449,6 +450,7 @@ class TestRabbitMQCollector(CollectorTestCase):
 
         self.collector.config['query_individual_queues'] = False
         del self.collector.config['vhosts']
+
 
 ##########################################################################
 if __name__ == "__main__":

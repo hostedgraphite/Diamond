@@ -4,14 +4,15 @@
 
 import os
 
-from test import CollectorTestCase
-from test import get_collector_config
-from test import unittest
-from test import Mock
-from test import patch
+from ksm import KSMCollector
 
 from diamond.collector import Collector
-from ksm import KSMCollector
+from test import CollectorTestCase
+from test import Mock
+from test import get_collector_config
+from test import patch
+from test import unittest
+
 
 ##########################################################################
 
@@ -49,6 +50,7 @@ class TestKSMCollector(CollectorTestCase):
                            metrics=metrics,
                            defaultpath=self.collector.config['path'])
         self.assertPublishedMany(publish_mock, metrics)
+
 
 ##########################################################################
 if __name__ == "__main__":

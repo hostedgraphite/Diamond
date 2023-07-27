@@ -12,7 +12,7 @@ jobs:
       - run: apt-get install -y libpq-dev lm-sensors
       - run: pip install -r .travis.requirements3.txt
       - run: make install
-      - run: tox -e py38
+      - run: tox
       - run: cp -r htmlcov $CIRCLE_ARTIFACTS
       - store_artifacts:
           path: /tmp/artifacts

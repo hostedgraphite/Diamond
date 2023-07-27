@@ -233,6 +233,7 @@ class TestUnboundCollector(CollectorTestCase):
         self.assertPublishedMany(publish_mock, metrics)
         self.assertUnpublishedMany(publish_mock, histogram)
 
+
 ##########################################################################
 if __name__ == "__main__":
     unittest.main()

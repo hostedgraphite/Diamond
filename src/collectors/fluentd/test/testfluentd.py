@@ -24,8 +24,8 @@ class TestFluentdCollector(CollectorTestCase):
                     'buffer_queue_length',
                     'buffer_total_queued_size',
                     'retry_count'
-                    ]
-                }
+                ]
+            }
         })
 
         self.collector = FluentdCollector(config, None)
@@ -42,6 +42,7 @@ class TestFluentdCollector(CollectorTestCase):
         f = open(os.path.join(fixtures_path, "example_empty.stat")).read()
         stat = json.loads(f)
         self.assertEqual(len(self.collector.parse_api_output(stat)), 0)
+
 
 if __name__ == "__main__":
     unittest.main()

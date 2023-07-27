@@ -1,8 +1,8 @@
 #!/usr/bin/env python3
 ##########################################################################
+import optparse
 import os
 import sys
-import optparse
 import traceback
 
 from configobj import ConfigObj
@@ -36,6 +36,7 @@ def getIncludePaths(path):
         if os.path.isdir(cPath):
             getIncludePaths(cPath)
 
+
 collectors = {}
 
 
@@ -43,10 +44,7 @@ def getCollectors(path):
     for f in os.listdir(path):
         cPath = os.path.abspath(os.path.join(path, f))
 
-        if (os.path.isfile(cPath)
-                and len(f) > 3
-                and f[-3:] == '.py'
-                and f[0:4] != 'test'):
+        if os.path.isfile(cPath) and len(f) > 3 and f[-3:] == '.py' and f[0:4] != 'test':
             modname = f[:-3]
             try:
                 # Import the module
@@ -56,8 +54,7 @@ def getCollectors(path):
                 for attr in dir(module):
                     cls = getattr(module, attr)
                     try:
-                        if (issubclass(cls, Collector)
-                                and cls.__name__ not in collectors):
+                        if issubclass(cls, Collector) and cls.__name__ not in collectors:
                             collectors[cls.__name__] = module
                             break
                     except TypeError:
@@ -146,6 +143,7 @@ def configureKey(key):
     except NotImplementedError:
         return
 
+
 ##########################################################################
 
 if __name__ == "__main__":
@@ -210,8 +208,7 @@ if __name__ == "__main__":
 
         config_keys = {}
         config_file = ConfigObj()
-        config_file.filename = (config['server']['collectors_config_path']
-                                + "/" + collector + ".conf")
+        config_file.filename = (config['server']['collectors_config_path'] + "/" + collector + ".conf")
 
         # Find the class and load it from the collector module
         try:
@@ -259,7 +256,7 @@ if __name__ == "__main__":
             print("I/O error({0}): {1}".format(err.errno, err.strerror))
         except KeyboardInterrupt:
             sys.exit()
-        except:
+        except Exception:
             continue
     if not foundcollector:
         print("Collector not found.")

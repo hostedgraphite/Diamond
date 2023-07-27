@@ -63,6 +63,7 @@ class TestPostqueueCollector(CollectorTestCase):
 
         self.assertPublishedMany(publish_mock, metrics)
 
+
 ##########################################################################
 if __name__ == "__main__":
     unittest.main()

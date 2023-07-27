@@ -48,7 +48,7 @@ class VMStatCollector(diamond.collector.Collector):
 
         # open file
         file = open(self.PROC)
-        exp = '^(pgfault|pgmajfault|pgpgin|pgpgout|pswpin|pswpout)\s(\d+)'
+        exp = r'^(pgfault|pgmajfault|pgpgin|pgpgout|pswpin|pswpout)\s(\d+)'
         reg = re.compile(exp)
         # Build regex
         for line in file:

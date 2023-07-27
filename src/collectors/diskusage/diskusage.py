@@ -58,13 +58,13 @@ class DiskUsageCollector(diamond.collector.Collector):
         config = super(DiskUsageCollector, self).get_default_config()
         config.update({
             'path':     'iostat',
-            'devices':  ('PhysicalDrive[0-9]+$' +
-                         '|md[0-9]+$' +
-                         '|sd[a-z]+[0-9]*$' +
-                         '|x?vd[a-z]+[0-9]*$' +
-                         '|disk[0-9]+$' +
-                         '|nvme[0-9]+n[0-9]+$' +
-                         '|dm\-[0-9]+$'),
+            'devices':  (r'PhysicalDrive[0-9]+$' +
+                         r'|md[0-9]+$' +
+                         r'|sd[a-z]+[0-9]*$' +
+                         r'|x?vd[a-z]+[0-9]*$' +
+                         r'|disk[0-9]+$' +
+                         r'|nvme[0-9]+n[0-9]+$' +
+                         r'|dm\-[0-9]+$'),
             'sector_size': 512,
             'send_zero': False,
         })

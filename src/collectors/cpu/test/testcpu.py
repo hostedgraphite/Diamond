@@ -254,6 +254,7 @@ class TestCPUCollectorNormalize(CollectorTestCase):
 
         self.assertPublishedMany(publish_mock, self.expected)
 
+
 ##########################################################################
 if __name__ == "__main__":
     unittest.main()

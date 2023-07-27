@@ -21,6 +21,7 @@ class TestCelerymonCollector(CollectorTestCase):
     def test_import(self):
         self.assertTrue(CelerymonCollector)
 
+
 ###############################################################################
 if __name__ == "__main__":
     unittest.main()

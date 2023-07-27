@@ -2,15 +2,16 @@
 # coding=utf-8
 ##########################################################################
 
-from test import CollectorTestCase
-from test import get_collector_config
-from test import unittest
-from test import run_only
-from test import Mock
-from test import patch
+from beanstalkd import BeanstalkdCollector
 
 from diamond.collector import Collector
-from beanstalkd import BeanstalkdCollector
+from test import CollectorTestCase
+from test import Mock
+from test import get_collector_config
+from test import patch
+from test import run_only
+from test import unittest
+
 
 ##########################################################################
 
@@ -21,8 +22,8 @@ def run_only_if_beanstalkc_is_available(func):
         beanstalkd = True
     except ImportError:
         beanstalkd = False
-    pred = lambda: beanstalkd is True
-    return run_only(func, pred)
+
+    return run_only(func, lambda: beanstalkd is True)
 
 
 class TestBeanstalkdCollector(CollectorTestCase):
@@ -182,6 +183,7 @@ class TestBeanstalkdCollector(CollectorTestCase):
                            metrics=metrics,
                            defaultpath=self.collector.config['path'])
         self.assertPublishedMany(publish_mock, metrics)
+
 
 ##########################################################################
 if __name__ == "__main__":

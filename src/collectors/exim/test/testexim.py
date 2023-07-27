@@ -64,6 +64,7 @@ class TestEximCollector(CollectorTestCase):
         self.collector.collect()
         self.assertPublishedMany(publish_mock, {})
 
+
 ##########################################################################
 if __name__ == "__main__":
     unittest.main()

@@ -20,7 +20,7 @@ except ImportError:
 
 import diamond.collector
 
-RE_LOGSTASH_INDEX = re.compile('^(.*)-\d{4}(\.\d{2}){2,3}$')
+RE_LOGSTASH_INDEX = re.compile(r'^(.*)-\d{4}(\.\d{2}){2,3}$')
 
 
 class ElasticSearchCollector(diamond.collector.Collector):

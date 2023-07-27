@@ -4,14 +4,16 @@
 
 import os
 import time
-from test import CollectorTestCase
-from test import get_collector_config
-from test import unittest
-from test import run_only
-from test import patch
+
+from processresources import ProcessResourcesCollector
 
 from diamond.collector import Collector
-from processresources import ProcessResourcesCollector
+from test import CollectorTestCase
+from test import get_collector_config
+from test import patch
+from test import run_only
+from test import unittest
+
 
 ##########################################################################
 
@@ -29,11 +31,11 @@ class TestProcessResourcesCollector(CollectorTestCase):
         'interval': 10,
         'process': {
             'postgres': {
-                'exe': '^\/usr\/lib\/postgresql\/+d.+d\/bin\/postgres',
+                'exe': r'^\/usr\/lib\/postgresql\/+d.+d\/bin\/postgres',
                 'name': ['postgres', 'pg'],
             },
             'foo': {
-                'exe': '^\/usr\/bin\/foo',
+                'exe': r'^\/usr\/bin\/foo',
             },
             'bar': {
                 'name': '^bar',
@@ -229,6 +231,7 @@ class TestProcessResourcesCollector(CollectorTestCase):
                              'diamond-selfmon.memory_info_ex.rss', 1234)
         self.assertPublished(publish_mock, 'noprocess.workers_count', 0)
         self.assertUnpublished(publish_mock, 'noprocess.uptime', 0)
+
 
 ##########################################################################
 if __name__ == "__main__":

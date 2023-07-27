@@ -2,16 +2,17 @@
 # coding=utf-8
 ##########################################################################
 
-from test import CollectorTestCase
-from test import get_collector_config
-from test import unittest
-from test import Mock
-from test import patch
-from test import StringIO
-from test import BUILTIN_OPEN
+from nfsd import NfsdCollector
 
 from diamond.collector import Collector
-from nfsd import NfsdCollector
+from test import BUILTIN_OPEN
+from test import CollectorTestCase
+from test import Mock
+from test import StringIO
+from test import get_collector_config
+from test import patch
+from test import unittest
+
 
 ##########################################################################
 
@@ -113,6 +114,7 @@ class TestNfsdCollector(CollectorTestCase):
                            metrics=metrics,
                            defaultpath=self.collector.config['path'])
         self.assertPublishedMany(publish_mock, metrics)
+
 
 ##########################################################################
 if __name__ == "__main__":

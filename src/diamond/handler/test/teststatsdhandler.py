@@ -18,8 +18,8 @@ def run_only_if_statsd_is_available(func):
         import statsd
     except ImportError:
         statsd = None
-    pred = lambda: statsd is not None
-    return run_only(func, pred)
+
+    return run_only(func, lambda: statsd is not None)
 
 
 class TestStatsdHandler(unittest.TestCase):

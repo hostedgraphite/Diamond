@@ -7,8 +7,8 @@ import diamond.collector
 import re
 import time
 
-RE_LSPACES = re.compile("^[\s\t]*")
-RE_TSPACES = re.compile("[\s\t]*$")
+RE_LSPACES = re.compile(r"^[\s\t]*")
+RE_TSPACES = re.compile(r"[\s\t]*$")
 
 
 class IcingaStatsCollector(diamond.collector.Collector):

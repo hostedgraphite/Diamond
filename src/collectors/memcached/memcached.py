@@ -137,12 +137,12 @@ class MemcachedCollector(diamond.collector.Collector):
         try:
             cmdline = "/proc/%s/cmdline" % pid
             f = open(cmdline, 'r')
-            m = re.search("-c\x00(\d+)", f.readline())
+            m = re.search(r"-c\x00(\d+)", f.readline())
             if m is not None:
                 self.log.debug('limit connections %s', m.group(1))
                 stats['limit_maxconn'] = m.group(1)
             f.close()
-        except:
+        except Exception:
             self.log.debug("Cannot parse command line options for memcached")
 
         return stats
@@ -155,7 +155,7 @@ class MemcachedCollector(diamond.collector.Collector):
             hosts = [hosts]
 
         for host in hosts:
-            matches = re.search('((.+)\@)?([^:]+)(:(\d+))?', host)
+            matches = re.search(r'((.+)\@)?([^:]+)(:(\d+))?', host)
             alias = matches.group(2)
             hostname = matches.group(3)
             port = matches.group(5)

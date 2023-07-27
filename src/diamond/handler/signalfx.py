@@ -25,6 +25,7 @@ import logging
 import time
 import re
 
+
 class SignalfxHandler(Handler):
 
     # Inititalize Handler with url and batch size

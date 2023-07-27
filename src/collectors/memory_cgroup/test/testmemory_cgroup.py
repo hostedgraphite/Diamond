@@ -80,7 +80,7 @@ class TestMemoryCgroupCollector(CollectorTestCase):
             'interval': 10,
             'byte_unit': 'megabyte',
             'memory_path': fixtures_path,
-            'skip': 'test\w+ner',
+            'skip': r'test\w+ner',
         })
 
         self.collector = MemoryCgroupCollector(config, None)
@@ -112,6 +112,7 @@ class TestMemoryCgroupCollector(CollectorTestCase):
          for k, v in should_be_published.items()]
         [self.assertUnpublished(publish_mock, k, v)
          for k, v in should_not_be_published.items()]
+
 
 if __name__ == "__main__":
     unittest.main()

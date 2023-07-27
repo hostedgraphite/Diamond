@@ -88,22 +88,22 @@ class NginxCollector(diamond.collector.Collector):
 
     def collect_nginx(self, status):
         activeConnectionsRE = re.compile(r'Active connections: (?P<conn>\d+)')
-        totalConnectionsRE = re.compile('^\s+(?P<conn>\d+)\s+' +
-                                        '(?P<acc>\d+)\s+(?P<req>\d+)')
-        connectionStatusRE = re.compile('Reading: (?P<reading>\d+) ' +
-                                        'Writing: (?P<writing>\d+) ' +
-                                        'Waiting: (?P<waiting>\d+)')
+        totalConnectionsRE = re.compile(r'^\s+(?P<conn>\d+)\s+' +
+                                        r'(?P<acc>\d+)\s+(?P<req>\d+)')
+        connectionStatusRE = re.compile(r'Reading: (?P<reading>\d+) ' +
+                                        r'Writing: (?P<writing>\d+) ' +
+                                        r'Waiting: (?P<waiting>\d+)')
         precision = int(self.config['precision'])
 
-        for l in status.readlines():
-            l = l.rstrip('\r\n')
-            if activeConnectionsRE.match(l):
+        for line in status.readlines():
+            line = line.rstrip('\r\n')
+            if activeConnectionsRE.match(line):
                 self.publish_gauge(
                     'active_connections',
-                    int(activeConnectionsRE.match(l).group('conn')),
+                    int(activeConnectionsRE.match(line).group('conn')),
                     precision)
-            elif totalConnectionsRE.match(l):
-                m = totalConnectionsRE.match(l)
+            elif totalConnectionsRE.match(line):
+                m = totalConnectionsRE.match(line)
                 req_per_conn = float(m.group('req')) / \
                     float(m.group('acc'))
                 self.publish_counter('conn_accepted',
@@ -118,8 +118,8 @@ class NginxCollector(diamond.collector.Collector):
                 self.publish_gauge('req_per_conn',
                                    float(req_per_conn),
                                    precision)
-            elif connectionStatusRE.match(l):
-                m = connectionStatusRE.match(l)
+            elif connectionStatusRE.match(line):
+                m = connectionStatusRE.match(line)
                 self.publish_gauge('act_reads',
                                    int(m.group('reading')),
                                    precision)
@@ -155,7 +155,7 @@ class NginxCollector(diamond.collector.Collector):
 
     def collect_server_zones(self, status):
         for zone in status:
-            prefix = 'servers.%s' % re.sub('\.', '_', zone)
+            prefix = 'servers.%s' % re.sub(r'\.', '_', zone)
 
             self.publish_gauge('%s.processing' % (prefix),
                                status[zone]['processing'])
@@ -174,14 +174,14 @@ class NginxCollector(diamond.collector.Collector):
 
     def collect_upstreams(self, status):
         for upstream in status:
-            prefix = 'upstreams.%s' % re.sub('\.', '_', upstream)
+            prefix = 'upstreams.%s' % re.sub(r'\.', '_', upstream)
             self.publish_gauge('%s.keepalive' % prefix,
                                status[upstream]['keepalive'])
 
             for peer in status[upstream]['peers']:
 
                 peer_prefix = '%s.peers.%s' % (prefix, re.sub(':', "-",
-                                               re.sub('\.', '_',
+                                               re.sub(r'\.', '_',
                                                       peer['server'])))
 
                 self.publish_gauge('%s.active' % peer_prefix, peer['active'])

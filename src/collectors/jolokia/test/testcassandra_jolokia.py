@@ -129,6 +129,7 @@ class TestCassandraJolokiaCollector(CollectorTestCase):
             self.expected_fixture_a_p('p99')
         })
 
+
 ##########################################################################
 if __name__ == "__main__":
     unittest.main()

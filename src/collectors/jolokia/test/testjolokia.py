@@ -58,7 +58,7 @@ class TestJolokiaCollector(CollectorTestCase):
         patch_urlopen.start()
         rewrite = [
             (re.compile('memoryUsage'), 'memUsed'),
-            (re.compile('.*\.init'), ''),
+            (re.compile(r'.*\.init'), ''),
         ]
         self.collector.rewrite.extend(rewrite)
         self.collector.collect()
@@ -231,6 +231,7 @@ class TestJolokiaCollector(CollectorTestCase):
             prefix + '.memUsedBeforeGc.Par_Survivor_Space.committed': 3145728,
             prefix + '.memUsedBeforeGc.Par_Survivor_Space.used': 414088
         }
+
 
 ##########################################################################
 if __name__ == "__main__":

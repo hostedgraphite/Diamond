@@ -56,5 +56,5 @@ class FilesCollector(diamond.collector.Collector):
                         fh.close()
                         if (found and self.config['delete']):
                             os.unlink(os.path.join(self.config['dir'], fn))
-                    except:
+                    except Exception:
                         pass

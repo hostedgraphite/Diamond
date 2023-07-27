@@ -21,8 +21,8 @@ def run_only_if_libvirt_is_available(func):
         import libvirt
     except ImportError:
         libvirt = None
-    pred = lambda: libvirt is not None
-    return run_only(func, pred)
+
+    return run_only(func, lambda: libvirt is not None)
 
 
 class TestXENCollector(CollectorTestCase):

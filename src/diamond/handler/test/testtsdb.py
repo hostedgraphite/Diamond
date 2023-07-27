@@ -50,8 +50,7 @@ class TestTSDBdHandler(unittest.TestCase):
                         host='myhostname', metric_type='GAUGE')
         handler = TSDBHandler(config)
         header = {'Content-Type': 'application/json'}
-        exception = HTTPError(url=self.url, code=404, msg="Error",
-                                      hdrs=header, fp=None)
+        exception = HTTPError(url=self.url, code=404, msg="Error", hdrs=header, fp=None)
         handler.side_effect = exception
         handler.process(metric)
 
@@ -310,9 +309,9 @@ class TestTSDBdHandler(unittest.TestCase):
 
         handler = TSDBHandler(config)
         handler.process(metric)
-        body = ( '[{"timestamp": 1234567, "value": 80, '
-                 '"tags": {"hostname": "myhostname", "mountpoint": "MOUNT_POINT", "myFirstTag": "myValue"}, '
-                 '"metric": "diskspace.byte_percentfree"}]')
+        body = ('[{"timestamp": 1234567, "value": 80, '
+                '"tags": {"hostname": "myhostname", "mountpoint": "MOUNT_POINT", "myFirstTag": "myValue"}, '
+                '"metric": "diskspace.byte_percentfree"}]')
         header = {'Content-Type': 'application/json'}
         mock_urlopen.assert_called_with(self.url, body, header)
 

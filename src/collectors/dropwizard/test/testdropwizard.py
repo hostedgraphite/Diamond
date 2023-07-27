@@ -2,16 +2,16 @@
 # coding=utf-8
 ##########################################################################
 
-from test import CollectorTestCase
-from test import get_collector_config
-from test import unittest
-from test import Mock
-from test import patch
+from dropwizard import DropwizardCollector
 
 from diamond.collector import Collector
 from diamond.pycompat import URLOPEN
+from test import CollectorTestCase
+from test import Mock
+from test import get_collector_config
+from test import patch
+from test import unittest
 
-from dropwizard import DropwizardCollector
 
 ##########################################################################
 
@@ -79,6 +79,7 @@ class TestDropwizardCollector(CollectorTestCase):
         patch_urlopen.stop()
 
         self.assertPublishedMany(publish_mock, {})
+
 
 ##########################################################################
 if __name__ == "__main__":

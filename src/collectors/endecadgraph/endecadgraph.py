@@ -44,9 +44,9 @@ class EndecaDgraphCollector(diamond.collector.Collector):
     ]
 
     # set of regular expressions for matching & sub'ing.
-    NUMVAL_MATCH = re.compile('^[\d\.e\-\+]*$')
-    CHAR_BLACKLIST = re.compile('\-|\ |,|:|/|>|\(|\)')
-    UNDERSCORE_UNDUPE = re.compile('_+')
+    NUMVAL_MATCH = re.compile(r'^[\d\.e\-\+]*$')
+    CHAR_BLACKLIST = re.compile(r'\-|\ |,|:|/|>|\(|\)')
+    UNDERSCORE_UNDUPE = re.compile(r'_+')
 
     # endeca xml namespace
     XML_NS = '{http://xmlns.endeca.com/ene/dgraph}'

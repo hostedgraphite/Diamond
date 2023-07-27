@@ -95,7 +95,7 @@ class DiskTemperatureCollector(diamond.collector.Collector):
 
             try:
                 metrics[device + ".Temperature"] = float(output)
-            except:
+            except Exception:
                 self.log.warn('Disk temperature retrieval failed on ' + device)
 
         for metric in metrics.keys():

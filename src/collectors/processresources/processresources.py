@@ -1,6 +1,6 @@
 # coding=utf-8
 
-"""
+r"""
 A Diamond collector that collects memory usage of each process defined in it's
 config file by matching them with their executable filepath or the process name.
 This collector can also be used to collect memory usage for the Diamond process.

@@ -15,8 +15,8 @@ import diamond.collector
 import diamond.convertor
 from diamond.collector import str_to_bool
 LINE_PATTERN = re.compile(
-    '^(?P<source>\S+).*\s+(?P<offset>[+-]\d+)(?P<unit>\w+)\s+')
-IP_PATTERN = re.compile('^\d+\.\d+\.\d+\.\d+$')
+    r'^(?P<source>\S+).*\s+(?P<offset>[+-]\d+)(?P<unit>\w+)\s+')
+IP_PATTERN = re.compile(r'^\d+\.\d+\.\d+\.\d+$')
 
 
 def cleanup_source(source):

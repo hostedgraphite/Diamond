@@ -63,7 +63,7 @@ class MonitCollector(diamond.collector.Collector):
 
         try:
             dom = parseString("".join(response.readlines()))
-        except:
+        except Exception:
             self.log.error("Got an empty response from the monit server")
             return
 
@@ -111,7 +111,7 @@ class MonitCollector(diamond.collector.Collector):
                                         oldUnit='kilobyte',
                                         newUnit=unit))
 
-                    except:
+                    except Exception:
                         pass
 
         for key in metrics:

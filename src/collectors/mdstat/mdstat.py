@@ -46,8 +46,9 @@ bitmap: 1/1 pages [4KB], 65536KB chunk
 - recovery.remaining_time
 """
 
-import diamond.collector
 import re
+
+import diamond.collector
 
 
 class MdStatCollector(diamond.collector.Collector):
@@ -69,6 +70,7 @@ class MdStatCollector(diamond.collector.Collector):
 
     def collect(self):
         """Publish all mdstat metrics."""
+
         def traverse(d, metric_name=''):
             """
             Traverse the given nested dict using depth-first search.
@@ -193,9 +195,9 @@ class MdStatCollector(diamond.collector.Collector):
         members = block.split('\n')[0].split(' : ')[1].split(' ')[2:]
 
         device_regexp = re.compile(
-            '^(?P<member_name>.*)'
-            '\[(?P<member_role_number>\d*)\]'
-            '\(?(?P<member_state>[FS])?\)?$'
+            r'^(?P<member_name>.*)'
+            r'\[(?P<member_role_number>\d*)\]'
+            r'\(?(?P<member_state>[FS])?\)?$'
         )
 
         ret = {
@@ -237,13 +239,13 @@ class MdStatCollector(diamond.collector.Collector):
         :rtype: dict
         """
         array_status_regexp = re.compile(
-            '^ *(?P<blocks>\d*) blocks '
-            '(?:super (?P<superblock_version>\d\.\d) )?'
-            '(?:level (?P<raid_level>\d), '
-            '(?P<chunk_size>\d*)k chunk, '
-            'algorithm (?P<algorithm>\d) )?'
-            '(?:\[(?P<total_members>\d*)/(?P<actual_members>\d*)\])?'
-            '(?:(?P<rounding_factor>\d*)k rounding)?.*$'
+            r'^ *(?P<blocks>\d*) blocks '
+            r'(?:super (?P<superblock_version>\d\.\d) )?'
+            r'(?:level (?P<raid_level>\d), '
+            r'(?P<chunk_size>\d*)k chunk, '
+            r'algorithm (?P<algorithm>\d) )?'
+            r'(?:\[(?P<total_members>\d*)/(?P<actual_members>\d*)\])?'
+            r'(?:(?P<rounding_factor>\d*)k rounding)?.*$'
         )
 
         array_status_dict = \
@@ -289,9 +291,9 @@ class MdStatCollector(diamond.collector.Collector):
         :rtype: dict
         """
         array_bitmap_regexp = re.compile(
-            '^ *bitmap: (?P<allocated_pages>[0-9]*)/'
-            '(?P<total_pages>[0-9]*) pages '
-            '\[(?P<page_size>[0-9]*)KB\], '
+            r'^ *bitmap: (?P<allocated_pages>[0-9]*)/'
+            r'(?P<total_pages>[0-9]*) pages '
+            r'\[(?P<page_size>[0-9]*)KB\], '
             '(?P<chunk_size>[0-9]*)KB chunk.*$',
             re.MULTILINE
         )
@@ -307,9 +309,9 @@ class MdStatCollector(diamond.collector.Collector):
 
         # convert all values to int
         for key, value in array_bitmap_dict.items():
-                if not value:
-                    continue
-                array_bitmap_dict_sanitizied[key] = int(value)
+            if not value:
+                continue
+            array_bitmap_dict_sanitizied[key] = int(value)
 
         # convert page_size to bytes
         array_bitmap_dict_sanitizied['page_size'] *= 1024
@@ -339,9 +341,9 @@ class MdStatCollector(diamond.collector.Collector):
         :rtype: dict
         """
         array_recovery_regexp = re.compile(
-            '^ *\[.*\] *recovery = (?P<percent>\d*\.?\d*)%'
-            ' \(\d*/\d*\) finish=(?P<remaining_time>\d*\.?\d*)min '
-            'speed=(?P<speed>\d*)K/sec$',
+            r'^ *\[.*\] *recovery = (?P<percent>\d*\.?\d*)%'
+            r' \(\d*/\d*\) finish=(?P<remaining_time>\d*\.?\d*)min '
+            r'speed=(?P<speed>\d*)K/sec$',
             re.MULTILINE
         )
 
@@ -362,6 +364,6 @@ class MdStatCollector(diamond.collector.Collector):
 
         # convert minutes to milliseconds
         array_recovery_dict['remaining_time'] = \
-            int(float(array_recovery_dict['remaining_time'])*60*1000)
+            int(float(array_recovery_dict['remaining_time']) * 60 * 1000)
 
         return array_recovery_dict

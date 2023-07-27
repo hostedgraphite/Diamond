@@ -145,6 +145,7 @@ class TestMesosCGroupCollector(CollectorTestCase):
             'ENVIRONMENT.ROLE.TASK.0.memory.total_unevictable': '0'
         }
 
+
 ##########################################################################
 if __name__ == "__main__":
     unittest.main()

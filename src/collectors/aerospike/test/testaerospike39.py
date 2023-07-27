@@ -93,7 +93,7 @@ class TestAerospike39Collector(CollectorTestCase):
             [
                 "3.9",
                 self.getFixture('v3.9/statistics').getvalue(),
-                ]
+            ]
         })
 
         patch_Telnet = patch('telnetlib.Telnet', Mock(return_value=mockTelnet))
@@ -138,7 +138,7 @@ class TestAerospike39Collector(CollectorTestCase):
             [
                 "3.9",
                 self.getFixture('v3.9/throughput').getvalue(),
-                ]
+            ]
         })
 
         patch_Telnet = patch('telnetlib.Telnet', Mock(return_value=mockTelnet))
@@ -184,7 +184,7 @@ class TestAerospike39Collector(CollectorTestCase):
                 self.getFixture('v3.9/namespaces').getvalue(),
                 self.getFixture('v3.9/namespace_foo').getvalue(),
                 self.getFixture('v3.9/namespace_bar').getvalue(),
-                ],
+            ],
         })
 
         patch_Telnet = patch('telnetlib.Telnet', Mock(return_value=mockTelnet))
@@ -264,6 +264,7 @@ class TestAerospike39Collector(CollectorTestCase):
                 call('namespace/bar\n'),
             ],
         )
+
 
 ##########################################################################
 if __name__ == "__main__":

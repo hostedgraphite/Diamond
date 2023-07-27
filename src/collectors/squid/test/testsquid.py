@@ -189,6 +189,7 @@ class TestSquidCollector(CollectorTestCase):
                            defaultpath=self.collector.config['path'])
         self.assertPublishedMany(publish_mock, metrics)
 
+
 ##########################################################################
 if __name__ == "__main__":
     unittest.main()

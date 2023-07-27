@@ -129,7 +129,7 @@ class AerospikeCollector(diamond.collector.Collector):
             datasets = data.split(';')[1::2]
             for i, label in enumerate(labels):
                 # Extract namespace and histogram type from header label
-                match = re.match('\{(\w+)\}-(\w+)', label)
+                match = re.match(r'\{(\w+)\}-(\w+)', label)
                 if match:
                     namespace = match.group(1)
                     histogram = match.group(2)
@@ -184,7 +184,7 @@ class AerospikeCollector(diamond.collector.Collector):
             datasets = data.split(';')[1::2]
             for i, label in enumerate(labels):
                 # Extract namespace and histogram type from header label
-                match = re.match('\{(\w+)\}-(\w+)', label)
+                match = re.match(r'\{(\w+)\}-(\w+)', label)
                 if match:
                     namespace = match.group(1)
                     histogram = match.group(2)

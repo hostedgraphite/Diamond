@@ -62,7 +62,7 @@ class UPSCollector(diamond.collector.Collector):
 
             try:
                 val = float(datapoint[1])
-            except:
+            except Exception:
                 continue
 
             if len(datapoint[0].split(".")) == 2:

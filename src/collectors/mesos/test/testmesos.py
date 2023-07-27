@@ -131,7 +131,7 @@ class TestMesosCollector(CollectorTestCase):
         self.assertPublished(
             publish_mock,
             'frameworks.marathon-0_7_6.executors.task_name.cpus_percent',
-            0.5/1.7)
+            0.5 / 1.7)
 
     def fixture_cpu_utilisation(self, publish_mock):
         config = get_collector_config('MesosCollector', {'master': False})

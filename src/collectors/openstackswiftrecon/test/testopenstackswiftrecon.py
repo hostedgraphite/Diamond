@@ -66,6 +66,7 @@ class TestOpenstackSwiftReconCollector(CollectorTestCase):
                            metrics=metrics,
                            defaultpath=self.collector.config['path'])
 
+
 ##########################################################################
 if __name__ == "__main__":
     unittest.main()

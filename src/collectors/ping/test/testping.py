@@ -2,14 +2,15 @@
 # coding=utf-8
 ##########################################################################
 
-from test import CollectorTestCase
-from test import get_collector_config
-from test import unittest
-from test import Mock
-from test import patch
+from ping import PingCollector
 
 from diamond.collector import Collector
-from ping import PingCollector
+from test import CollectorTestCase
+from test import Mock
+from test import get_collector_config
+from test import patch
+from test import unittest
+
 
 ##########################################################################
 
@@ -213,6 +214,7 @@ class TestPingCollector(CollectorTestCase):
         self.assertPublishedMany(publish_mock, {
             'localhost': 10000
         })
+
 
 ##########################################################################
 if __name__ == "__main__":

@@ -246,4 +246,4 @@ class NagiosPerfdataCollector(diamond.collector.Collector):
     def _sanitize(self, s):
         """Sanitize the name of a metric to remove unwanted chars
         """
-        return re.sub("[^\w-]", "_", s)
+        return re.sub(r"[^\w-]", "_", s)

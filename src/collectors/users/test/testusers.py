@@ -2,16 +2,16 @@
 # coding=utf-8
 ##########################################################################
 
-from test import CollectorTestCase
-from test import get_collector_config
-from test import unittest
-from test import run_only
-from test import patch
+import sys
 
-from diamond.collector import Collector
 from users import UsersCollector
 
-import sys
+from diamond.collector import Collector
+from test import CollectorTestCase
+from test import get_collector_config
+from test import patch
+from test import run_only
+from test import unittest
 
 
 ##########################################################################
@@ -26,8 +26,8 @@ def run_only_if_pyutmp_is_available(func):
         import utmp
     except ImportError:
         utmp = None
-    pred = lambda: pyutmp is not None or utmp is not None
-    return run_only(func, pred)
+
+    return run_only(func, lambda: pyutmp is not None or utmp is not None)
 
 
 class TestUsersCollector(CollectorTestCase):
@@ -45,11 +45,10 @@ class TestUsersCollector(CollectorTestCase):
     @run_only_if_pyutmp_is_available
     @patch.object(Collector, 'publish')
     def test_should_work_with_real_data(self, publish_mock):
-
         metrics = {
-            'kormoc':   2,
-            'root':     3,
-            'total':    5,
+            'kormoc': 2,
+            'root': 3,
+            'total': 5,
         }
 
         self.setDocExample(collector=self.collector.__class__.__name__,
@@ -63,6 +62,7 @@ class TestUsersCollector(CollectorTestCase):
             self.collector.collect()
 
             self.assertPublishedMany(publish_mock, metrics)
+
 
 ##########################################################################
 if __name__ == "__main__":

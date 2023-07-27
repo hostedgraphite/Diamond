@@ -4,19 +4,19 @@
 The Collector class is a base class for all metric collectors.
 """
 
+import logging
 import os
 import platform
-import socket
-import platform
-import logging
-import configobj
-import time
 import re
+import socket
 import subprocess
+import time
+
+import configobj
 
 from diamond.metric import Metric
 from diamond.utils.config import load_config
-from . error import DiamondException
+from .error import DiamondException
 
 # Detect the architecture of the system and set the counters for MAX_VALUES
 # appropriately. Otherwise, rolling over counters will cause incorrect or
@@ -138,6 +138,7 @@ def get_hostname(config, method=None):
         return None
 
     raise NotImplementedError(config['hostname_method'])
+
 
 get_hostname.cached_results = {}
 
@@ -543,8 +544,8 @@ class ProcessCollector(Collector):
     def get_default_config_help(self):
         config_help = super(ProcessCollector, self).get_default_config_help()
         config_help.update({
-            'use_sudo':     'Use sudo?',
-            'sudo_cmd':     'Path to sudo',
+            'use_sudo': 'Use sudo?',
+            'sudo_cmd': 'Path to sudo',
         })
         return config_help
 
@@ -554,8 +555,8 @@ class ProcessCollector(Collector):
         """
         config = super(ProcessCollector, self).get_default_config()
         config.update({
-            'use_sudo':     False,
-            'sudo_cmd':     self.find_binary('/usr/bin/sudo'),
+            'use_sudo': False,
+            'sudo_cmd': self.find_binary('/usr/bin/sudo'),
         })
         return config
 

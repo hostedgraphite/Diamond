@@ -142,7 +142,7 @@ class OpenLDAPCollector(diamond.collector.Collector):
                                   'objectClass=*', [attr])
                 result_type, result_data = conn.result(num, 0)
                 datapoints[key] = int(result_data[0][1][attr][0])
-        except:
+        except Exception:
             self.log.warn('Unable to query ldap base=%s, attr=%s'
                           % (base, attr))
             raise

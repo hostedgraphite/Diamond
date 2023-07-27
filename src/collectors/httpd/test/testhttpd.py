@@ -334,6 +334,7 @@ class TestHttpdCollector(CollectorTestCase):
 
         self.assertEqual(self.collector.urls, expected_urls)
 
+
 ##########################################################################
 if __name__ == "__main__":
     unittest.main()
