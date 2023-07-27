@@ -22,10 +22,9 @@ Collects data from RabbitMQ through the admin interface
 """
 
 import diamond.collector
+import diamond.pycompat
+from diamond.pycompat import quote, Request, urljoin
 import re
-from urlparse import urljoin
-from urllib import quote
-import urllib2
 from base64 import b64encode
 
 try:
@@ -47,9 +46,9 @@ class RabbitMQClient(object):
 
     def do_call(self, path):
         url = urljoin(self.base_url, path)
-        req = urllib2.Request(url)
+        req = Request(url)
         req.add_header('Authorization', self._authorization)
-        return json.load(urllib2.urlopen(req, timeout=self.timeout))
+        return json.load(diamond.pycompat.urlopen(req, timeout=self.timeout))
 
     def get_all_vhosts(self):
         return self.do_call('vhosts')
@@ -170,7 +169,7 @@ class RabbitMQCollector(diamond.collector.Collector):
                              len(node_data['partitions']))
                 content = client.get_nodes()
                 self.publish('cluster.nodes', len(content))
-        except:
+        except Exception:
             self.log.exception('Could not connect to rabbitmq')
             return {}
 
@@ -243,7 +242,7 @@ class RabbitMQCollector(diamond.collector.Collector):
             vhost_conf, legacy = self.get_vhost_conf(vhost_names)
 
             # Iterate all vhosts in our vhosts configurations
-            for vhost, queues in vhost_conf.iteritems():
+            for vhost, queues in vhost_conf.items():
                 vhost_name = vhost
                 if self.config['replace_dot']:
                     vhost_name = vhost_name.replace(
@@ -277,7 +276,7 @@ class RabbitMQCollector(diamond.collector.Collector):
             overview = client.get_overview()
             for key in overview:
                 self._publish_metrics('', [], key, overview)
-        except:
+        except Exception:
             self.log.exception('An error occurred collecting from RabbitMQ')
             return {}
 
@@ -288,7 +287,7 @@ class RabbitMQCollector(diamond.collector.Collector):
         if isinstance(value, dict):
             for new_key in value:
                 self._publish_metrics(name, keys, new_key, value)
-        elif isinstance(value, (float, int, long)):
+        elif isinstance(value, (float, int)):
             joined_keys = '.'.join(keys)
             if name:
                 publish_key = '{}.{}'.format(name, joined_keys)

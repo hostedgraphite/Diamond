@@ -7,7 +7,7 @@ Collects the following from beanstalkd:
 
 #### Dependencies
 
- * beanstalkc
+ * pystalkd
 
 """
 
@@ -15,9 +15,10 @@ import re
 import diamond.collector
 
 try:
-    import beanstalkc
+    from pystalkd.Beanstalkd import Connection, BeanstalkdException
+    beanstalkc = True
 except ImportError:
-    beanstalkc = None
+    beanstalkc = False
 
 
 class BeanstalkdCollector(diamond.collector.Collector):
@@ -49,9 +50,8 @@ class BeanstalkdCollector(diamond.collector.Collector):
     def _get_stats(self):
         stats = {}
         try:
-            connection = beanstalkc.Connection(self.config['host'],
-                                               int(self.config['port']))
-        except beanstalkc.BeanstalkcException as e:
+            connection = Connection(self.config['host'], int(self.config['port']))
+        except BeanstalkdException as e:
             self.log.error("Couldn't connect to beanstalkd: %s", e)
             return {}
 
@@ -65,7 +65,7 @@ class BeanstalkdCollector(diamond.collector.Collector):
         return stats
 
     def collect(self):
-        if beanstalkc is None:
+        if beanstalkc is False:
             self.log.error('Unable to import beanstalkc')
             return {}
 

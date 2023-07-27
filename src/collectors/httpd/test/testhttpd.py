@@ -1,22 +1,24 @@
-#!/usr/bin/python
+#!/usr/bin/python3
 # coding=utf-8
 ##########################################################################
 
 from test import CollectorTestCase
 from test import get_collector_config
 from test import unittest
-from mock import Mock
-from mock import patch
+from test import Mock
+from test import patch
 
 from diamond.collector import Collector
 from httpd import HttpdCollector
-import httplib
+try:
+    from httplib import HTTPConnection, HTTPResponse
+except ImportError:
+    from http.client import HTTPConnection, HTTPResponse
 
 ##########################################################################
 
 
-class TestHTTPResponse(httplib.HTTPResponse):
-
+class TestHTTPResponse(HTTPResponse):
     def __init__(self):
         pass
 
@@ -39,8 +41,8 @@ class TestHttpdCollector(CollectorTestCase):
 
         self.HTTPResponse = TestHTTPResponse()
 
-        httplib.HTTPConnection.request = Mock(return_value=True)
-        httplib.HTTPConnection.getresponse = Mock(
+        HTTPConnection.request = Mock(return_value=True)
+        HTTPConnection.getresponse = Mock(
             return_value=self.HTTPResponse)
 
     def test_import(self):
@@ -331,6 +333,7 @@ class TestHttpdCollector(CollectorTestCase):
         expected_urls = {'localhost': 'http://localhost:80/server-status?auto'}
 
         self.assertEqual(self.collector.urls, expected_urls)
+
 
 ##########################################################################
 if __name__ == "__main__":

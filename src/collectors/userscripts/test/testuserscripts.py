@@ -1,25 +1,25 @@
-#!/usr/bin/python
+#!/usr/bin/python3
 # coding=utf-8
 ##########################################################################
 
 import os
 
-from test import CollectorTestCase
-from test import get_collector_config
-from test import unittest
-from test import run_only
-from mock import patch
+from userscripts import UserScriptsCollector
 
 from diamond.collector import Collector
-from userscripts import UserScriptsCollector
+from test import CollectorTestCase
+from test import get_collector_config
+from test import patch
+from test import run_only
+from test import unittest
+
 
 ##########################################################################
 
 
 def run_only_if_kitchen_is_available(func):
     import subprocess
-    pred = lambda: subprocess is not None
-    return run_only(func, pred)
+    return run_only(func, lambda: subprocess is not None)
 
 
 class TestUserScriptsCollector(CollectorTestCase):
@@ -57,6 +57,7 @@ class TestUserScriptsCollector(CollectorTestCase):
         # Just make sure publish got called >0 times, if this test fails it'll
         # be due to raising an exception. Meh.
         assert publish_mock.call_args_list
+
 
 ##########################################################################
 if __name__ == "__main__":

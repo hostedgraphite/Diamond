@@ -1,15 +1,16 @@
-#!/usr/bin/python
+#!/usr/bin/python3
 # coding=utf-8
 ##########################################################################
 
-from __future__ import print_function
 from test import CollectorTestCase
 from test import get_collector_config
 from test import unittest
-from mock import MagicMock, Mock, mock_open
-from mock import patch
+from mock import MagicMock, mock_open
+from test import patch
+from test import Mock
 
 from diamond.collector import Collector
+from diamond.pycompat import URLOPEN
 
 from mesos_cgroup import MesosCGroupCollector
 
@@ -65,37 +66,28 @@ class TestMesosCGroupCollector(CollectorTestCase):
                 raise NotImplementedError()
 
         def open_se(path, mode='r', create=True):
+            fixture = None
             if path.endswith('cpuacct/mesos/%s/cpuacct.usage' % task_id):
                 fixture = self.getFixture('cpuacct.usage')
-                m = mock_open(read_data=fixture.getvalue())
-                m.__enter__.return_value = fixture
-                return m
             elif path.endswith('cpuacct/mesos/%s/cpuacct.stat' % task_id):
                 fixture = self.getFixture('cpuacct.stat')
-                m = mock_open(read_data=fixture.getvalue())
-                m.__enter__.return_value = fixture
-                return m
             elif path.endswith('cpu/mesos/%s/cpu.stat' % task_id):
                 fixture = self.getFixture('cpu.stat')
-                m = mock_open(read_data=fixture.getvalue())
-                m.__enter__.return_value = fixture
-                return m
             elif path.endswith('memory/mesos/%s/memory.stat' % task_id):
                 fixture = self.getFixture('memory.stat')
-                m = mock_open(read_data=fixture.getvalue())
-                m.__enter__.return_value = fixture
-                return m
+
+            if fixture is not None:
+                return mock_open(read_data=fixture.getvalue()).return_value
             else:
                 patch_open.stop()
                 o = open(path, mode, create)
                 patch_open.start()
                 return o
 
-        patch_urlopen = patch('urllib2.urlopen', Mock(side_effect=urlopen_se))
+        patch_urlopen = patch(URLOPEN, Mock(side_effect=urlopen_se))
         patch_listdir = patch('os.listdir', Mock(side_effect=listdir_se))
         patch_isdir = patch('os.path.isdir', Mock(side_effect=isdir_se))
-        patch_open = patch('__builtin__.open', MagicMock(spec=file,
-                                                         side_effect=open_se))
+        patch_open = patch('builtins.open', MagicMock(spec=open, side_effect=open_se))
 
         patch_urlopen.start()
         patch_listdir.start()
@@ -152,6 +144,7 @@ class TestMesosCGroupCollector(CollectorTestCase):
             'ENVIRONMENT.ROLE.TASK.0.memory.total_active_file': '180727808',
             'ENVIRONMENT.ROLE.TASK.0.memory.total_unevictable': '0'
         }
+
 
 ##########################################################################
 if __name__ == "__main__":

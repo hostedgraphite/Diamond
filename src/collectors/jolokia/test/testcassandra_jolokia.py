@@ -1,11 +1,11 @@
-#!/usr/bin/python
+#!/usr/bin/python3
 # coding=utf-8
 ##########################################################################
 
 from test import CollectorTestCase
 from test import get_collector_config
 from test import unittest
-from mock import patch
+from test import patch
 
 from diamond.collector import Collector
 
@@ -128,6 +128,7 @@ class TestCassandraJolokiaCollector(CollectorTestCase):
             'WackyMetricSeventeen.p99':
             self.expected_fixture_a_p('p99')
         })
+
 
 ##########################################################################
 if __name__ == "__main__":

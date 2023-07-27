@@ -1,12 +1,13 @@
-#!/usr/bin/python
+#!/usr/bin/python3
 # coding=utf-8
 ##########################################################################
 
 from test import CollectorTestCase
 from test import get_collector_config
 from test import unittest
-from mock import Mock, call
-from mock import patch
+from mock import call
+from test import Mock
+from test import patch
 
 from diamond.collector import Collector
 
@@ -92,7 +93,7 @@ class TestAerospike39Collector(CollectorTestCase):
             [
                 "3.9",
                 self.getFixture('v3.9/statistics').getvalue(),
-                ]
+            ]
         })
 
         patch_Telnet = patch('telnetlib.Telnet', Mock(return_value=mockTelnet))
@@ -137,7 +138,7 @@ class TestAerospike39Collector(CollectorTestCase):
             [
                 "3.9",
                 self.getFixture('v3.9/throughput').getvalue(),
-                ]
+            ]
         })
 
         patch_Telnet = patch('telnetlib.Telnet', Mock(return_value=mockTelnet))
@@ -183,7 +184,7 @@ class TestAerospike39Collector(CollectorTestCase):
                 self.getFixture('v3.9/namespaces').getvalue(),
                 self.getFixture('v3.9/namespace_foo').getvalue(),
                 self.getFixture('v3.9/namespace_bar').getvalue(),
-                ],
+            ],
         })
 
         patch_Telnet = patch('telnetlib.Telnet', Mock(return_value=mockTelnet))
@@ -263,6 +264,7 @@ class TestAerospike39Collector(CollectorTestCase):
                 call('namespace/bar\n'),
             ],
         )
+
 
 ##########################################################################
 if __name__ == "__main__":

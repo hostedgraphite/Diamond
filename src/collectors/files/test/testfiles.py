@@ -1,4 +1,4 @@
-#!/usr/bin/python
+#!/usr/bin/python3
 # coding=utf-8
 ###############################################################################
 
@@ -20,6 +20,7 @@ class TestFilesCollector(CollectorTestCase):
 
     def test_import(self):
         self.assertTrue(FilesCollector)
+
 
 ###############################################################################
 if __name__ == "__main__":

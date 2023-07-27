@@ -1,8 +1,9 @@
-#!/usr/bin/env python
+#!/usr/bin/env python3
 # coding=utf-8
 ###############################################################################
 
-from __future__ import print_function
+
+from io import BytesIO
 import os
 import sys
 import inspect
@@ -20,18 +21,31 @@ except ImportError:
 try:
     from cStringIO import StringIO
 except ImportError:
-    from StringIO import StringIO
+    try:
+        from StringIO import StringIO
+    except ImportError:
+        from io import StringIO
 
 try:
     from setproctitle import setproctitle
 except ImportError:
     setproctitle = None
 
+try:
+    from mock import ANY, call, MagicMock, Mock, mock_open, patch
+except ImportError:
+    from unittest.mock import ANY, call, MagicMock, Mock, mock_open, patch
+
+try:  # py3k way
+    import builtins
+
+    BUILTIN_OPEN = "builtins.open"
+except ImportError:  # py2.x way
+    BUILTIN_OPEN = "__builtin__.open"
+
 sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__))))
-sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__),
-                                             'src')))
-sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__),
-                                             'src', 'collectors')))
+sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), 'src')))
+sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), 'src', 'collectors')))
 
 
 def run_only(func, predicate):
@@ -40,6 +54,7 @@ def run_only(func, predicate):
     else:
         def f(arg):
             pass
+
         return f
 
 
@@ -61,7 +76,7 @@ class CollectorTestCase(unittest.TestCase):
             return False
 
         filePath = os.path.join(os.path.dirname(os.path.realpath(__file__)),
-                                'docs', 'collectors',  collector + '.md')
+                                'docs', 'collectors', collector + '.md')
 
         if not os.path.exists(filePath):
             return False
@@ -79,7 +94,7 @@ class CollectorTestCase(unittest.TestCase):
             with open(filePath, 'w') as fp:
                 for line in content:
                     if line.strip() == '__EXAMPLESHERE__':
-                        for metric in sorted(metrics.iterkeys()):
+                        for metric in sorted(metrics.keys()):
 
                             metricPath = 'servers.hostname.'
 
@@ -113,6 +128,10 @@ class CollectorTestCase(unittest.TestCase):
         with open(self.getFixturePath(fixture_name), 'r') as f:
             return StringIO(f.read())
 
+    def getFixtureInBytes(self, fixture_name):
+        with open(self.getFixturePath(fixture_name), 'rb') as f:
+            return BytesIO(f.read())
+
     def getFixtures(self):
         fixtures = []
         for root, dirnames, filenames in os.walk(self.getFixtureDirPath()):
@@ -120,7 +139,7 @@ class CollectorTestCase(unittest.TestCase):
         return fixtures
 
     def getPickledResults(self, results_name):
-        with open(self.getFixturePath(results_name), 'r') as f:
+        with open(self.getFixturePath(results_name), 'rb') as f:
             return pickle.load(f)
 
     def setPickledResults(self, results_name, data):
@@ -133,11 +152,11 @@ class CollectorTestCase(unittest.TestCase):
     def assertPublished(self, mock, key, value, expected_value=1):
         if type(mock) is list:
             for m in mock:
-                calls = (filter(lambda x: x[0][0] == key, m.call_args_list))
+                calls = list(filter(lambda x: x[0][0] == key, m.call_args_list))
                 if len(calls) > 0:
                     break
         else:
-            calls = filter(lambda x: x[0][0] == key, mock.call_args_list)
+            calls = list(filter(lambda x: x[0][0] == key, mock.call_args_list))
 
         actual_value = len(calls)
         message = '%s: actual number of calls %d, expected %d' % (
@@ -169,7 +188,7 @@ class CollectorTestCase(unittest.TestCase):
         return self.assertPublishedMany(mock, dict, expected_value)
 
     def assertPublishedMany(self, mock, dict, expected_value=1):
-        for key, value in dict.iteritems():
+        for key, value in dict.items():
             self.assertPublished(mock, key, value, expected_value)
 
         if type(mock) is list:
@@ -182,8 +201,8 @@ class CollectorTestCase(unittest.TestCase):
         return self.assertPublishedMetric(mock, key, value, expected_value)
 
     def assertPublishedMetric(self, mock, key, value, expected_value=1):
-        calls = filter(lambda x: x[0][0].path.find(key) != -1,
-                       mock.call_args_list)
+        calls = list(filter(lambda x: x[0][0].path.find(key) != -1,
+                            mock.call_args_list))
 
         actual_value = len(calls)
         message = '%s: actual number of calls %d, expected %d' % (
@@ -215,10 +234,11 @@ class CollectorTestCase(unittest.TestCase):
         return self.assertPublishedMetricMany(mock, dict, expected_value)
 
     def assertPublishedMetricMany(self, mock, dict, expected_value=1):
-        for key, value in dict.iteritems():
+        for key, value in dict.items():
             self.assertPublishedMetric(mock, key, value, expected_value)
 
         mock.reset_mock()
+
 
 collectorTests = {}
 
@@ -249,6 +269,7 @@ def getCollectorTests(path):
         cPath = os.path.abspath(os.path.join(path, f))
         if os.path.isdir(cPath):
             getCollectorTests(cPath)
+
 
 ###############################################################################
 

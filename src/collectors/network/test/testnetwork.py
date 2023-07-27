@@ -1,20 +1,18 @@
-#!/usr/bin/python
+#!/usr/bin/python3
 # coding=utf-8
 ##########################################################################
 
-from test import CollectorTestCase
-from test import get_collector_config
-from test import unittest
-from mock import Mock
-from mock import patch
-
-try:
-    from cStringIO import StringIO
-except ImportError:
-    from StringIO import StringIO
+from network import NetworkCollector
 
 from diamond.collector import Collector
-from network import NetworkCollector
+from test import BUILTIN_OPEN
+from test import CollectorTestCase
+from test import Mock
+from test import StringIO
+from test import get_collector_config
+from test import patch
+from test import unittest
+
 
 ##########################################################################
 
@@ -24,7 +22,7 @@ class TestNetworkCollector(CollectorTestCase):
     def setUp(self):
         config = get_collector_config('NetworkCollector', {
             'interfaces': ['eth', 'em', 'bond', 'veth', 'br-lxc'],
-            'interval':  10,
+            'interval': 10,
             'byte_unit': ['bit', 'megabit', 'megabyte'],
         })
 
@@ -33,7 +31,7 @@ class TestNetworkCollector(CollectorTestCase):
     def test_import(self):
         self.assertTrue(NetworkCollector)
 
-    @patch('__builtin__.open')
+    @patch(BUILTIN_OPEN)
     @patch('os.access', Mock(return_value=True))
     @patch.object(Collector, 'publish')
     def test_should_open_proc_net_dev(self, publish_mock, open_mock):
@@ -321,6 +319,7 @@ class TestNetworkCollector(CollectorTestCase):
         }
 
         self.assertPublishedMany(publish_mock, metrics)
+
 
 ##########################################################################
 if __name__ == "__main__":

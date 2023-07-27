@@ -18,6 +18,8 @@ instances
 # should suffice
 
 import diamond.collector
+from diamond.pycompat import long
+
 try:
     import vms
 except ImportError:

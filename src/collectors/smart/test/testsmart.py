@@ -1,13 +1,13 @@
-#!/usr/bin/python
+#!/usr/bin/python3
 # coding=utf-8
 ##########################################################################
 
 from test import CollectorTestCase
 from test import get_collector_config
 from test import unittest
-from mock import Mock
-from mock import call
-from mock import patch
+from test import Mock
+from test import call
+from test import patch
 
 from diamond.collector import Collector
 from smart import SmartCollector
@@ -184,6 +184,7 @@ class TestSmartCollector(CollectorTestCase):
         assert_attrs_start_at(7, 'osx_ssd')
         assert_attrs_start_at(7, 'centos5.5_hdd')
         assert_attrs_start_at(8, 'debian_invalid_checksum_warning')
+
 
 ##########################################################################
 if __name__ == "__main__":

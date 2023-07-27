@@ -117,11 +117,11 @@ class DarnerCollector(diamond.collector.Collector):
         hosts = self.config.get('hosts')
 
         # Convert a string config value to be an array
-        if isinstance(hosts, basestring):
+        if isinstance(hosts, str):
             hosts = [hosts]
 
         for host in hosts:
-            matches = re.search('((.+)\@)?([^:]+)(:(\d+))?', host)
+            matches = re.search(r'((.+)\@)?([^:]+)(:(\d+))?', host)
             alias = matches.group(2)
             hostname = matches.group(3)
             port = matches.group(5)

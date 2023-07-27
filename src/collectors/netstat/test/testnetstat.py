@@ -1,12 +1,11 @@
-#!/usr/bin/python
+#!/usr/bin/python3
 # coding=utf-8
 ################################################################################
 
-from __future__ import print_function
 from test import CollectorTestCase
 from test import get_collector_config
 from test import unittest
-from mock import patch
+from test import patch
 
 from diamond.collector import Collector
 from netstat import NetstatCollector
@@ -35,6 +34,7 @@ class TestNetstatCollector(CollectorTestCase):
                            defaultpath=self.collector.config['path'])
         print(publish_mock)
         self.assertPublishedMany(publish_mock, metrics)
+
 
 ################################################################################
 if __name__ == "__main__":

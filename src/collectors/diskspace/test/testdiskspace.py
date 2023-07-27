@@ -1,12 +1,14 @@
-#!/usr/bin/python
+#!/usr/bin/python3
 # coding=utf-8
 ##########################################################################
 
 from test import CollectorTestCase
 from test import get_collector_config
 from test import unittest
-from mock import Mock
-from mock import patch
+from test import run_only
+from test import Mock
+from test import patch
+from test import BUILTIN_OPEN
 
 from diamond.collector import Collector
 from diskspace import DiskSpaceCollector
@@ -33,7 +35,7 @@ class TestDiskSpaceCollector(CollectorTestCase):
     def run_collection(self, statvfs_mock, os_major, os_minor):
         os_stat_mock = patch('os.stat')
         os_path_isdir_mock = patch('os.path.isdir', Mock(return_value=False))
-        open_mock = patch('__builtin__.open',
+        open_mock = patch(BUILTIN_OPEN,
                           Mock(return_value=self.getFixture('proc_mounts')))
         os_statvfs_mock = patch('os.statvfs', Mock(return_value=statvfs_mock))
 
@@ -53,7 +55,7 @@ class TestDiskSpaceCollector(CollectorTestCase):
 
         os_stat_mock = patch('os.stat')
         os_realpath_mock = patch('os.path.realpath')
-        open_mock = patch('__builtin__.open',
+        open_mock = patch(BUILTIN_OPEN,
                           Mock(return_value=self.getFixture('proc_mounts')))
 
         stat_mock = os_stat_mock.start()
@@ -194,6 +196,7 @@ class TestDiskSpaceCollector(CollectorTestCase):
                            metrics=metrics,
                            defaultpath=self.collector.config['path'])
         self.assertPublishedMany(publish_mock, metrics)
+
 
 ##########################################################################
 if __name__ == "__main__":

@@ -1,15 +1,16 @@
-#!/usr/bin/python
+#!/usr/bin/python3
 # coding=utf-8
 ##########################################################################
 
-from test import CollectorTestCase
-from test import get_collector_config
-from test import unittest
-from mock import Mock
-from mock import patch
+from ipvs import IPVSCollector
 
 from diamond.collector import Collector
-from ipvs import IPVSCollector
+from test import CollectorTestCase
+from test import Mock
+from test import get_collector_config
+from test import patch
+from test import unittest
+
 
 ##########################################################################
 
@@ -52,6 +53,7 @@ class TestIPVSCollector(CollectorTestCase):
                            metrics=metrics,
                            defaultpath=self.collector.config['path'])
         self.assertPublishedMany(publish_mock, metrics)
+
 
 ##########################################################################
 if __name__ == "__main__":

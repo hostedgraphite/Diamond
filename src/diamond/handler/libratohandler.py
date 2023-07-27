@@ -12,7 +12,7 @@ operations more fun and efficient.
 
 """
 
-from Handler import Handler
+from . Handler import Handler
 import logging
 import time
 import re
@@ -48,7 +48,7 @@ class LibratoHandler(Handler):
 
         # If a user leaves off the ending comma, cast to a array for them
         include_filters = self.config['include_filters']
-        if isinstance(include_filters, basestring):
+        if isinstance(include_filters, str):
             include_filters = [include_filters]
 
         self.include_reg = re.compile(r'(?:%s)' % '|'.join(include_filters))
@@ -72,8 +72,8 @@ class LibratoHandler(Handler):
                 'A list of regex patterns. Only measurements whose path '
                 'matches a filter will be submitted. Useful for limiting '
                 'usage to *only* desired measurements, e.g. '
-                '`"^diskspace\..*\.byte_avail$", "^loadavg\.01"` or '
-                '`"^sockets\.",` (note trailing comma to indicate a list)',
+                r'`"^diskspace\..*\.byte_avail$", "^loadavg\.01"` or '
+                r'`"^sockets\.",` (note trailing comma to indicate a list)',
         })
 
         return config

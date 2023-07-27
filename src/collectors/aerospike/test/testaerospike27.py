@@ -1,12 +1,13 @@
-#!/usr/bin/python
+#!/usr/bin/python3
 # coding=utf-8
 ##########################################################################
 
 from test import CollectorTestCase
 from test import get_collector_config
 from test import unittest
-from mock import Mock, call
-from mock import patch
+from mock import call
+from test import Mock
+from test import patch
 
 from diamond.collector import Collector
 
@@ -96,7 +97,7 @@ class TestAerospike27Collector(CollectorTestCase):
             [
                 "2.7.1\n",
                 self.getFixture('v2.7/statistics').getvalue()
-                ]
+            ]
         })
 
         patch_Telnet = patch('telnetlib.Telnet', Mock(return_value=mockTelnet))
@@ -194,7 +195,7 @@ class TestAerospike27Collector(CollectorTestCase):
                 self.getFixture('v2.7/namespaces').getvalue(),
                 self.getFixture('v2.7/namespace_foo').getvalue(),
                 self.getFixture('v2.7/namespace_bar').getvalue(),
-                ],
+            ],
         })
 
         patch_Telnet = patch('telnetlib.Telnet', Mock(return_value=mockTelnet))

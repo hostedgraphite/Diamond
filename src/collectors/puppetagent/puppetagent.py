@@ -42,7 +42,7 @@ class PuppetAgentCollector(diamond.collector.Collector):
         summary_fp = open(self.config['yaml_path'], 'r')
 
         try:
-            summary = yaml.load(summary_fp)
+            summary = yaml.safe_load(summary_fp)
         finally:
             summary_fp.close()
 
@@ -55,9 +55,9 @@ class PuppetAgentCollector(diamond.collector.Collector):
 
         summary = self._get_summary()
 
-        for sect, data in summary.iteritems():
-            for stat, value in data.iteritems():
-                if value is None or isinstance(value, basestring):
+        for sect, data in summary.items():
+            for stat, value in data.items():
+                if value is None or isinstance(value, str):
                     continue
 
                 metric = '.'.join([sect, stat])

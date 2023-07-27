@@ -11,7 +11,7 @@ Collects stats from bind 9.5's statistics server
 """
 
 import diamond.collector
-import urllib2
+import diamond.pycompat
 import xml.etree.cElementTree as ElementTree
 
 
@@ -69,22 +69,22 @@ class BindCollector(diamond.collector.Collector):
 
     def collect(self):
         try:
-            req = urllib2.urlopen('http://%s:%d/' % (
+            req = diamond.pycompat.urlopen('http://%s:%d/' % (
                 self.config['host'], int(self.config['port'])))
         except Exception as e:
             self.log.error('Couldnt connect to bind: %s', e)
             return {}
 
-        tree = ElementTree.parse(req)
+        tree = ElementTree.fromstring(req.read())
 
         if not tree:
             raise ValueError("Corrupt XML file, no statistics found")
 
-        root = tree.find('bind/statistics')
+        root = tree
 
         if 'resolver' in self.config['publish']:
             for view in root.findall('views/view'):
-                name = view.find('name').text
+                name = view.attrib.get('name')
                 if name == '_bind' and not self.config['publish_view_bind']:
                     continue
                 if name == '_meta' and not self.config['publish_view_meta']:
@@ -97,11 +97,13 @@ class BindCollector(diamond.collector.Collector):
                                               counter.find('name').text),
                         int(counter.find('counter').text)
                     )
-                for counter in view.findall('resstat'):
+                for counter in view.findall('counters[@type="resstats"]/counter'):
                     self.clean_counter(
-                        'view.%s.resstat.%s' % (name,
-                                                counter.find('name').text),
-                        int(counter.find('counter').text)
+                        'view.%s.resstat.%s' % (
+                            name,
+                            counter.attrib.get('name')
+                        ),
+                        int(counter.text)
                     )
                 for counter in view.findall('cache/rrset'):
                     self.clean_counter(
@@ -112,38 +114,38 @@ class BindCollector(diamond.collector.Collector):
                     )
 
         if 'server' in self.config['publish']:
-            for counter in root.findall('server/requests/opcode'):
+            for counter in root.findall('server/counters[@type="opcode"]/counter'):
                 self.clean_counter(
-                    'requests.%s' % counter.find('name').text,
-                    int(counter.find('counter').text)
+                    'requests.%s' % counter.attrib.get('name'),
+                    int(counter.text)
                 )
-            for counter in root.findall('server/queries-in/rdtype'):
+            for counter in root.findall('server/counters[@type="resqtype"]/counter'):
                 self.clean_counter(
-                    'queries.%s' % counter.find('name').text,
-                    int(counter.find('counter').text)
+                    'queries.%s' % counter.attrib.get('name'),
+                    int(counter.text)
                 )
-            for counter in root.findall('server/nsstat'):
+            for counter in root.findall('server/counters[@type="nsstat"]/counter'):
                 self.clean_counter(
-                    'nsstat.%s' % counter.find('name').text,
-                    int(counter.find('counter').text)
+                    'nsstat.%s' % counter.attrib.get('name'),
+                    int(counter.text)
                 )
 
         if 'zonemgmt' in self.config['publish']:
-            for counter in root.findall('server/zonestat'):
+            for counter in root.findall('server/counters[@type="zonestat"]/counter'):
                 self.clean_counter(
-                    'zonestat.%s' % counter.find('name').text,
-                    int(counter.find('counter').text)
+                    'zonestat.%s' % counter.attrib.get('name'),
+                    int(counter.text)
                 )
 
         if 'sockets' in self.config['publish']:
-            for counter in root.findall('server/sockstat'):
+            for counter in root.findall('server/counters[@type="sockstat"]/counter'):
                 self.clean_counter(
-                    'sockstat.%s' % counter.find('name').text,
-                    int(counter.find('counter').text)
+                    'sockstat.%s' % counter.attrib.get('name'),
+                    int(counter.text)
                 )
 
         if 'memory' in self.config['publish']:
-            for counter in root.find('memory/summary').getchildren():
+            for counter in list(root.find('memory/summary')):
                 self.publish(
                     'memory.%s' % counter.tag,
                     int(counter.text)

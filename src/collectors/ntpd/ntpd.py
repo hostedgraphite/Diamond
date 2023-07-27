@@ -46,8 +46,10 @@ class NtpdCollector(diamond.collector.Collector):
             if str_to_bool(self.config['use_sudo']):
                 command.insert(0, self.config['sudo_cmd'])
 
-            return subprocess.Popen(command,
-                                    stdout=subprocess.PIPE).communicate()[0]
+            stdout = subprocess.Popen(command,
+                                      stdout=subprocess.PIPE).communicate()[0]
+            if isinstance(stdout, bytes):
+                stdout = stdout.decode()
         except OSError:
             self.log.exception("Unable to run %s", command)
             return ""
@@ -76,7 +78,11 @@ class NtpdCollector(diamond.collector.Collector):
             data['poll'] = {'val': parts[5], 'precision': 0}
             data['reach'] = {'val': parts[6], 'precision': 0}
             data['delay'] = {'val': parts[7], 'precision': 6}
-            data['offset'] = {'val': parts[8], 'precision': 0}
+
+            # Commented this as a temporary workaround to resolve an issue with the 'offset' metric being processed
+            # twice, since both ntpq and ntpdc_kerninfo fixtures contain that metric
+            # data['offset'] = {'val': parts[8], 'precision': 0}
+
             data['jitter'] = {'val': parts[9], 'precision': 6}
 
         def convert_to_second(when_ntpd_ouput):

@@ -52,7 +52,7 @@ class KafkaConsumerLagCollector(diamond.collector.ProcessCollector):
                     consumer_group,
                     '--zookeeper',
                     zookeeper
-                    ]
+                ]
 
                 if topic:
                     cmd += '--topic %s' % topic

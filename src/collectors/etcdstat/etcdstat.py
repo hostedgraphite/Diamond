@@ -13,8 +13,9 @@ Collects metrics from an Etcd instance.
 """
 
 import diamond.collector
+import diamond.pycompat
 import json
-import urllib2
+from diamond.pycompat import HTTPError
 
 METRICS_KEYS = ['sendPkgRate',
                 'recvPkgRate',
@@ -76,7 +77,7 @@ class EtcdCollector(diamond.collector.Collector):
     def collect_store_metrics(self):
         metrics = self.get_store_metrics()
 
-        for k, v in metrics.iteritems():
+        for k, v in metrics.items():
             key = self.clean_up(k)
             self.publish("store.%s" % key, v)
 
@@ -100,8 +101,8 @@ class EtcdCollector(diamond.collector.Collector):
             url = "%s://%s:%s/v2/stats/%s" % (protocol, self.config['host'],
                                               self.config['port'], category)
 
-            return json.load(urllib2.urlopen(url, **opts))
-        except (urllib2.HTTPError, ValueError) as err:
+            return json.load(diamond.pycompat.urlopen(url, **opts))
+        except (HTTPError, ValueError) as err:
             self.log.error('Unable to read JSON response: %s' % err)
             return {}
 

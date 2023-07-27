@@ -1,14 +1,16 @@
-#!/usr/bin/python
+#!/usr/bin/python3
 # coding=utf-8
 ##########################################################################
 
 from test import CollectorTestCase
 from test import get_collector_config
 from test import unittest
-from mock import call, patch
+from mock import call
+from test import patch
+from test import Mock
 
 from diamond.collector import Collector
-
+from diamond.pycompat import URLOPEN
 from solr import SolrCollector
 
 ##########################################################################
@@ -23,13 +25,14 @@ class TestSolrCollector(CollectorTestCase):
     def test_import(self):
         self.assertTrue(SolrCollector)
 
-    @patch('urllib2.urlopen')
+    @patch(URLOPEN)
     @patch.object(Collector, 'publish')
     def test_should_work_with_real_data(self, publish_mock, urlopen_mock):
         returns = [self.getFixture('cores'),
                    self.getFixture('ping'),
                    self.getFixture('stats'),
                    self.getFixture('system')]
+
         urlopen_mock.side_effect = lambda *args: returns.pop(0)
 
         self.collector.collect()
@@ -123,8 +126,7 @@ class TestSolrCollector(CollectorTestCase):
             'jvm.mem.used': 19.2,
         }
 
-        self.setDocExample(collector=self.collector.__class__.__name__,
-                           metrics=metrics)
+        self.setDocExample(collector=self.collector.__class__.__name__, metrics=metrics)
         self.assertPublishedMany(publish_mock, metrics)
 
         urlopen_mock.assert_has_calls([
@@ -135,7 +137,7 @@ class TestSolrCollector(CollectorTestCase):
             call('http://localhost:8983/solr/admin/system?stats=true&wt=json')
         ])
 
-    @patch('urllib2.urlopen')
+    @patch(URLOPEN)
     @patch.object(Collector, 'publish')
     def test_should_fail_gracefully(self, publish_mock, urlopen_mock):
         urlopen_mock.return_value = self.getFixture('stats_blank')
@@ -143,8 +145,7 @@ class TestSolrCollector(CollectorTestCase):
         self.collector.collect()
 
         self.assertPublishedMany(publish_mock, {})
-        urlopen_mock.assert_called_once_with(
-            'http://localhost:8983/solr/admin/cores?action=STATUS&wt=json')
+        urlopen_mock.assert_called_once_with('http://localhost:8983/solr/admin/cores?action=STATUS&wt=json')
 
 
 ##########################################################################

@@ -1,13 +1,14 @@
-#!/usr/bin/python
+#!/usr/bin/python3
 # coding=utf-8
 ##########################################################################
 
 from test import CollectorTestCase
 from test import get_collector_config
 from test import unittest
-from mock import patch
+from test import patch
 
 from diamond.collector import Collector
+from diamond.pycompat import URLOPEN
 
 from eventstoreprojections import EventstoreProjectionsCollector
 
@@ -23,7 +24,7 @@ class TestEventstoreProjectionsCollector(CollectorTestCase):
     def test_import(self):
         self.assertTrue(EventstoreProjectionsCollector)
 
-    @patch('urllib2.urlopen')
+    @patch(URLOPEN)
     @patch.object(Collector, 'publish')
     def test_should_work_with_real_data(self, publish_mock, urlopen_mock):
         returns = [self.getFixture('projections')]

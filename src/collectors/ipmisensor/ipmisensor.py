@@ -61,13 +61,13 @@ class IPMISensorCollector(diamond.collector.Collector):
         # Try just getting the float value
         try:
             return float(value)
-        except:
+        except Exception:
             pass
 
         # Next best guess is a hex value
         try:
             return float.fromhex(value)
-        except:
+        except Exception:
             pass
 
         # No luck, bail

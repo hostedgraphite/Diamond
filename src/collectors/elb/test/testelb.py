@@ -1,15 +1,14 @@
-#!/usr/bin/python
+#!/usr/bin/python3
 # coding=utf-8
 
 import datetime
-import mock
 
 from test import CollectorTestCase
 from test import get_collector_config
 from test import unittest
-from mock import patch
+from test import patch
 from test import run_only
-from mock import Mock
+from test import Mock
 
 from diamond.collector import Collector
 from elb import ElbCollector
@@ -20,8 +19,8 @@ def run_only_if_boto_is_available(func):
         import boto
     except ImportError:
         boto = None
-    pred = lambda: boto is not None
-    return run_only(func, pred)
+
+    return run_only(func, lambda: boto is not None)
 
 
 class TestElbCollector(CollectorTestCase):
@@ -99,8 +98,8 @@ class TestElbCollector(CollectorTestCase):
         collector = ElbCollector(config, handlers=[])
 
         target = ts + datetime.timedelta(minutes=1)
-        with mock.patch.object(datetime, 'datetime',
-                               mock.Mock(wraps=datetime.datetime)) as patched:
+        with patch.object(datetime, 'datetime',
+                          Mock(wraps=datetime.datetime)) as patched:
             patched.utcnow.return_value = target
             collector.collect()
 
@@ -175,8 +174,8 @@ class TestElbCollector(CollectorTestCase):
         collector = ElbCollector(config, handlers=[])
 
         target = ts + datetime.timedelta(minutes=1)
-        with mock.patch.object(datetime, 'datetime',
-                               mock.Mock(wraps=datetime.datetime)) as patched:
+        with patch.object(datetime, 'datetime',
+                          Mock(wraps=datetime.datetime)) as patched:
             patched.utcnow.return_value = target
             collector.collect()
 
@@ -217,6 +216,7 @@ def assertRaisesAndContains(excClass, contains_str, callableObj, *args,
         else:
             excName = str(excClass)
         raise AssertionError("%s not raised" % excName)
+
 
 if __name__ == "__main__":
     unittest.main()

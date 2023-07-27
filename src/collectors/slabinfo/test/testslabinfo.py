@@ -1,17 +1,14 @@
-#!/usr/bin/python
+#!/usr/bin/python3
 # coding=utf-8
 ##########################################################################
 
 from test import CollectorTestCase
 from test import get_collector_config
 from test import unittest
-from mock import Mock
-from mock import patch
-
-try:
-    from cStringIO import StringIO
-except ImportError:
-    from StringIO import StringIO
+from test import Mock
+from test import patch
+from test import StringIO
+from test import BUILTIN_OPEN
 
 from diamond.collector import Collector
 from slabinfo import SlabInfoCollector
@@ -31,7 +28,7 @@ class TestSlabInfoCollector(CollectorTestCase):
     def test_import(self):
         self.assertTrue(SlabInfoCollector)
 
-    @patch('__builtin__.open')
+    @patch(BUILTIN_OPEN)
     @patch('os.access', Mock(return_value=True))
     @patch.object(Collector, 'publish')
     def test_should_open_proc_stat(self, publish_mock, open_mock):
@@ -50,6 +47,7 @@ class TestSlabInfoCollector(CollectorTestCase):
                            metrics=metrics,
                            defaultpath=self.collector.config['path'])
         self.assertPublishedMany(publish_mock, metrics)
+
 
 ##########################################################################
 if __name__ == "__main__":

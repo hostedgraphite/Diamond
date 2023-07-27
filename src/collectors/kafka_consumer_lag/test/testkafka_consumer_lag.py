@@ -1,10 +1,11 @@
-#!/usr/bin/python
+#!/usr/bin/python3
 # coding=utf-8
 ##########################################################################
 
 from test import CollectorTestCase
 from test import get_collector_config
-from mock import patch, Mock
+from test import patch
+from test import Mock
 
 from diamond.collector import Collector
 from kafka_consumer_lag import KafkaConsumerLagCollector

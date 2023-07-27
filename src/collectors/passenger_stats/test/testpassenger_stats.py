@@ -1,4 +1,4 @@
-#!/usr/bin/python
+#!/usr/bin/python3
 # coding=utf-8
 ##########################################################################
 
@@ -19,6 +19,7 @@ class TestPassengerCollector(CollectorTestCase):
 
     def test_import(self):
         self.assertTrue(PassengerCollector)
+
 
 ##########################################################################
 if __name__ == "__main__":

@@ -1,12 +1,12 @@
-#!/usr/bin/python
+#!/usr/bin/python3
 # coding=utf-8
 ##########################################################################
 
 from test import CollectorTestCase
 from test import get_collector_config
 from test import unittest
-
-from mock import patch, Mock
+from test import BUILTIN_OPEN
+from test import patch, Mock
 
 from diamond.collector import Collector
 from openstackswiftrecon import OpenstackSwiftReconCollector
@@ -29,7 +29,7 @@ class TestOpenstackSwiftReconCollector(CollectorTestCase):
     def test_import(self):
         self.assertTrue(OpenstackSwiftReconCollector)
 
-    @patch('__builtin__.open')
+    @patch(BUILTIN_OPEN)
     @patch('os.access', Mock(return_value=False))
     @patch.object(Collector, 'publish')
     def test_recon_no_access(self, publish_mock, open_mock):
@@ -65,6 +65,7 @@ class TestOpenstackSwiftReconCollector(CollectorTestCase):
         self.setDocExample(collector=self.collector.__class__.__name__,
                            metrics=metrics,
                            defaultpath=self.collector.config['path'])
+
 
 ##########################################################################
 if __name__ == "__main__":

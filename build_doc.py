@@ -1,15 +1,15 @@
-#!/usr/bin/env python
+#!/usr/bin/env python3
 # coding=utf-8
 ##########################################################################
 
-from __future__ import print_function
-import configobj
 import optparse
 import os
 import shutil
 import sys
 import tempfile
 import traceback
+
+import configobj
 
 sys.path.append(os.path.abspath(
     os.path.join(os.path.dirname(__file__), 'src')))
@@ -24,6 +24,7 @@ def getIncludePaths(path):
 
         elif os.path.isdir(cPath):
             getIncludePaths(cPath)
+
 
 collectors = {}
 
@@ -64,6 +65,7 @@ def getCollectors(path):
         elif os.path.isdir(cPath):
             getCollectors(cPath)
 
+
 handlers = {}
 
 
@@ -79,6 +81,10 @@ def getHandlers(path, name=None):
 
             try:
                 # Import the module
+                if path.endswith('handler'):
+                    # A workaround to fix relative import path issue in handlers that use relative imports
+                    modname = 'diamond.handler.%s' % modname
+
                 module = __import__(modname, globals(), locals(), ['*'])
 
                 # Find the name
@@ -138,12 +144,12 @@ def writeDocOptions(docFile, options, default_options):
         docFile.write("%s | %s | %s | %s\n"
                       % (option,
                          defaultOption,
-                         options[option].replace("\n", '<br>\n'),
+                         str(options[option]).replace("\n", '<br>\n'),
                          defaultOptionType))
 
 
 def writeDoc(items, type_name, doc_path):
-    for item in sorted(items.iterkeys()):
+    for item in sorted(items.keys()):
 
         # Skip configuring the basic item object
         if item == type_name:
@@ -163,15 +169,15 @@ def writeDoc(items, type_name, doc_path):
 
         try:
             tmpfile = None
-            if type_name is "Collector":
+            if type_name == "Collector":
                 obj = cls(config=config, handlers={})
-            elif type_name is "Handler":
+            elif type_name == "Handler":
                 tmpfile = tempfile.mkstemp()
                 obj = cls({'log_file': tmpfile[1]})
 
             item_options = obj.get_default_config_help()
             default_options = obj.get_default_config()
-            if type_name is "Handler":
+            if type_name == "Handler":
                 os.remove(tmpfile[1])
         except Exception as e:
             print("Caught Exception {}".format(e))
@@ -185,7 +191,7 @@ def writeDoc(items, type_name, doc_path):
         if item_options:
             writeDocOptions(docFile, item_options, default_options)
 
-        if type_name is "Collector":
+        if type_name == "Collector":
             docFile.write("\n")
             docFile.write("#### Example Output\n")
             docFile.write("\n")
@@ -195,6 +201,7 @@ def writeDoc(items, type_name, doc_path):
             docFile.write("\n")
 
         docFile.close()
+
 
 ##########################################################################
 
@@ -229,7 +236,7 @@ if __name__ == "__main__":
     else:
         print("ERROR: Config file: %s does not exist." % (
             options.configfile), file=sys.stderr)
-        print(("Please run python config.py -c /path/to/diamond.conf"),
+        print("Please run python config.py -c /path/to/diamond.conf",
               file=sys.stderr)
         parser.print_help(sys.stderr)
         sys.exit(1)

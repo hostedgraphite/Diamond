@@ -6,16 +6,15 @@ Collect HAProxy Stats
 #### Dependencies
 
  * urlparse
- * urllib2
-
 """
 
 import re
-import urllib2
 import base64
 import csv
 import socket
 import diamond.collector
+import diamond.pycompat
+from diamond.pycompat import Request
 
 
 class HAProxyCollector(diamond.collector.Collector):
@@ -64,51 +63,59 @@ class HAProxyCollector(diamond.collector.Collector):
         Request stats from HAProxy Server
         """
         metrics = []
-        req = urllib2.Request(self._get_config_value(section, 'url'))
+        req = Request(self._get_config_value(section, 'url'))
         try:
-            handle = urllib2.urlopen(req)
-            return handle.readlines()
+            handle = diamond.pycompat.urlopen(req)
+            data = []
+            for line in handle.readlines():
+                data.append(line.decode())
+
+            return data
         except Exception as e:
             if not hasattr(e, 'code') or e.code != 401:
                 self.log.error("Error retrieving HAProxy stats. %s", e)
                 return metrics
 
-        # get the www-authenticate line from the headers
-        # which has the authentication scheme and realm in it
-        authline = e.headers['www-authenticate']
+            # get the www-authenticate line from the headers
+            # which has the authentication scheme and realm in it
+            authline = e.headers['www-authenticate']
 
-        # this regular expression is used to extract scheme and realm
-        authre = (r'''(?:\s*www-authenticate\s*:)?\s*''' +
-                  '''(\w*)\s+realm=['"]([^'"]+)['"]''')
-        authobj = re.compile(authre, re.IGNORECASE)
-        matchobj = authobj.match(authline)
-        if not matchobj:
-            # if the authline isn't matched by the regular expression
-            # then something is wrong
-            self.log.error('The authentication header is malformed.')
-            return metrics
+            # this regular expression is used to extract scheme and realm
+            authre = (r'''(?:\s*www-authenticate\s*:)?\s*''' +
+                      r'''(\w*)\s+realm=['"]([^'"]+)['"]''')
+            authobj = re.compile(authre, re.IGNORECASE)
+            matchobj = authobj.match(authline)
+            if not matchobj:
+                # if the authline isn't matched by the regular expression
+                # then something is wrong
+                self.log.error('The authentication header is malformed.')
+                return metrics
 
-        scheme = matchobj.group(1)
-        # here we've extracted the scheme
-        # and the realm from the header
-        if scheme.lower() != 'basic':
-            self.log.error('Invalid authentication scheme.')
-            return metrics
+            scheme = matchobj.group(1)
+            # here we've extracted the scheme
+            # and the realm from the header
+            if scheme.lower() != 'basic':
+                self.log.error('Invalid authentication scheme.')
+                return metrics
 
-        base64string = base64.encodestring(
-            '%s:%s' % (self._get_config_value(section, 'user'),
-                       self._get_config_value(section, 'pass')))[:-1]
-        authheader = 'Basic %s' % base64string
-        req.add_header("Authorization", authheader)
-        try:
-            handle = urllib2.urlopen(req)
-            metrics = handle.readlines()
-            return metrics
-        except IOError as e:
-            # here we shouldn't fail if the USER/PASS is right
-            self.log.error("Error retrieving HAProxy stats. " +
-                           "(Invalid username or password?) %s", e)
-            return metrics
+            auth_header = '%s:%s' % (
+                self._get_config_value(section, 'user'),
+                self._get_config_value(section, 'pass')
+            )
+            base64string = base64.b64encode(auth_header.encode()).decode()
+            req.add_header("Authorization", 'Basic %s' % base64string)
+            try:
+                handle = diamond.pycompat.urlopen(req)
+                data = []
+                for line in handle.readlines():
+                    data.append(line.decode())
+
+                return data
+            except IOError as e:
+                # here we shouldn't fail if the USER/PASS is right
+                self.log.error("Error retrieving HAProxy stats. " +
+                               "(Invalid username or password?) %s", e)
+                return metrics
 
     def unix_get_csv_data(self):
         sock = socket.socket(socket.AF_UNIX, socket.SOCK_STREAM)
@@ -116,9 +123,9 @@ class HAProxyCollector(diamond.collector.Collector):
 
         try:
             sock.connect(self.config['sock'])
-            sock.send('show stat\n')
+            sock.send(b'show stat\n')
             while 1:
-                buf = sock.recv(4096)
+                buf = sock.recv(4096).decode()
                 if not buf:
                     break
                 data += buf
@@ -182,4 +189,4 @@ class HAProxyCollector(diamond.collector.Collector):
     def _sanitize(self, s):
         """Sanitize the name of a metric to remove unwanted chars
         """
-        return re.sub('[^\w-]', '_', s)
+        return re.sub(r'[^\w-]', '_', s)

@@ -1,4 +1,4 @@
-#!/usr/bin/env python2
+#!/usr/bin/env python3
 # coding=utf-8
 
 import os
@@ -6,8 +6,8 @@ import io
 from test import CollectorTestCase
 from test import get_collector_config
 from test import unittest
-from mock import Mock
-from mock import patch
+from test import Mock
+from test import patch
 
 from diamond.collector import Collector
 from mdstat import MdStatCollector
@@ -25,7 +25,7 @@ class TestMdStatCollector(CollectorTestCase):
     def test_import(self):
         self.assertTrue(MdStatCollector)
 
-    @patch('__builtin__.open')
+    @patch('builtins.open')
     @patch('os.access', Mock(return_value=True))
     @patch.object(Collector, 'publish')
     def test_should_open_proc_loadavg(self, publish_mock, open_mock):
@@ -34,7 +34,7 @@ class TestMdStatCollector(CollectorTestCase):
             # on platforms that don't provide /proc/mdstat: don't bother
             # testing this.
             return
-        open_mock.return_value = io.BytesIO('')
+        open_mock.return_value = io.BytesIO(b'')
         self.collector.collect()
         open_mock.assert_called_once_with('/proc/mdstat', 'r')
 
@@ -222,6 +222,7 @@ class TestMdStatCollector(CollectorTestCase):
         }
 
         self.assertPublishedMany(publish_mock, metrics)
+
 
 if __name__ == "__main__":
     unittest.main()

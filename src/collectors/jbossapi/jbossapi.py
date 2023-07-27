@@ -1,6 +1,6 @@
 # coding=utf-8
 
-"""
+r"""
 V. 1.0
 
 JbossApiCollector is a collector that uses JBOSS 7 native API to collect data
@@ -170,7 +170,7 @@ class JbossApiCollector(diamond.collector.Collector):
             'connect_timeout': '4',
             'ssl_options': '--sslv3 -k',
             'curl_options': '-s --digest -L ',
-            'interface_regex': '^(.+?)\.',  # matches up to first "."
+            'interface_regex': r'^(.+?)\.',  # matches up to first "."
             'hosts': [],
             'app_stats': 'True',
             'connector_options': ['http', 'ajp'],
@@ -356,6 +356,8 @@ class JbossApiCollector(diamond.collector.Collector):
             attributes = subprocess.Popen(the_cmd, shell=True,
                                           stdout=subprocess.PIPE
                                           ).communicate()[0]
+            if isinstance(attributes, bytes):
+                attributes = attributes.decode()
             output = json.loads(attributes)
         except Exception as e:
             self.log.error("JbossApiCollector: There was an exception %s", e)
@@ -363,8 +365,7 @@ class JbossApiCollector(diamond.collector.Collector):
         return output
 
     def is_number(self, value):
-        return (isinstance(value, (int, long, float)) and
-                not isinstance(value, bool))
+        return isinstance(value, (int, float)) and not isinstance(value, bool)
 
     def string_fix(self, s):
         return re.sub(r"[^a-zA-Z0-9_]", "_", s)

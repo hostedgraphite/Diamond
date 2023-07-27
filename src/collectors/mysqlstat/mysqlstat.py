@@ -24,7 +24,7 @@ GRANT PROCESS ON *.* TO 'user'@'hostname' IDENTIFIED BY
 
 #### Dependencies
 
- * MySQLdb
+ * mysql-connector-python
 
 """
 
@@ -34,10 +34,10 @@ import re
 import time
 
 try:
-    import MySQLdb
-    from MySQLdb import MySQLError
+    from mysql import connector
+    MySQLdb = True
 except ImportError:
-    MySQLdb = None
+    MySQLdb = False
     MySQLError = ValueError
 
 
@@ -108,119 +108,119 @@ class MySQLCollector(diamond.collector.Collector):
     innodb_status_keys = {
         'Innodb_bp_total_alloc,' +
         'Innodb_bp_add_alloc':
-            'Total memory allocated (\d+)\; in additional pool allocated (\d+)',
+            r'Total memory allocated (\d+)\; in additional pool allocated (\d+)',
         'Innodb_bp_reads_per_sec,' +
         'Innodb_bp_created_per_sec,' +
         'Innodb_bp_written_per_sec':
-            '(^\d+.\d+) reads/s, (\d+.\d+) creates/s, (\d+.\d+) writes/s',
+            r'(^\d+.\d+) reads/s, (\d+.\d+) creates/s, (\d+.\d+) writes/s',
         'Innodb_io_ibuf_reads,Innodb_io_ibuf_logs,Innodb_io_ibuf_syncs':
-            ' ibuf aio reads: (\d+), log i/o\'s: (\d+), sync i/o\'s: (\d+)',
+            r' ibuf aio reads: (\d+), log i/o\'s: (\d+), sync i/o\'s: (\d+)',
         'Innodb_log_pending_log_writes,Innodb_log_pending_checkpoint_writes':
-            '(\d+) pending log writes, (\d+) pending chkp writes',
+            r'(\d+) pending log writes, (\d+) pending chkp writes',
         'Innodb_hash_searches_per_sec,Innodb_non_hash_searches_per_sec':
-            '(\d+.\d+) hash searches/s, (\d+.\d+) non-hash searches/s',
+            r'(\d+.\d+) hash searches/s, (\d+.\d+) non-hash searches/s',
         'Innodb_row_queries_inside,Innodb_row_queries_queue':
-            '(\d+) queries inside InnoDB, (\d+) queries in queue',
+            r'(\d+) queries inside InnoDB, (\d+) queries in queue',
         'Innodb_trx_total_lock_structs':
-            '(\d+) lock struct\(s\), ' +
-            'heap size (\d+), ' +
-            '(\d+) row lock\(s\), ' +
-            'undo log entries (\d+)',
+            r'(\d+) lock struct\(s\), ' +
+            r'heap size (\d+), ' +
+            r'(\d+) row lock\(s\), ' +
+            r'undo log entries (\d+)',
         'Innodb_log_io_total,Innodb_log_io_per_sec':
-            '(\d+) log i\/o\'s done, (\d+.\d+) log i\/o\'s\/second',
+            r'(\d+) log i\/o\'s done, (\d+.\d+) log i\/o\'s\/second',
         'Innodb_io_os_file_reads,Innodb_io_os_file_writes,' +
         'Innodb_io_os_file_fsyncs':
-            '(\d+) OS file reads, (\d+) OS file writes, (\d+) OS fsyncs',
+            r'(\d+) OS file reads, (\d+) OS file writes, (\d+) OS fsyncs',
         'Innodb_rows_inserted_per_sec,Innodb_rows_updated_per_sec,' +
         'Innodb_rows_deleted_per_sec,Innodb_rows_read_per_sec':
-            '(\d+.\d+) inserts\/s, ' +
-            '(\d+.\d+) updates\/s, ' +
-            '(\d+.\d+) deletes\/s, ' +
-            '(\d+.\d+) reads\/s',
+            r'(\d+.\d+) inserts\/s, ' +
+            r'(\d+.\d+) updates\/s, ' +
+            r'(\d+.\d+) deletes\/s, ' +
+            r'(\d+.\d+) reads\/s',
         'Innodb_reads_per_sec,Innodb_bytes_per_read,Innodb_io_syncs_per_sec,' +
         'Innodb_writes_per_sec':
-            '(\d+.\d+) reads\/s, (\d+) avg bytes\/read, (\d+.\d+) writes\/s, ' +
-            '(\d+.\d+) fsyncs\/s',
+            r'(\d+.\d+) reads\/s, (\d+) avg bytes\/read, (\d+.\d+) writes\/s, ' +
+            r'(\d+.\d+) fsyncs\/s',
         'Innodb_bp_pages_young_per_sec,Innodb_bp_pages_not_young_per_sec':
-            '(\d+.\d+) youngs\/s, (\d+.\d+) non-youngs\/s',
+            r'(\d+.\d+) youngs\/s, (\d+.\d+) non-youngs\/s',
         'Innodb_bp_hit_rate,Innodb_bp_young_hit_rate,' +
         'Innodb_bp_not_young_hit_rate':
-            'Buffer pool hit rate (\d+) \/ \d+, ' +
-            'young-making rate (\d+) \/ \d+ not (\d+) \/ \d+',
+            r'Buffer pool hit rate (\d+) \/ \d+, ' +
+            r'young-making rate (\d+) \/ \d+ not (\d+) \/ \d+',
         'Innodb_bp_size':
-            'Buffer pool size   (\d+)',
+            r'Buffer pool size   (\d+)',
         'Innodb_bp_db_pages':
-            'Database pages     (\d+)',
+            r'Database pages     (\d+)',
         'Innodb_bp_dictionary_alloc':
-            'Dictionary memory allocated (\d+)',
+            r'Dictionary memory allocated (\d+)',
         'Innodb_bp_free_buffers':
-            'Free buffers       (\d+)',
+            r'Free buffers       (\d+)',
         'Innodb_hash_table_size,Innodb_hash_node_heap':
-            'Hash table size (\d+), node heap has (\d+) buffer\(s\)',
+            r'Hash table size (\d+), node heap has (\d+) buffer\(s\)',
         'Innodb_trx_history_list_length':
-            'History list length (\d+)',
+            r'History list length (\d+)',
         'Innodb_bp_io_sum_pages,Innodb_bp_io_cur_pages,' +
         'Innodb_bp_io_unzip_sum_pages,Innodb_bp_io_unzip_cur_pages':
-            'I\/O sum\[(\d+)\]:cur\[(\d+)\], unzip sum\[(\d+)\]:cur\[(\d+)\]',
+            r'I\/O sum\[(\d+)\]:cur\[(\d+)\], unzip sum\[(\d+)\]:cur\[(\d+)\]',
         'Innodb_ibuf_size,Innodb_ibuf_free_list_len,Innodb_ibuf_seg_size,' +
         'Innodb_ibuf_merges':
-            'Ibuf: size (\d+), free list len (\d+), seg size (\d+), (\d+) ' +
+            r'Ibuf: size (\d+), free list len (\d+), seg size (\d+), (\d+) ' +
             'merges',
         'Innodb_bp_lru_len,Innodb_bp_unzip_lru_len':
-            'LRU len: (\d+), unzip_LRU len: (\d+)',
+            r'LRU len: (\d+), unzip_LRU len: (\d+)',
         'Innodb_bp_modified_pages':
-            'Modified db pages  (\d+)',
+            r'Modified db pages  (\d+)',
         'Innodb_sem_mutex_spin_waits,Innodb_sem_mutex_rounds,' +
         'Innodb_sem_mutex_os_waits':
-            'Mutex spin waits (\d+), rounds (\d+), OS waits (\d+)',
+            r'Mutex spin waits (\d+), rounds (\d+), OS waits (\d+)',
         'Innodb_rows_inserted,Innodb_rows_updated,Innodb_rows_deleted,' +
         'Innodb_rows_read':
-            'Number of rows inserted (\d+), updated (\d+), deleted (\d+), ' +
-            'read (\d+)',
+            r'Number of rows inserted (\d+), updated (\d+), deleted (\d+), ' +
+            r'read (\d+)',
         'Innodb_bp_old_db_pages':
-            'Old database pages (\d+)',
+            r'Old database pages (\d+)',
         'Innodb_sem_os_reservation_count,' +
         'Innodb_sem_os_signal_count':
-            'OS WAIT ARRAY INFO: reservation count (\d+), signal count (\d+)',
+            r'OS WAIT ARRAY INFO: reservation count (\d+), signal count (\d+)',
         'Innodb_bp_pages_young,Innodb_bp_pages_not_young':
-            'Pages made young (\d+), not young (\d+)',
+            r'Pages made young (\d+), not young (\d+)',
         'Innodb_bp_pages_read,Innodb_bp_pages_created,Innodb_bp_pages_written':
-            'Pages read (\d+), created (\d+), written (\d+)',
+            r'Pages read (\d+), created (\d+), written (\d+)',
         'Innodb_bp_pages_read_ahead_per_sec,' +
         'Innodb_bp_pages_evicted_no_access_per_sec,' +
         'Innodb_status_bp_pages_random_read_ahead':
-            'Pages read ahead (\d+.\d+)/s, ' +
-            'evicted without access (\d+.\d+)\/s, ' +
-            'Random read ahead (\d+.\d+)/s',
+            r'Pages read ahead (\d+.\d+)/s, ' +
+            r'evicted without access (\d+.\d+)\/s, ' +
+            r'Random read ahead (\d+.\d+)/s',
         'Innodb_io_pending_flush_log,Innodb_io_pending_flush_bp':
-            'Pending flushes \(fsync\) log: (\d+); buffer pool: (\d+)',
+            r'Pending flushes \(fsync\) log: (\d+); buffer pool: (\d+)',
         'Innodb_io_pending_reads,Innodb_io_pending_writes':
-            'Pending normal aio reads: (\d+) \[\d+, \d+, \d+, \d+\], aio ' +
-            'writes: (\d+) \[\d+, \d+, \d+, \d+\]',
+            r'Pending normal aio reads: (\d+) \[\d+, \d+, \d+, \d+\], aio ' +
+            r'writes: (\d+) \[\d+, \d+, \d+, \d+\]',
         'Innodb_bp_pending_writes_lru,Innodb_bp_pending_writes_flush_list,' +
         'Innodb_bp_pending_writes_single_page':
-            'Pending writes: LRU (\d+), flush list (\d+), single page (\d+)',
+            r'Pending writes: LRU (\d+), flush list (\d+), single page (\d+)',
         'Innodb_per_sec_avg':
-            'Per second averages calculated from the last (\d+) seconds',
+            r'Per second averages calculated from the last (\d+) seconds',
         'Innodb_sem_rw_excl_spins,Innodb_sem_rw_excl_rounds,' +
         'Innodb_sem_rw_excl_os_waits':
-            'RW-excl spins (\d+), rounds (\d+), OS waits (\d+)',
+            r'RW-excl spins (\d+), rounds (\d+), OS waits (\d+)',
         'Innodb_sem_shared_spins,Innodb_sem_shared_rounds,' +
         'Innodb_sem_shared_os_waits':
-            'RW-shared spins (\d+), rounds (\d+), OS waits (\d+)',
+            r'RW-shared spins (\d+), rounds (\d+), OS waits (\d+)',
         'Innodb_sem_spins_per_wait_mutex,Innodb_sem_spins_per_wait_rw_shared,' +
         'Innodb_sem_spins_per_wait_rw_excl':
-            'Spin rounds per wait: (\d+.\d+) mutex, (\d+.\d+) RW-shared, ' +
-            '(\d+.\d+) RW-excl',
+            r'Spin rounds per wait: (\d+.\d+) mutex, (\d+.\d+) RW-shared, ' +
+            r'(\d+.\d+) RW-excl',
         'Innodb_main_thd_log_flush_writes':
-            'srv_master_thread log flush and writes: (\d+)',
+            r'srv_master_thread log flush and writes: (\d+)',
         'Innodb_main_thd_loops_one_sec,Innodb_main_thd_loops_sleeps,' +
         'Innodb_main_thd_loops_ten_sec,Innodb_main_thd_loops_background,' +
         'Innodb_main_thd_loops_flush':
-            'srv_master_thread loops: (\d+) 1_second, (\d+) sleeps, (\d+) ' +
-            '10_second, (\d+) background, (\d+) flush',
+            r'srv_master_thread loops: (\d+) 1_second, (\d+) sleeps, (\d+) ' +
+            r'10_second, (\d+) background, (\d+) flush',
         'Innodb_ibuf_inserts,Innodb_ibuf_merged_recs,Innodb_ibuf_merges':
-            '(\d+) inserts, (\d+) merged recs, (\d+) merges',
+            r'(\d+) inserts, (\d+) merged recs, (\d+) merges',
     }
     innodb_status_match = {}
 
@@ -291,7 +291,7 @@ class MySQLCollector(diamond.collector.Collector):
         return config
 
     def get_db_stats(self, query):
-        cursor = self.db.cursor(cursorclass=MySQLdb.cursors.DictCursor)
+        cursor = self.db.cursor(dictionary=True)
 
         try:
             cursor.execute(query)
@@ -302,7 +302,7 @@ class MySQLCollector(diamond.collector.Collector):
 
     def connect(self, params):
         try:
-            self.db = MySQLdb.connect(**params)
+            self.db = connector.Connect(**params)
             self.log.debug('MySQLCollector: Connected to database.')
         except MySQLError as e:
             self.log.error('MySQLCollector couldnt connect to database %s', e)
@@ -334,7 +334,7 @@ class MySQLCollector(diamond.collector.Collector):
         for row in rows:
             try:
                 metrics['status'][row['Variable_name']] = float(row['Value'])
-            except:
+            except Exception:
                 pass
 
         if self.config['master']:
@@ -347,9 +347,9 @@ class MySQLCollector(diamond.collector.Collector):
                             continue
                         try:
                             metrics['master'][key] = float(row_master[key])
-                        except:
+                        except Exception:
                             pass
-            except:
+            except Exception:
                 self.log.error('MySQLCollector: Couldnt get master status')
                 pass
 
@@ -363,9 +363,9 @@ class MySQLCollector(diamond.collector.Collector):
                             continue
                         try:
                             metrics['slave'][key] = float(row_slave[key])
-                        except:
+                        except Exception:
                             pass
-            except:
+            except Exception:
                 self.log.error('MySQLCollector: Couldnt get slave status')
                 pass
 
@@ -377,7 +377,7 @@ class MySQLCollector(diamond.collector.Collector):
 
                 innodb_status_output = rows[0]
 
-                todo = self.innodb_status_keys.keys()
+                todo = list(self.innodb_status_keys)
                 for line in innodb_status_output['Status'].split('\n'):
                     for key in todo:
                         match = self.innodb_status_keys[key].match(line)
@@ -438,7 +438,7 @@ class MySQLCollector(diamond.collector.Collector):
 
     def collect(self):
 
-        if MySQLdb is None:
+        if MySQLdb is False:
             self.log.error('Unable to import MySQLdb')
             return False
 
@@ -474,7 +474,7 @@ class MySQLCollector(diamond.collector.Collector):
             except Exception as e:
                 try:
                     self.disconnect()
-                except MySQLdb.ProgrammingError:
+                except connector.ProgrammingError:
                     pass
                 self.log.error('Collection failed for %s %s', nickname, e)
                 continue

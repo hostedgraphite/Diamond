@@ -66,7 +66,7 @@ def collector_process(collector, metric_queue, log):
     sys.stdout = open(os.devnull, 'w')
     sys.stderr = open(os.devnull, 'w')
 
-    while(True):
+    while (True):
         try:
             time_to_sleep = (next_window + stagger_offset) - time.time()
             if time_to_sleep > 0:
@@ -118,7 +118,7 @@ def handler_process(handlers, metric_queue, log):
 
     log.debug('Starting process %s', proc.name)
 
-    while(True):
+    while (True):
         metric = metric_queue.get(block=True, timeout=None)
         for handler in handlers:
             if metric is not None:

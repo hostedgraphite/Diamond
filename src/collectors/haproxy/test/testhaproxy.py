@@ -1,14 +1,15 @@
-#!/usr/bin/python
+#!/usr/bin/python3
 # coding=utf-8
 ##########################################################################
 
 from test import CollectorTestCase
 from test import get_collector_config
 from test import unittest
-from mock import Mock
-from mock import patch
+from test import Mock
+from test import patch
 
 from diamond.collector import Collector
+from diamond.pycompat import URLOPEN
 from haproxy import HAProxyCollector
 
 ##########################################################################
@@ -30,8 +31,8 @@ class TestHAProxyCollector(CollectorTestCase):
     def test_should_work_with_real_data(self, publish_mock):
         self.collector.config['ignore_servers'] = False
 
-        patch_urlopen = patch('urllib2.urlopen',
-                              Mock(return_value=self.getFixture('stats.csv')))
+        patch_urlopen = patch(URLOPEN,
+                              Mock(return_value=self.getFixtureInBytes('stats.csv')))
 
         patch_urlopen.start()
         self.collector.collect()
@@ -51,7 +52,7 @@ class TestHAProxyCollector(CollectorTestCase):
         class MockSocket():
             def __init__(*args, **kwargs):
                 self.connected = False
-                self.output_data = ''
+                self.output_data = b''
 
             def connect(*args, **kwargs):
                 self.connected = True
@@ -59,8 +60,8 @@ class TestHAProxyCollector(CollectorTestCase):
             def send(obj, string, *args, **kwargs):
                 if not self.connected:
                     raise Exception('MockSocket: Endpoint not connected.')
-                if string == 'show stat\n':
-                    self.output_data = self.getFixture('stats.csv').getvalue()
+                if string == b'show stat\n':
+                    self.output_data = self.getFixtureInBytes('stats.csv').getvalue()
 
             def recv(obj, bufsize, *args, **kwargs):
                 output_buffer = self.output_data[:bufsize]
@@ -84,8 +85,8 @@ class TestHAProxyCollector(CollectorTestCase):
     def test_should_work_with_real_data_and_ignore_servers(self, publish_mock):
         self.collector.config['ignore_servers'] = True
 
-        patch_urlopen = patch('urllib2.urlopen',
-                              Mock(return_value=self.getFixture('stats.csv')))
+        patch_urlopen = patch(URLOPEN,
+                              Mock(return_value=self.getFixtureInBytes('stats.csv')))
 
         patch_urlopen.start()
         self.collector.collect()
@@ -94,6 +95,7 @@ class TestHAProxyCollector(CollectorTestCase):
         metrics = self.getPickledResults('real_data_ignore_servers.pkl')
 
         self.assertPublishedMany(publish_mock, metrics)
+
 
 ##########################################################################
 if __name__ == "__main__":

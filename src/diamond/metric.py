@@ -3,7 +3,8 @@
 import time
 import re
 import logging
-from error import DiamondException
+from . error import DiamondException
+from diamond.pycompat import long
 
 
 class Metric(object):
@@ -14,7 +15,7 @@ class Metric(object):
     __slots__ = [
         'path', 'value', 'raw_value', 'timestamp', 'precision',
         'host', 'metric_type', 'ttl'
-        ]
+    ]
 
     def __init__(self, path, value, raw_value=None, timestamp=None, precision=0,
                  host=None, metric_type='COUNTER', ttl=None):
@@ -101,9 +102,9 @@ class Metric(object):
         """
         Parse a string and create a metric
         """
-        match = re.match(r'^(?P<name>[A-Za-z0-9\.\-_]+)\s+' +
-                         '(?P<value>[0-9\.]+)\s+' +
-                         '(?P<timestamp>[0-9\.]+)(\n?)$',
+        match = re.match(r'^(?P<name>[A-Za-z0-9.\-_]+)\s+' +
+                         r'(?P<value>[0-9.]+)\s+' +
+                         r'(?P<timestamp>[0-9.]+)(\n?)$',
                          string)
         try:
             groups = match.groupdict()
@@ -111,7 +112,7 @@ class Metric(object):
             return Metric(groups['name'],
                           groups['value'],
                           float(groups['timestamp']))
-        except:
+        except Exception:
             raise DiamondException(
                 "Metric could not be parsed from string: %s." % string)
 

@@ -1,0 +1,51 @@
+version: 2
+jobs:
+  test:
+    docker:
+      - image: hostedgraphite/pythonbuild:focal_build3
+    environment:
+      CIRCLE_ARTIFACTS: /tmp/artifacts
+    steps:
+      - checkout
+      - run: mkdir -p $CIRCLE_ARTIFACTS
+      - run: apt-get update
+      - run: apt-get install -y libpq-dev lm-sensors
+      - run: pip install -r .travis.requirements3.txt
+      - run: make install
+      - run: tox
+      - run: cp -r htmlcov $CIRCLE_ARTIFACTS
+      - store_artifacts:
+          path: /tmp/artifacts
+      - save_cache:
+          key: dep-pip-{{ .Branch }}-{{ checksum ".travis.requirements3.txt" }}
+          paths:
+            - "/root/.cache"
+  build:
+    docker:
+      - image: hostedgraphite/pythonbuild:focal_build3
+    environment:
+      CIRCLE_ARTIFACTS: /tmp/artifacts
+    steps:
+      - checkout
+      - restore_cache:
+          keys:
+            - dep-pip-{{ .Branch }}-{{ checksum ".travis.requirements3.txt" }}
+      - run: mkdir -p $CIRCLE_ARTIFACTS
+      - run: apt-get update
+      - run: apt-get install -y libpq-dev lm-sensors python3-configobj cdbs
+      - run: pip install -r .travis.requirements3.txt
+      - run: make deb
+      - run: cp build/*.deb $CIRCLE_ARTIFACTS
+      - store_artifacts:
+          path: /tmp/artifacts
+      - save_cache:
+          paths:
+            - /tmp/artifacts/
+          key: Diamond-{{ .Branch }}-{{ .Revision }}
+
+workflows:
+  version: 2
+  default:
+    jobs:
+      - test
+      - build

@@ -13,6 +13,7 @@ using /proc/net/dev.
 import diamond.collector
 from diamond.collector import str_to_bool
 import diamond.convertor
+from diamond.pycompat import long
 import os
 import re
 
@@ -63,25 +64,25 @@ class NetworkCollector(diamond.collector.Collector):
             # Build Regular Expression
             greed = ''
             if str_to_bool(self.config['greedy']):
-                greed = '\S*'
+                greed = r'\S*'
 
-            exp = (('^(?:\s*)((?:%s)%s):(?:\s*)' +
-                    '(?P<rx_bytes>\d+)(?:\s*)' +
-                    '(?P<rx_packets>\w+)(?:\s*)' +
-                    '(?P<rx_errors>\d+)(?:\s*)' +
-                    '(?P<rx_drop>\d+)(?:\s*)' +
-                    '(?P<rx_fifo>\d+)(?:\s*)' +
-                    '(?P<rx_frame>\d+)(?:\s*)' +
-                    '(?P<rx_compressed>\d+)(?:\s*)' +
-                    '(?P<rx_multicast>\d+)(?:\s*)' +
-                    '(?P<tx_bytes>\d+)(?:\s*)' +
-                    '(?P<tx_packets>\w+)(?:\s*)' +
-                    '(?P<tx_errors>\d+)(?:\s*)' +
-                    '(?P<tx_drop>\d+)(?:\s*)' +
-                    '(?P<tx_fifo>\d+)(?:\s*)' +
-                    '(?P<tx_colls>\d+)(?:\s*)' +
-                    '(?P<tx_carrier>\d+)(?:\s*)' +
-                    '(?P<tx_compressed>\d+)(?:.*)$') %
+            exp = ((r'^(?:\s*)((?:%s)%s):(?:\s*)' +
+                    r'(?P<rx_bytes>\d+)(?:\s*)' +
+                    r'(?P<rx_packets>\w+)(?:\s*)' +
+                    r'(?P<rx_errors>\d+)(?:\s*)' +
+                    r'(?P<rx_drop>\d+)(?:\s*)' +
+                    r'(?P<rx_fifo>\d+)(?:\s*)' +
+                    r'(?P<rx_frame>\d+)(?:\s*)' +
+                    r'(?P<rx_compressed>\d+)(?:\s*)' +
+                    r'(?P<rx_multicast>\d+)(?:\s*)' +
+                    r'(?P<tx_bytes>\d+)(?:\s*)' +
+                    r'(?P<tx_packets>\w+)(?:\s*)' +
+                    r'(?P<tx_errors>\d+)(?:\s*)' +
+                    r'(?P<tx_drop>\d+)(?:\s*)' +
+                    r'(?P<tx_fifo>\d+)(?:\s*)' +
+                    r'(?P<tx_colls>\d+)(?:\s*)' +
+                    r'(?P<tx_carrier>\d+)(?:\s*)' +
+                    r'(?P<tx_compressed>\d+)(?:.*)$') %
                    (('|'.join(self.config['interfaces'])), greed))
             reg = re.compile(exp)
             # Match Interfaces

@@ -1,4 +1,4 @@
-#!/usr/bin/python
+#!/usr/bin/python3
 # coding=utf-8
 ##########################################################################
 
@@ -21,6 +21,7 @@ class TestEntropyStatCollector(CollectorTestCase):
 
     def test_import(self):
         self.assertTrue(EntropyStatCollector)
+
 
 ##########################################################################
 if __name__ == "__main__":

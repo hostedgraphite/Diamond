@@ -54,13 +54,15 @@ class UPSCollector(diamond.collector.Collector):
 
         p = subprocess.Popen(command,
                              stdout=subprocess.PIPE).communicate()[0]
+        if isinstance(p, bytes):
+            p = p.decode()
 
         for ln in p.strip().splitlines():
             datapoint = ln.split(": ")
 
             try:
                 val = float(datapoint[1])
-            except:
+            except Exception:
                 continue
 
             if len(datapoint[0].split(".")) == 2:

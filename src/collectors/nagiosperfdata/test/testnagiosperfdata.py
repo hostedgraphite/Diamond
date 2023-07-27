@@ -1,9 +1,9 @@
-#!/usr/bin/python
+#!/usr/bin/python3
 # coding=utf-8
 
 from test import CollectorTestCase
 from test import get_collector_config
-from mock import patch
+from test import patch
 import os
 
 from diamond.collector import Collector

@@ -1,4 +1,4 @@
-#!/usr/bin/python
+#!/usr/bin/python3
 # coding=utf-8
 ###############################################################################
 
@@ -20,6 +20,7 @@ class Testnetapp_inode(CollectorTestCase):
 
     def test_import(self):
         self.assertTrue(netapp_inode)
+
 
 ###############################################################################
 if __name__ == "__main__":

@@ -1,14 +1,15 @@
-#!/usr/bin/python
+#!/usr/bin/python3
 # coding=utf-8
 ##########################################################################
 
 from test import CollectorTestCase
 from test import get_collector_config
 from test import unittest
-from mock import Mock
-from mock import patch
+from test import Mock
+from test import patch
 
 from diamond.collector import Collector
+from diamond.pycompat import URLOPEN
 from bind import BindCollector
 
 ##########################################################################
@@ -28,7 +29,7 @@ class TestBindCollector(CollectorTestCase):
 
     @patch.object(Collector, 'publish')
     def test_should_work_with_real_data(self, publish_mock):
-        patch_urlopen = patch('urllib2.urlopen', Mock(
+        patch_urlopen = patch(URLOPEN, Mock(
             return_value=self.getFixture('bind.xml')))
 
         patch_urlopen.start()
@@ -51,6 +52,8 @@ class TestBindCollector(CollectorTestCase):
             'view._default.resstat.Retry': 0.000000,
             'view._default.resstat.QueryAbort': 0.000000,
             'view._default.resstat.QuerySockFail': 0.000000,
+            'view._default.resstat.QueryCurUDP': 0.000000,
+            'view._default.resstat.QueryCurTCP': 0.000000,
             'view._default.resstat.QueryTimeout': 0.000000,
             'view._default.resstat.GlueFetchv4': 0.000000,
             'view._default.resstat.GlueFetchv6': 0.000000,
@@ -66,8 +69,26 @@ class TestBindCollector(CollectorTestCase):
             'view._default.resstat.QryRTT800': 0.000000,
             'view._default.resstat.QryRTT1600': 0.000000,
             'view._default.resstat.QryRTT1600+': 0.000000,
+            'view._default.resstat.BucketSize': 0.000000,
+            'view._default.resstat.REFUSED': 0.000000,
+            'view._default.resstat.ClientCookieOut': 0.000000,
+            'view._default.resstat.ServerCookieOut': 0.000000,
+            'view._default.resstat.CookieIn': 0.000000,
+            'view._default.resstat.CookieClientOk': 0.000000,
+            'view._default.resstat.BadEDNSVersion': 0.000000,
+            'view._default.resstat.BadCookieRcode': 0.000000,
+            'view._default.resstat.ServerQuota': 0.000000,
+            'view._default.resstat.NextItem': 0.000000,
+            'view._default.resstat.Priming': 0.000000,
             'requests.QUERY': 0.000000,
             'queries.A': 0.000000,
+            'queries.NS': 0.000000,
+            'queries.CNAME': 0.000000,
+            'queries.PTR': 0.000000,
+            'queries.AAAA': 0.000000,
+            'queries.SRV': 0.000000,
+            'queries.DS': 0.000000,
+            'queries.DNSKEY': 0.000000,
             'nsstat.Requestv4': 0.000000,
             'nsstat.Requestv6': 0.000000,
             'nsstat.ReqEdns0': 0.000000,
@@ -76,6 +97,7 @@ class TestBindCollector(CollectorTestCase):
             'nsstat.ReqSIG0': 0.000000,
             'nsstat.ReqBadSIG': 0.000000,
             'nsstat.ReqTCP': 0.000000,
+            'nsstat.TCPConnHighWater': 0.000000,
             'nsstat.AuthQryRej': 0.000000,
             'nsstat.RecQryRej': 0.000000,
             'nsstat.XfrRej': 0.000000,
@@ -104,6 +126,36 @@ class TestBindCollector(CollectorTestCase):
             'nsstat.UpdateDone': 0.000000,
             'nsstat.UpdateFail': 0.000000,
             'nsstat.UpdateBadPrereq': 0.000000,
+            'nsstat.RecursClients': 0.000000,
+            'nsstat.DNS64': 0.000000,
+            'nsstat.RateDropped': 0.000000,
+            'nsstat.RateSlipped': 0.000000,
+            'nsstat.RPZRewrites': 0.000000,
+            'nsstat.QryUDP': 0.000000,
+            'nsstat.QryTCP': 0.000000,
+            'nsstat.NSIDOpt': 0.000000,
+            'nsstat.ExpireOpt': 0.000000,
+            'nsstat.KeepAliveOpt': 0.000000,
+            'nsstat.PadOpt': 0.000000,
+            'nsstat.OtherOpt': 0.000000,
+            'nsstat.CookieIn': 0.000000,
+            'nsstat.CookieNew': 0.000000,
+            'nsstat.CookieBadSize': 0.000000,
+            'nsstat.CookieBadTime': 0.000000,
+            'nsstat.CookieNoMatch': 0.000000,
+            'nsstat.CookieMatch': 0.000000,
+            'nsstat.ECSOpt': 0.000000,
+            'nsstat.QryNXRedir': 0.000000,
+            'nsstat.QryNXRedirRLookup': 0.000000,
+            'nsstat.QryBADCOOKIE': 0.000000,
+            'nsstat.SynthNXDOMAIN': 0.000000,
+            'nsstat.SynthNODATA': 0.000000,
+            'nsstat.SynthWILDCARD': 0.000000,
+            'nsstat.QryTryStale': 0.000000,
+            'nsstat.QryUsedStale': 0.000000,
+            'nsstat.Prefetch': 0.000000,
+            'nsstat.KeyTagOpt': 0.000000,
+            'nsstat.RecLimitDropped': 0.000000,
             'zonestat.NotifyOutv4': 0.000000,
             'zonestat.NotifyOutv6': 0.000000,
             'zonestat.NotifyInv4': 0.000000,
@@ -169,6 +221,13 @@ class TestBindCollector(CollectorTestCase):
             'sockstat.TCP6RecvErr': 0.000000,
             'sockstat.UnixRecvErr': 0.000000,
             'sockstat.FDwatchRecvErr': 0.000000,
+            'sockstat.RawRecvErr': 0.000000,
+            'sockstat.UDP4Active': 0.000000,
+            'sockstat.UDP6Active': 0.000000,
+            'sockstat.TCP4Active': 0.000000,
+            'sockstat.TCP6Active': 0.000000,
+            'sockstat.UnixActive': 0.000000,
+            'sockstat.RawActive': 0.000000,
         }
 
         self.setDocExample(collector=self.collector.__class__.__name__,

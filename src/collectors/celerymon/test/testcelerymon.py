@@ -1,4 +1,4 @@
-#!/usr/bin/python
+#!/usr/bin/python3
 # coding=utf-8
 ###############################################################################
 
@@ -20,6 +20,7 @@ class TestCelerymonCollector(CollectorTestCase):
 
     def test_import(self):
         self.assertTrue(CelerymonCollector)
+
 
 ###############################################################################
 if __name__ == "__main__":

@@ -1,14 +1,15 @@
-#!/usr/bin/python
+#!/usr/bin/python3
 # coding=utf-8
 ##########################################################################
 
 from test import CollectorTestCase
 from test import get_collector_config
 from test import unittest
-from mock import Mock
-from mock import patch
+from test import Mock
+from test import patch
 
 from diamond.collector import Collector
+from diamond.pycompat import URLOPEN
 
 from nginx import NginxCollector
 
@@ -35,10 +36,9 @@ class TestNginxCollector(CollectorTestCase):
         mockResponse = Mock(**{
             'readlines.return_value': self.getFixture('status').readlines(),
             'info.return_value': mockMimeMessage,
-            }
-        )
+        })
 
-        patch_urlopen = patch('urllib2.urlopen', Mock(
+        patch_urlopen = patch(URLOPEN, Mock(
             return_value=mockResponse))
 
         patch_urlopen.start()
@@ -75,10 +75,9 @@ class TestNginxCollector(CollectorTestCase):
                 self.getFixture('plus_status').readlines(),
             'info.return_value': mockMimeMessage,
             'read.return_value': self.getFixture('plus_status').read(),
-            }
-        )
+        })
 
-        patch_urlopen = patch('urllib2.urlopen', Mock(
+        patch_urlopen = patch(URLOPEN, Mock(
             return_value=mockResponse))
 
         patch_urlopen.start()
@@ -176,10 +175,9 @@ class TestNginxCollector(CollectorTestCase):
             'readlines.return_value':
                 self.getFixture('status_blank').readlines(),
             'info.return_value': mockMimeMessage,
-            }
-        )
+        })
 
-        patch_urlopen = patch('urllib2.urlopen', Mock(
+        patch_urlopen = patch(URLOPEN, Mock(
             return_value=mockResponse))
 
         patch_urlopen.start()
@@ -187,6 +185,7 @@ class TestNginxCollector(CollectorTestCase):
         patch_urlopen.stop()
 
         self.assertPublishedMany(publish_mock, {})
+
 
 ##########################################################################
 if __name__ == "__main__":

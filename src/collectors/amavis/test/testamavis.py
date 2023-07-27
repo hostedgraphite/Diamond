@@ -1,4 +1,4 @@
-#!/usr/bin/python
+#!/usr/bin/python3
 # coding=utf-8
 ##########################################################################
 
@@ -7,7 +7,7 @@ import os
 from test import CollectorTestCase
 from test import get_collector_config
 from test import unittest
-from mock import patch
+from test import patch
 
 import amavis
 from diamond.collector import Collector

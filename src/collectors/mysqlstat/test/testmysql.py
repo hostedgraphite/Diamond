@@ -1,36 +1,38 @@
-#!/usr/bin/python
+#!/usr/bin/python3
 # coding=utf-8
 ##########################################################################
 
-from test import CollectorTestCase
-from test import get_collector_config
-from test import unittest
-from test import run_only
-from mock import Mock
-from mock import patch
+from mysqlstat import MySQLCollector
 
 from diamond.collector import Collector
-from mysqlstat import MySQLCollector
+from test import CollectorTestCase
+from test import Mock
+from test import get_collector_config
+from test import patch
+from test import run_only
+from test import unittest
+
 
 ##########################################################################
 
 
 def run_only_if_MySQLdb_is_available(func):
     try:
-        import MySQLdb
+        from mysql import connector
+        MySQLdb = True
     except ImportError:
-        MySQLdb = None
-    pred = lambda: MySQLdb is not None
-    return run_only(func, pred)
+        MySQLdb = False
+
+    return run_only(func, lambda: MySQLdb is True)
 
 
 class TestMySQLCollector(CollectorTestCase):
 
     def setUp(self):
         config = get_collector_config('MySQLCollector', {
-            'slave':    'True',
-            'master':   'True',
-            'innodb':   'True',
+            'slave': 'True',
+            'master': 'True',
+            'innodb': 'True',
             'hosts': ['root:@localhost:3306/mysql'],
             'interval': '1',
         })
@@ -45,7 +47,6 @@ class TestMySQLCollector(CollectorTestCase):
     @patch.object(MySQLCollector, 'disconnect', Mock(return_value=True))
     @patch.object(Collector, 'publish')
     def test_real_data(self, publish_mock):
-
         p_global_status = patch.object(
             MySQLCollector,
             'get_db_global_status',
@@ -121,6 +122,7 @@ class TestMySQLCollector(CollectorTestCase):
         self.setDocExample(collector=self.collector.__class__.__name__,
                            metrics=metrics,
                            defaultpath=self.collector.config['path'])
+
 
 ##########################################################################
 if __name__ == "__main__":

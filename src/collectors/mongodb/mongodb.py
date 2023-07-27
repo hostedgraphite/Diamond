@@ -25,6 +25,7 @@ MongoDBCollector.conf
 import diamond.collector
 import datetime
 from diamond.collector import str_to_bool
+from functools import reduce
 import re
 import zlib
 
@@ -96,7 +97,7 @@ class MongoDBCollector(diamond.collector.Collector):
             'user': None,
             'passwd': None,
             'databases': '.*',
-            'ignore_collections': '^tmp\.mr\.',
+            'ignore_collections': r'^tmp\.mr\.',
             'network_timeout': None,
             'simple': 'False',
             'translate_collections': 'False',
@@ -118,7 +119,7 @@ class MongoDBCollector(diamond.collector.Collector):
         hosts = self.config.get('hosts')
 
         # Convert a string config value to be an array
-        if isinstance(hosts, basestring):
+        if isinstance(hosts, str):
             hosts = [hosts]
 
         # we need this for backwards compatibility
@@ -147,7 +148,7 @@ class MongoDBCollector(diamond.collector.Collector):
             passwd = None
 
         for host in hosts:
-            matches = re.search('((.+)\@)?(.+)?', host)
+            matches = re.search(r'((.+)\@)?(.+)?', host)
             alias = matches.group(2)
             host = matches.group(3)
 
@@ -156,7 +157,7 @@ class MongoDBCollector(diamond.collector.Collector):
                     # one host only, no need to have a prefix
                     base_prefix = []
                 else:
-                    base_prefix = [re.sub('[:\.]', '_', host)]
+                    base_prefix = [re.sub(r'[:\.]', '_', host)]
             else:
                 base_prefix = [alias]
 
@@ -190,7 +191,7 @@ class MongoDBCollector(diamond.collector.Collector):
                     self.log.error(
                         'User auth given, but could not autheticate' +
                         ' with host: %s, err: %s' % (host, e))
-                    return{}
+                    return {}
 
             data = conn.db.command('serverStatus')
             self._publish_transformed(data, base_prefix)
@@ -353,10 +354,8 @@ class MongoDBCollector(diamond.collector.Collector):
                 self._publish_metrics(keys, new_key, value)
         elif isinstance(value, int) or isinstance(value, float):
             publishfn('.'.join(keys), value)
-        elif isinstance(value, long):
-            publishfn('.'.join(keys), float(value))
         elif isinstance(value, datetime.datetime):
-            publishfn('.'.join(keys), long(value.strftime('%s')))
+            publishfn('.'.join(keys), int(value.strftime('%s')))
 
     def _extract_simple_data(self, data):
         return {

@@ -1,4 +1,4 @@
-#!/usr/bin/env python
+#!/usr/bin/env python3
 import os
 import sys
 
@@ -33,6 +33,7 @@ class TestCephStats(unittest.TestCase):
         f = open('sample-noio.txt')
         self.assertEqual(process_ceph_status(f.read()), {})
         f.close()
+
 
 if __name__ == '__main__':
     unittest.main()

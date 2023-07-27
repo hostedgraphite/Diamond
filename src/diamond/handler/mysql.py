@@ -4,8 +4,8 @@
 Insert the collected values into a mysql table
 """
 
-from Handler import Handler
-import MySQLdb
+from . Handler import Handler
+from mysql import connector
 
 
 class MySQLHandler(Handler):
@@ -94,11 +94,11 @@ class MySQLHandler(Handler):
         Connect to the MySQL server
         """
         self._close()
-        self.conn = MySQLdb.Connect(host=self.hostname,
-                                    port=self.port,
-                                    user=self.username,
-                                    passwd=self.password,
-                                    db=self.database)
+        self.conn = connector.Connect(host=self.hostname,
+                                      port=self.port,
+                                      user=self.username,
+                                      passwd=self.password,
+                                      db=self.database)
 
     def _close(self):
         """

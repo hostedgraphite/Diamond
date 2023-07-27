@@ -1,12 +1,12 @@
-#!/usr/bin/python
+#!/usr/bin/python3
 # coding=utf-8
 ###############################################################################
 
 from test import CollectorTestCase
 from test import get_collector_config
 from test import unittest
-from mock import Mock
-from mock import patch
+from test import Mock
+from test import patch
 
 from diamond.collector import Collector
 
@@ -52,6 +52,7 @@ class TestOpenvzCollector(CollectorTestCase):
                            metrics=metrics,
                            defaultpath=self.collector.config['path'])
         self.assertPublishedMany(publish_mock, metrics)
+
 
 ###############################################################################
 if __name__ == "__main__":

@@ -5,7 +5,7 @@ import memcached_slab
 
 
 fixtures = os.path.join(os.path.dirname(__file__), 'fixtures', 'stats')
-with open(fixtures, 'rb') as f:
+with open(fixtures, 'r') as f:
     RAW_SLAB_STATS = f.read()
 
 

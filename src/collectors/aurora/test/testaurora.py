@@ -1,16 +1,17 @@
-#!/usr/bin/python
+#!/usr/bin/python3
 # coding=utf-8
 ###############################################################################
 
-from test import CollectorTestCase
-from test import get_collector_config
-from test import unittest
-from mock import Mock
-from mock import patch
+from aurora import AuroraCollector
 
 from diamond.collector import Collector
+from diamond.pycompat import URLOPEN
+from test import CollectorTestCase
+from test import Mock
+from test import get_collector_config
+from test import patch
+from test import unittest
 
-from aurora import AuroraCollector
 
 ###############################################################################
 
@@ -31,7 +32,7 @@ class TestAuroraCollector(CollectorTestCase):
             if url == 'http://localhost:8081/vars':
                 return self.getFixture('metrics')
 
-        patch_urlopen = patch('urllib2.urlopen', Mock(side_effect=se))
+        patch_urlopen = patch(URLOPEN, Mock(side_effect=se))
 
         patch_urlopen.start()
         self.collector.collect()
@@ -46,8 +47,8 @@ class TestAuroraCollector(CollectorTestCase):
 
     @patch.object(Collector, 'publish')
     def test_should_fail_gracefully(self, publish_mock):
-        patch_urlopen = patch('urllib2.urlopen', Mock(
-                              return_value=self.getFixture('metrics_blank')))
+        patch_urlopen = patch(URLOPEN, Mock(
+            return_value=self.getFixture('metrics_blank')))
 
         patch_urlopen.start()
         self.collector.collect()
@@ -67,6 +68,7 @@ class TestAuroraCollector(CollectorTestCase):
             'tasks.FAILED.computers.prod.computer-traffic-analysis': 517.0,
             'tasks.FAILED.reporting.prod.report-processing': 2.0
         }
+
 
 ##########################################################################
 if __name__ == "__main__":

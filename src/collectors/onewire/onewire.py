@@ -58,11 +58,11 @@ class OneWireCollector(diamond.collector.Collector):
                 if '.' in ld:
                     self.read_values(ld, self.config['scan'], metrics)
 
-        for oid, files in self.config.iteritems():
+        for oid, files in self.config.items():
             if oid[:3] == 'id:':
                 self.read_values(oid[3:], files, metrics)
 
-        for fn, fv in metrics.iteritems():
+        for fn, fv in metrics.items():
             self.publish(fn, fv, 2)
 
     def read_values(self, oid, files, metrics):
@@ -74,20 +74,20 @@ class OneWireCollector(diamond.collector.Collector):
         oid_path = os.path.join(self.config['owfs'], oid)
         oid = oid.replace('.', '_')
 
-        for fn, alias in files.iteritems():
+        for fn, alias in files.items():
             fv = os.path.join(oid_path, fn)
             if os.path.isfile(fv):
                 try:
                     f = open(fv)
                     v = f.read()
                     f.close()
-                except:
+                except Exception:
                     self.log.error("Unable to read %s", fv)
                     raise
 
                 try:
                     v = float(v)
-                except:
+                except Exception:
                     self.log.error("Unexpected value %s in %s", v, fv)
                     raise
 

@@ -1,4 +1,4 @@
-#!/usr/bin/python
+#!/usr/bin/python3
 # coding=utf-8
 ##########################################################################
 
@@ -6,7 +6,7 @@ from test import CollectorTestCase
 from test import get_collector_config
 from test import run_only
 from test import unittest
-from mock import patch
+from test import patch
 
 from pgbouncer import PgbouncerCollector
 
@@ -18,8 +18,8 @@ def run_only_if_psycopg2_is_available(func):
         import psycopg2
     except ImportError:
         psycopg2 = None
-    pred = lambda: psycopg2 is not None
-    return run_only(func, pred)
+
+    return run_only(func, lambda: psycopg2 is not None)
 
 
 class TestPgbouncerCollector(CollectorTestCase):

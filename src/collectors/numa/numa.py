@@ -1,4 +1,4 @@
-#!/usr/bin/env python
+#!/usr/bin/env python3
 # coding=utf-8
 """
 This class collects data on NUMA utilization
@@ -13,7 +13,7 @@ from subprocess import Popen, PIPE
 from re import compile as re_compile
 import logging
 
-node_re = re_compile('(?P<node>^node \d+ (free|size)): (?P<size>\d+) \MB')
+node_re = re_compile(r'(?P<node>^node \d+ (free|size)): (?P<size>\d+) MB')
 
 
 class NumaCollector(diamond.collector.Collector):
@@ -31,9 +31,9 @@ class NumaCollector(diamond.collector.Collector):
 
     def collect(self):
         p = Popen([self.config['bin'], '--hardware'], stdout=PIPE, stderr=PIPE)
-
         output, errors = p.communicate()
-
+        if isinstance(output, bytes):
+            output = output.decode()
         lines = output.split('\n')
         for line in lines:
             try:

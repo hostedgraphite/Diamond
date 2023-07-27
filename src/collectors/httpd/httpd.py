@@ -6,15 +6,16 @@ Collect stats from Apache HTTPD server using mod_status
 #### Dependencies
 
  * mod_status
- * httplib
- * urlparse
-
 """
 
 import re
-import httplib
-import urlparse
+try:
+    from httplib import HTTPConnection
+except ImportError:
+    from http.client import HTTPConnection
+
 import diamond.collector
+from diamond.pycompat import urlparse
 
 
 class HttpdCollector(diamond.collector.Collector):
@@ -25,7 +26,7 @@ class HttpdCollector(diamond.collector.Collector):
             self.config['urls'].append(self.config['url'])
 
         self.urls = {}
-        if isinstance(self.config['urls'], basestring):
+        if isinstance(self.config['urls'], str):
             self.config['urls'] = self.config['urls'].split(',')
 
         for url in self.config['urls']:
@@ -66,7 +67,7 @@ class HttpdCollector(diamond.collector.Collector):
                 while True:
 
                     # Parse Url
-                    parts = urlparse.urlparse(url)
+                    parts = urlparse(url)
 
                     # Parse host and port
                     endpoint = parts[1].split(':')
@@ -78,8 +79,8 @@ class HttpdCollector(diamond.collector.Collector):
                         service_port = 80
 
                     # Setup Connection
-                    connection = httplib.HTTPConnection(service_host,
-                                                        service_port)
+                    connection = HTTPConnection(service_host,
+                                                service_port)
 
                     url = "%s?%s" % (parts[2], parts[4])
 
@@ -99,7 +100,7 @@ class HttpdCollector(diamond.collector.Collector):
                     service_host, str(service_port), url, e)
                 continue
 
-            exp = re.compile('^([A-Za-z ]+):\s+(.+)$')
+            exp = re.compile(r'^([A-Za-z ]+):\s+(.+)$')
             for line in data.split('\n'):
                 if line:
                     m = exp.match(line)
@@ -143,7 +144,7 @@ class HttpdCollector(diamond.collector.Collector):
         if key in metrics:
             # Get Metric Name
             presicion_metric = False
-            metric_name = "%s" % re.sub('\s+', '', key)
+            metric_name = "%s" % re.sub(r'\s+', '', key)
             if metric_name in metrics_precision:
                 presicion_metric = 1
 

@@ -92,12 +92,12 @@ class MemcachedCollector(diamond.collector.Collector):
             sock.settimeout(3)
 
             # request stats
-            sock.send('stats\n')
+            sock.send(b'stats\n')
 
             # stats can be sent across multiple packets, so make sure we've
             # read up until the END marker
             while True:
-                received = sock.recv(4096)
+                received = sock.recv(4096).decode()
                 if not received:
                     break
                 data += received
@@ -137,12 +137,12 @@ class MemcachedCollector(diamond.collector.Collector):
         try:
             cmdline = "/proc/%s/cmdline" % pid
             f = open(cmdline, 'r')
-            m = re.search("-c\x00(\d+)", f.readline())
+            m = re.search(r"-c\x00(\d+)", f.readline())
             if m is not None:
                 self.log.debug('limit connections %s', m.group(1))
                 stats['limit_maxconn'] = m.group(1)
             f.close()
-        except:
+        except Exception:
             self.log.debug("Cannot parse command line options for memcached")
 
         return stats
@@ -151,11 +151,11 @@ class MemcachedCollector(diamond.collector.Collector):
         hosts = self.config.get('hosts')
 
         # Convert a string config value to be an array
-        if isinstance(hosts, basestring):
+        if isinstance(hosts, str):
             hosts = [hosts]
 
         for host in hosts:
-            matches = re.search('((.+)\@)?([^:]+)(:(\d+))?', host)
+            matches = re.search(r'((.+)\@)?([^:]+)(:(\d+))?', host)
             alias = matches.group(2)
             hostname = matches.group(3)
             port = matches.group(5)

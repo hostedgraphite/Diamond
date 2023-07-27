@@ -1,4 +1,4 @@
-#!/usr/bin/python
+#!/usr/bin/python3
 # coding=utf-8
 
 try:
@@ -12,20 +12,19 @@ from test import CollectorTestCase
 from test import get_collector_config
 from test import unittest
 from test import run_only
-from mock import patch, call
+from test import patch
+from mock import call
 
 from diamond.collector import Collector
 import ceph
 
 
 def run_only_if_assertSequenceEqual_is_available(func):
-    pred = lambda: 'assertSequenceEqual' in dir(unittest.TestCase)
-    return run_only(func, pred)
+    return run_only(func, lambda: 'assertSequenceEqual' in dir(unittest.TestCase))
 
 
 def run_only_if_subprocess_check_output_is_available(func):
-    pred = lambda: 'check_output' in dir(subprocess)
-    return run_only(func, pred)
+    return run_only(func, lambda: 'check_output' in dir(subprocess))
 
 
 class TestCounterIterator(unittest.TestCase):
@@ -211,6 +210,7 @@ class TestCephCollectorPublish(CollectorTestCase):
                                             metric_type='GAUGE', instance=None,
                                             precision=0),
                                        ])
+
 
 if __name__ == "__main__":
     unittest.main()

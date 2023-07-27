@@ -62,7 +62,7 @@ class DRBDCollector(diamond.collector.Collector):
                 if re.search('version', line) is None:
                     if re.search(r' \d: cs', line):
                         matches = re.match(r' (\d): (cs:\w+) (ro:\w+/\w+) '
-                                           '(ds:\w+/\w+) (\w{1}) .*', line)
+                                           r'(ds:\w+/\w+) (\w{1}) .*', line)
                         current_resource = matches.group(1)
                         results[current_resource] = dict()
                     elif re.search(r'\sns:', line):
@@ -76,7 +76,7 @@ class DRBDCollector(diamond.collector.Collector):
                     continue
             statusfile.close()
         except IOError as errormsg:
-            self.log.error("Can't read DRBD status file: {}".format(errormsg))
+            self.log.error("Can't read DRBD status file: {0}".format(errormsg))
             return
 
         for resource in results.keys():

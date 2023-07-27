@@ -1,4 +1,4 @@
-#!/usr/bin/python
+#!/usr/bin/python3
 # coding=utf-8
 ##########################################################################
 
@@ -6,8 +6,9 @@ from test import CollectorTestCase
 from test import get_collector_config
 from test import unittest
 from test import run_only
-from mock import Mock
-from mock import patch, call
+from test import Mock
+from test import patch
+from mock import call
 
 from diamond.collector import Collector
 from redisstat import RedisCollector
@@ -23,8 +24,8 @@ def run_only_if_redis_is_available(func):
         import redis
     except ImportError:
         redis = None
-    pred = lambda: redis is not None
-    return run_only(func, pred)
+
+    return run_only(func, lambda: redis is not None)
 
 
 class TestRedisCollector(CollectorTestCase):

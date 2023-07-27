@@ -23,8 +23,9 @@ you're going to have a bad time.
 """
 
 import diamond.collector
+import diamond.pycompat
+from diamond.pycompat import HTTPError
 import json
-import urllib2
 import os
 
 
@@ -63,7 +64,7 @@ class MesosCGroupCollector(diamond.collector.Collector):
         cgroup_root = containers['flags']['cgroups_root']
 
         for aspect in ['cpuacct', 'cpu', 'memory']:
-            aspect_path = os.path.join(sysfs, aspect, cgroup_root)
+            aspect_path: str = os.path.join(sysfs, aspect, cgroup_root)
 
             contents = os.listdir(aspect_path)
             for task_id in [entry for entry in contents if
@@ -125,8 +126,8 @@ class MesosCGroupCollector(diamond.collector.Collector):
                                        self.config['port'],
                                        self.config['mesos_state_path'])
 
-            return json.load(urllib2.urlopen(url))
-        except (urllib2.HTTPError, ValueError) as err:
+            return json.load(diamond.pycompat.urlopen(url))
+        except (HTTPError, ValueError) as err:
             self.log.error('Unable to read JSON response: %s' % err)
             return {}
 

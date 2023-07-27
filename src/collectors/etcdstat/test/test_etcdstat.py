@@ -1,4 +1,4 @@
-#!/usr/bin/python
+#!/usr/bin/python3
 # coding=utf-8
 ##########################################################################
 
@@ -6,8 +6,8 @@ from diamond.collector import Collector
 from test import CollectorTestCase
 from test import get_collector_config
 from test import unittest
-from mock import patch
-from mock import Mock
+from test import patch
+from test import Mock
 
 from etcdstat import EtcdCollector
 
@@ -126,6 +126,7 @@ class TestEtcdCollector(CollectorTestCase):
         self.setDocExample(collector=self.collector.__class__.__name__,
                            metrics=metrics,
                            defaultpath=self.collector.config['path'])
+
 
 ##########################################################################
 if __name__ == "__main__":

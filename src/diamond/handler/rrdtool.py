@@ -7,9 +7,8 @@ Save stats in RRD files using rrdtool.
 import os
 import re
 import subprocess
-import Queue
-
-from Handler import Handler
+from diamond.pycompat import Queue, Empty
+from . Handler import Handler
 
 #
 # Constants for RRD file creation.
@@ -160,7 +159,7 @@ class RRDHandler(Handler):
 
     def _queue(self, filename, timestamp, value):
         if filename not in self._queues:
-            queue = Queue.Queue()
+            queue = Queue()
             self._queues[filename] = queue
         else:
             queue = self._queues[filename]
@@ -199,7 +198,7 @@ class RRDHandler(Handler):
                 if timestamp not in updates:
                     updates[timestamp] = []
                 updates[timestamp].append(value)
-            except Queue.Empty:
+            except Empty:
                 break
 
         # Save the last update time.
@@ -211,8 +210,7 @@ class RRDHandler(Handler):
             # The timestamps must be sorted, and we each of the
             # <time> values must be unique (like a snowflake).
             data_points = map(
-                lambda (timestamp, values): "%d:%s" %
-                (timestamp, ":".join(map(str, values))),
+                lambda point: "%d:%s" % (point[0], ":".join(map(str, point[1]))),
                 sorted(updates.items()))
 
             # Optimisticly update.

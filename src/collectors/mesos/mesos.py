@@ -14,14 +14,14 @@ port = 5050
 ```
 
 #### Dependencies
- * urlib2
+ * urlib
 """
 
 import copy
 import diamond.collector
+import diamond.pycompat
+from urllib.parse import urlparse
 import json
-import urllib2
-from urlparse import urlparse
 
 import diamond.collector
 
@@ -197,7 +197,7 @@ class MesosCollector(diamond.collector.Collector):
         """
         url = self._get_url(path)
         try:
-            response = urllib2.urlopen(url)
+            response = diamond.pycompat.urlopen(url)
         except Exception as err:
             self.log.error("%s: %s", url, err)
             return False
@@ -239,7 +239,7 @@ class MesosCollector(diamond.collector.Collector):
             self._publish(metrics, False)
 
     def _publish(self, result, sanitize_executor_id=True):
-        for executor_id, executor in result.iteritems():
+        for executor_id, executor in result.items():
             executor_statistics = executor['statistics']
             for key in executor_statistics:
                 value = executor_statistics[key]

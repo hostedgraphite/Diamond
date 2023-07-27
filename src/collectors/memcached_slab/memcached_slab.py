@@ -43,14 +43,14 @@ def parse_slab_stats(slab_stats):
         if line == 'END':
             break
         # e.g.: "STAT 1:chunks_per_page 10922"
-        cmd, key, value = line.split(' ')
+        [cmd, key, value] = line.split(' ')
         if cmd != 'STAT':
             continue
         # e.g.: "STAT active_slabs 1"
         if ":" not in key:
             stats_dict[key] = int(value)
             continue
-        slab, key = key.split(':')
+        [slab, key] = key.split(':')
         stats_dict['slabs'][int(slab)][key] = int(value)
 
     return stats_dict
@@ -66,10 +66,10 @@ def dict_to_paths(dict_):
     }
     """
     metrics = {}
-    for k, v in dict_.iteritems():
+    for k, v in dict_.items():
         if isinstance(v, dict):
             submetrics = dict_to_paths(v)
-            for subk, subv in submetrics.iteritems():
+            for subk, subv in submetrics.items():
                 metrics['.'.join([str(k), str(subk)])] = subv
         else:
             metrics[k] = v
@@ -115,7 +115,7 @@ class MemcachedSlabCollector(diamond.collector.Collector):
         unparsed_slab_stats = self.get_slab_stats()
         slab_stats = parse_slab_stats(unparsed_slab_stats)
         paths = dict_to_paths(slab_stats)
-        for path, value in paths.iteritems():
+        for path, value in paths.items():
             # Add path and prefix to metric (e.g.
             # 'servers.cache-main-01.memchached_slab')
             full_path = self.get_metric_path(path)

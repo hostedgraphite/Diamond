@@ -1,12 +1,12 @@
-#!/usr/bin/python
+#!/usr/bin/python3
 # coding=utf-8
 ###############################################################################
+
+from jbossapi import JbossApiCollector
 
 from test import CollectorTestCase
 from test import get_collector_config
 from test import unittest
-
-from jbossapi import JbossApiCollector
 
 
 ###############################################################################
@@ -20,6 +20,7 @@ class TestJbossApiCollector(CollectorTestCase):
 
     def test_import(self):
         self.assertTrue(JbossApiCollector)
+
 
 ###############################################################################
 if __name__ == "__main__":

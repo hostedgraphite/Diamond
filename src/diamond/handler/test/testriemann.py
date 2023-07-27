@@ -1,27 +1,26 @@
-#!/usr/bin/python
+#!/usr/bin/python3
 # coding=utf-8
 ##########################################################################
 
-from test import unittest
-from test import run_only
-from mock import Mock
-from mock import patch
 import configobj
 
 import diamond.handler.riemann as mod
 from diamond.metric import Metric
+from test import Mock
+from test import patch
+from test import run_only
+from test import unittest
 
 try:
     from riemann_client.client import Client
+
     riemann_client = True
 except ImportError:
     riemann_client = None
 
 
 def run_only_if_riemann_client_is_available(func):
-    def pred():
-        return riemann_client is not None
-    return run_only(func, pred)
+    return run_only(func, lambda: riemann_client is not None)
 
 
 def fake_connect(self):
@@ -61,9 +60,10 @@ class TestRiemannHandler(unittest.TestCase):
             self.assertEqual(event, {
                 'host': u'com.example.www',
                 'service': u'servers.cpu.total.idle',
-                'time': 1234567L,
+                'time': 1234567,
                 'metric_f': 0.0,
             })
+
 
 ##########################################################################
 if __name__ == "__main__":

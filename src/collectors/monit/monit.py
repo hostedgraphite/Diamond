@@ -8,14 +8,15 @@ Collect the monit stats and report on cpu/memory for monitored processes
  * monit serving up /_status
 
 """
-
-import urllib2
 import base64
 
 from xml.dom.minidom import parseString
 
 import diamond.collector
 from diamond.collector import str_to_bool
+
+import diamond.pycompat
+from diamond.pycompat import HTTPError, Request
 
 
 class MonitCollector(diamond.collector.Collector):
@@ -47,15 +48,14 @@ class MonitCollector(diamond.collector.Collector):
         url = 'http://%s:%i/_status?format=xml' % (self.config['host'],
                                                    int(self.config['port']))
         try:
-            request = urllib2.Request(url)
+            request = Request(url)
 
-            #
             # shouldn't need to check this
-            base64string = base64.encodestring('%s:%s' % (
-                self.config['user'], self.config['passwd'])).replace('\n', '')
+            original_string = '%s:%s' % (self.config['user'], self.config['passwd'])
+            base64string = base64.b64encode(original_string.encode()).decode()
             request.add_header("Authorization", "Basic %s" % base64string)
-            response = urllib2.urlopen(request)
-        except urllib2.HTTPError as err:
+            response = diamond.pycompat.urlopen(request)
+        except HTTPError as err:
             self.log.error("%s: %s", err, url)
             return
 
@@ -63,7 +63,7 @@ class MonitCollector(diamond.collector.Collector):
 
         try:
             dom = parseString("".join(response.readlines()))
-        except:
+        except Exception:
             self.log.error("Got an empty response from the monit server")
             return
 
@@ -111,7 +111,7 @@ class MonitCollector(diamond.collector.Collector):
                                         oldUnit='kilobyte',
                                         newUnit=unit))
 
-                    except:
+                    except Exception:
                         pass
 
         for key in metrics:

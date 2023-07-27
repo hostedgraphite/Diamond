@@ -4,19 +4,19 @@
 The Collector class is a base class for all metric collectors.
 """
 
+import logging
 import os
 import platform
-import socket
-import platform
-import logging
-import configobj
-import time
 import re
+import socket
 import subprocess
+import time
+
+import configobj
 
 from diamond.metric import Metric
 from diamond.utils.config import load_config
-from error import DiamondException
+from .error import DiamondException
 
 # Detect the architecture of the system and set the counters for MAX_VALUES
 # appropriately. Otherwise, rolling over counters will cause incorrect or
@@ -52,7 +52,10 @@ def get_hostname(config, method=None):
             proc = subprocess.Popen(config['hostname'],
                                     shell=True,
                                     stdout=subprocess.PIPE)
-            hostname = proc.communicate()[0].strip()
+            hostname = proc.communicate()[0]
+            if isinstance(hostname, bytes):
+                hostname = hostname.decode()
+            hostname = hostname.strip()
             if proc.returncode != 0:
                 raise subprocess.CalledProcessError(proc.returncode,
                                                     config['hostname'])
@@ -136,6 +139,7 @@ def get_hostname(config, method=None):
 
     raise NotImplementedError(config['hostname_method'])
 
+
 get_hostname.cached_results = {}
 
 
@@ -144,7 +148,7 @@ def str_to_bool(value):
     Converts string truthy/falsey strings to a bool
     Empty strings are false
     """
-    if isinstance(value, basestring):
+    if isinstance(value, str):
         value = value.strip().lower()
         if value in ['true', 't', 'yes', 'y']:
             return True
@@ -218,7 +222,7 @@ class Collector(object):
         event
         """
         if 'byte_unit' in self.config:
-            if isinstance(self.config['byte_unit'], basestring):
+            if isinstance(self.config['byte_unit'], str):
                 self.config['byte_unit'] = self.config['byte_unit'].split()
 
         if 'enabled' in self.config:
@@ -540,8 +544,8 @@ class ProcessCollector(Collector):
     def get_default_config_help(self):
         config_help = super(ProcessCollector, self).get_default_config_help()
         config_help.update({
-            'use_sudo':     'Use sudo?',
-            'sudo_cmd':     'Path to sudo',
+            'use_sudo': 'Use sudo?',
+            'sudo_cmd': 'Path to sudo',
         })
         return config_help
 
@@ -551,8 +555,8 @@ class ProcessCollector(Collector):
         """
         config = super(ProcessCollector, self).get_default_config()
         config.update({
-            'use_sudo':     False,
-            'sudo_cmd':     self.find_binary('/usr/bin/sudo'),
+            'use_sudo': False,
+            'sudo_cmd': self.find_binary('/usr/bin/sudo'),
         })
         return config
 
@@ -568,8 +572,13 @@ class ProcessCollector(Collector):
             if str_to_bool(self.config['use_sudo']):
                 command.insert(0, self.config['sudo_cmd'])
 
-            return subprocess.Popen(command,
-                                    stdout=subprocess.PIPE).communicate()
+            p = subprocess.Popen(command, stdout=subprocess.PIPE)
+            stdout, stderr = p.communicate()
+            if isinstance(stdout, bytes):
+                stdout = stdout.decode()
+            if isinstance(stderr, bytes):
+                stderr = stderr.decode()
+            return stdout, stderr
         except OSError:
             self.log.exception("Unable to run %s", command)
             return None

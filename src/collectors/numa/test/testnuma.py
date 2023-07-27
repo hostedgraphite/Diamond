@@ -1,15 +1,16 @@
-#!/usr/bin/python
+#!/usr/bin/python3
 # coding=utf-8
 ##########################################################################
 
-from test import CollectorTestCase
-from test import get_collector_config
-from test import unittest
-from mock import patch
-from mock import Mock
+from numa import NumaCollector
 
 from diamond.collector import Collector
-from numa import NumaCollector
+from test import CollectorTestCase
+from test import Mock
+from test import get_collector_config
+from test import patch
+from test import unittest
+
 
 ##########################################################################
 
@@ -32,8 +33,8 @@ class TestNumaCollector(CollectorTestCase):
         self.collector.collect()
 
         metrics = {
-            'node_0_free_MB':  342,
-            'node_0_size_MB':  15976
+            'node_0_free_MB': 342,
+            'node_0_size_MB': 15976
         }
 
         patch_communicate = patch(
@@ -50,6 +51,7 @@ class TestNumaCollector(CollectorTestCase):
             metrics=metrics,
             defaultpath=self.collector.config['path'])
         self.assertPublishedMany(publish_mock, metrics)
+
 
 ##########################################################################
 if __name__ == "__main__":

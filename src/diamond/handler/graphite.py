@@ -16,7 +16,7 @@ use it.
 
 """
 
-from Handler import Handler
+from . Handler import Handler
 import socket
 import time
 
@@ -128,16 +128,16 @@ class GraphiteHandler(Handler):
         Try to send all data in buffer.
         """
         try:
-            self.socket.sendall(data)
+            self.socket.sendall(data.encode())
             self._reset_errors()
-        except:
+        except Exception:
             self._close()
             self._throttle_error("GraphiteHandler: Socket error, "
                                  "trying reconnect.")
             self._connect()
             try:
-                self.socket.sendall(data)
-            except:
+                self.socket.sendall(data.encode())
+            except Exception:
                 return
             self._reset_errors()
 

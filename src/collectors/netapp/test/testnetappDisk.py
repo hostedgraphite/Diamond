@@ -1,12 +1,12 @@
-#!/usr/bin/python
+#!/usr/bin/python3
 # coding=utf-8
 ###############################################################################
+
+from netappDisk import netappDisk
 
 from test import CollectorTestCase
 from test import get_collector_config
 from test import unittest
-
-from netappDisk import netappDisk
 
 
 ###############################################################################
@@ -20,6 +20,7 @@ class TestnetappDisk(CollectorTestCase):
 
     def test_import(self):
         self.assertTrue(netappDisk)
+
 
 ###############################################################################
 if __name__ == "__main__":

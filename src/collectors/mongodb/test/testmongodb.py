@@ -1,4 +1,4 @@
-#!/usr/bin/python
+#!/usr/bin/python3
 # coding=utf-8
 ##########################################################################
 
@@ -6,9 +6,9 @@ from test import CollectorTestCase
 from test import get_collector_config
 from test import unittest
 from test import run_only
-from mock import MagicMock
-from mock import patch
-from mock import call
+from test import MagicMock
+from test import patch
+from test import call
 
 from diamond.collector import Collector
 from mongodb import MongoDBCollector
@@ -19,8 +19,10 @@ try:
 except ImportError:
     import simplejson as json
 
-
-##########################################################################
+try:
+    long
+except NameError:
+    long = int
 
 
 def run_only_if_pymongo_is_available(func):
@@ -28,8 +30,8 @@ def run_only_if_pymongo_is_available(func):
         import pymongo
     except ImportError:
         pymongo = None
-    pred = lambda: pymongo is not None
-    return run_only(func, pred)
+
+    return run_only(func, lambda: pymongo is not None)
 
 
 class TestMongoDBCollector(CollectorTestCase):
@@ -177,7 +179,7 @@ class TestMongoDBCollector(CollectorTestCase):
         for c in publish_mock.call_args_list:
             m = c[0][0]
             datapoints_per_metric[m] += 1
-        dupes = [m for m, n in datapoints_per_metric.iteritems() if n > 1]
+        dupes = [m for m, n in datapoints_per_metric.items() if n > 1]
         self.assertEqual(len(dupes), 0,
                          'BUG: 1+ point for same metric received: %s' %
                          ', '.join(dupes))

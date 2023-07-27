@@ -1,4 +1,4 @@
-#!/usr/bin/env python
+#!/usr/bin/env python3
 # coding=utf-8
 
 # This is the MIT License
@@ -37,7 +37,6 @@
 #   Made it work with the Ganglia 3.1 data format
 
 
-from __future__ import print_function
 from xdrlib import Packer, Unpacker
 import socket
 

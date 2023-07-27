@@ -1,17 +1,14 @@
-#!/usr/bin/python
+#!/usr/bin/python3
 # coding=utf-8
 ################################################################################
 
 from test import CollectorTestCase
 from test import get_collector_config
 from test import unittest
-from mock import Mock
-from mock import patch
+from test import Mock
+from test import patch
 
-try:
-    from cStringIO import StringIO
-except ImportError:
-    from StringIO import StringIO
+from test import StringIO
 
 from diamond.collector import Collector
 from xfs import XFSCollector
@@ -30,7 +27,7 @@ class TestXFSCollector(CollectorTestCase):
     def test_import(self):
         self.assertTrue(XFSCollector)
 
-    @patch('__builtin__.open')
+    @patch('builtins.open')
     @patch('os.access', Mock(return_value=True))
     @patch.object(Collector, 'publish')
     def test_should_open_proc_stat(self, publish_mock, open_mock):
@@ -212,6 +209,7 @@ class TestXFSCollector(CollectorTestCase):
                            metrics=metrics,
                            defaultpath=self.collector.config['path'])
         self.assertPublishedMany(publish_mock, metrics)
+
 
 ################################################################################
 if __name__ == "__main__":

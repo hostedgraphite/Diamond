@@ -60,6 +60,8 @@ class PowerDNSCollector(diamond.collector.Collector):
 
         data = subprocess.Popen(command,
                                 stdout=subprocess.PIPE).communicate()[0]
+        if isinstance(data, bytes):
+            data = data.decode()
 
         for metric in data.split(','):
             if not metric.strip():
@@ -67,7 +69,7 @@ class PowerDNSCollector(diamond.collector.Collector):
             metric, value = metric.split('=')
             try:
                 value = float(value)
-            except:
+            except Exception:
                 pass
             if metric not in self._GAUGE_KEYS:
                 value = self.derivative(metric, value)

@@ -33,7 +33,6 @@ https://communities.netapp.com/docs/DOC-1044
 
 """
 
-from __future__ import print_function
 import sys
 import time
 import re
@@ -298,7 +297,7 @@ class NetAppCollector(diamond.collector.Collector):
             query.child_add(counters)
 
             res = server.invoke_elem(query)
-            if(res.results_status() == "failed"):
+            if (res.results_status() == "failed"):
                 self.log.error("Connection to filer %s failed; %s" % (
                     device, res.results_reason()))
                 return
@@ -312,21 +311,21 @@ class NetAppCollector(diamond.collector.Collector):
             # calculations later.
             raw = {}
 
-            while(num_records != 0):
+            while (num_records != 0):
                 query = NaServer.NaElement(
                     "perf-object-get-instances-iter-next")
                 query.child_add_string("tag", iter_tag)
                 query.child_add_string("maximum", max_records)
                 res = server.invoke_elem(query)
 
-                if(res.results_status() == "failed"):
+                if (res.results_status() == "failed"):
                     print("Connection to filer %s failed; %s" % (
                         device, res.results_reason()))
                     return
 
                 num_records = res.child_get_int("records")
 
-                if(num_records > 0):
+                if (num_records > 0):
                     instances_list = res.child_get("instances")
                     instances = instances_list.children_get()
 
@@ -338,7 +337,7 @@ class NetAppCollector(diamond.collector.Collector):
                         # Shorten the name for disks as they are very long and
                         # padded with zeroes, eg:
                         # 5000C500:3A236B0B:00000000:00000000:00000000:...
-                        if na_object is "disk":
+                        if na_object == "disk":
                             non_zero_blocks = [
                                 block for block in raw_name.split(":")
                                 if block != "00000000"
