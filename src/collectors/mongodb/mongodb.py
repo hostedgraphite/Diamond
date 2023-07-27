@@ -191,7 +191,7 @@ class MongoDBCollector(diamond.collector.Collector):
                     self.log.error(
                         'User auth given, but could not autheticate' +
                         ' with host: %s, err: %s' % (host, e))
-                    return{}
+                    return {}
 
             data = conn.db.command('serverStatus')
             self._publish_transformed(data, base_prefix)

@@ -73,7 +73,7 @@ class OpenstackSwiftCollector(diamond.collector.Collector):
                     self.publish('dispersion.%s.%s' % (t, k), v)
 
         # container metrics returned by stat <container>
-        if(self.config['enable_container_metrics']):
+        if (self.config['enable_container_metrics']):
             account = '%s:%s' % (self.config['account'], self.config['user'])
             for container in self.config['containers'].split(','):
                 cmd = ['swift', '-A', self.config['auth_url'],

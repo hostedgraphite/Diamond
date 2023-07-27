@@ -137,7 +137,7 @@ class GraphiteHandler(Handler):
             self._connect()
             try:
                 self.socket.sendall(data.encode())
-            except:
+            except Exception:
                 return
             self._reset_errors()
 

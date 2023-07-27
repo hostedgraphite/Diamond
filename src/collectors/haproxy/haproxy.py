@@ -82,7 +82,7 @@ class HAProxyCollector(diamond.collector.Collector):
 
             # this regular expression is used to extract scheme and realm
             authre = (r'''(?:\s*www-authenticate\s*:)?\s*''' +
-                      '''(\w*)\s+realm=['"]([^'"]+)['"]''')
+                      r'''(\w*)\s+realm=['"]([^'"]+)['"]''')
             authobj = re.compile(authre, re.IGNORECASE)
             matchobj = authobj.match(authline)
             if not matchobj:

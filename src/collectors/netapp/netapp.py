@@ -297,7 +297,7 @@ class NetAppCollector(diamond.collector.Collector):
             query.child_add(counters)
 
             res = server.invoke_elem(query)
-            if(res.results_status() == "failed"):
+            if (res.results_status() == "failed"):
                 self.log.error("Connection to filer %s failed; %s" % (
                     device, res.results_reason()))
                 return
@@ -311,21 +311,21 @@ class NetAppCollector(diamond.collector.Collector):
             # calculations later.
             raw = {}
 
-            while(num_records != 0):
+            while (num_records != 0):
                 query = NaServer.NaElement(
                     "perf-object-get-instances-iter-next")
                 query.child_add_string("tag", iter_tag)
                 query.child_add_string("maximum", max_records)
                 res = server.invoke_elem(query)
 
-                if(res.results_status() == "failed"):
+                if (res.results_status() == "failed"):
                     print("Connection to filer %s failed; %s" % (
                         device, res.results_reason()))
                     return
 
                 num_records = res.child_get_int("records")
 
-                if(num_records > 0):
+                if (num_records > 0):
                     instances_list = res.child_get("instances")
                     instances = instances_list.children_get()
 
