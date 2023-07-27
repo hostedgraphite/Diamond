@@ -1,6 +1,5 @@
 # coding=utf-8
-
-
+import configparser
 import logging
 import logging.config
 import sys
@@ -36,7 +35,9 @@ def setup_logging(configfile, stdout=False):
     log = logging.getLogger('diamond')
 
     try:
-        logging.config.fileConfig(configfile, disable_existing_loggers=False)
+        config_parser = configparser.RawConfigParser(strict=False)
+        config_parser.read(configfile)
+        logging.config.fileConfig(config_parser, disable_existing_loggers=False)
 
         # if the stdout flag is set, we use the log level of the root logger
         # for logging to stdout, and keep all loggers defined in the conf file

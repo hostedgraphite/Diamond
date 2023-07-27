@@ -12,8 +12,11 @@ pysnmp==4.4.12
 pystalkd==1.3.0
 PyYAML==6.0
 redis==4.1.4
+protobuf==3.20.3
 riemann-client==6.5.0
 setproctitle==1.2.2
 simplejson==3.17.6
 statsd==3.3.0
 utmp==21.10.0
+mock
+Cython==0.29.28

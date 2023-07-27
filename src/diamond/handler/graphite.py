@@ -128,7 +128,7 @@ class GraphiteHandler(Handler):
         Try to send all data in buffer.
         """
         try:
-            self.socket.sendall(data)
+            self.socket.sendall(data.encode())
             self._reset_errors()
         except Exception:
             self._close()
@@ -136,8 +136,8 @@ class GraphiteHandler(Handler):
                                  "trying reconnect.")
             self._connect()
             try:
-                self.socket.sendall(data)
-            except Exception:
+                self.socket.sendall(data.encode())
+            except:
                 return
             self._reset_errors()
 

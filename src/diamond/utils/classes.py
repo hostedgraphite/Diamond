@@ -1,4 +1,5 @@
 # coding=utf-8
+import importlib.util
 
 import configobj
 import os
@@ -122,6 +123,7 @@ def load_collectors_from_paths(paths):
     if isinstance(paths, str):
         paths = paths.split(',')
         paths = map(str.strip, paths)
+        paths = list(paths)
 
     load_include_path(paths)
 

@@ -32,7 +32,7 @@ class TestHAProxyCollector(CollectorTestCase):
         self.collector.config['ignore_servers'] = False
 
         patch_urlopen = patch(URLOPEN,
-                              Mock(return_value=self.getFixture('stats.csv')))
+                              Mock(return_value=self.getFixtureInBytes('stats.csv')))
 
         patch_urlopen.start()
         self.collector.collect()
@@ -52,7 +52,7 @@ class TestHAProxyCollector(CollectorTestCase):
         class MockSocket():
             def __init__(*args, **kwargs):
                 self.connected = False
-                self.output_data = ''
+                self.output_data = b''
 
             def connect(*args, **kwargs):
                 self.connected = True
@@ -60,8 +60,8 @@ class TestHAProxyCollector(CollectorTestCase):
             def send(obj, string, *args, **kwargs):
                 if not self.connected:
                     raise Exception('MockSocket: Endpoint not connected.')
-                if string == 'show stat\n':
-                    self.output_data = self.getFixture('stats.csv').getvalue()
+                if string == b'show stat\n':
+                    self.output_data = self.getFixtureInBytes('stats.csv').getvalue()
 
             def recv(obj, bufsize, *args, **kwargs):
                 output_buffer = self.output_data[:bufsize]
@@ -86,7 +86,7 @@ class TestHAProxyCollector(CollectorTestCase):
         self.collector.config['ignore_servers'] = True
 
         patch_urlopen = patch(URLOPEN,
-                              Mock(return_value=self.getFixture('stats.csv')))
+                              Mock(return_value=self.getFixtureInBytes('stats.csv')))
 
         patch_urlopen.start()
         self.collector.collect()

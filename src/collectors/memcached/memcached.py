@@ -92,12 +92,12 @@ class MemcachedCollector(diamond.collector.Collector):
             sock.settimeout(3)
 
             # request stats
-            sock.send('stats\n')
+            sock.send(b'stats\n')
 
             # stats can be sent across multiple packets, so make sure we've
             # read up until the END marker
             while True:
-                received = sock.recv(4096)
+                received = sock.recv(4096).decode()
                 if not received:
                     break
                 data += received
